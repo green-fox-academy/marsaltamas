@@ -3,6 +3,8 @@
 ## week-1
 
 ### day-1
+
+1. training
 ### day-2
 
 1. [git-lesson-repository](https://github.com/marsaltamas/git-lesson-repository)
