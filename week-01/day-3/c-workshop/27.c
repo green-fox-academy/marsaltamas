@@ -12,7 +12,6 @@ int main()
     int x = 1345;
     int y = -40;
 
-
     printf("original x was: %d\n", x);
     printf("original y was: %d\n", y);
 
@@ -22,8 +21,6 @@ int main()
 
     x = y ^ 0;
     y = a ^ 0;
-
-
 
     printf("After swapped x is: %d\n", x);
     printf("After swapped y is: %d\n", y);
