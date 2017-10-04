@@ -9,18 +9,19 @@ but this time use bitwise operators only
 
 int main()
 {
-    int x = 2;
-    int y = 40;
+    int x = 1345;
+    int y = -40;
+
 
     printf("original x was: %d\n", x);
     printf("original y was: %d\n", y);
 
 
-    int a = x;
+    int a = x ^ 0;
 
 
-    x = y;
-    y = a ^ x;
+    x = y ^ 0;
+    y = a ^ 0;
 
 
 
