@@ -8,16 +8,23 @@ int main() {
 	uint8_t a = 0b00000011;
 
 
-
-
-
 	// Be z equal to the bitwise and of x and y
 
 	z = x & y;
 
+	printf("%s", "x bitwise and y test: ");
+	printf("%c", z & 0b10000000 ? '1' : '0');
+	printf("%c", z & 0b01000000 ? '1' : '0');
+	printf("%c", z & 0b00100000 ? '1' : '0');
+	printf("%c", z & 0b00010000 ? '1' : '0');
+	printf("%c", z & 0b00001000 ? '1' : '0');
+	printf("%c", z & 0b00000100 ? '1' : '0');
+	printf("%c", z & 0b00000010 ? '1' : '0');
+	printf("%c", z & 0b00000001 ? '1' : '0');
+
 	// Check the result with printf
 
-	printf("%i\n", z);
+	printf("\n%i\n", z);
 
 
 
