@@ -20,4 +20,4 @@
 
 ### day-4
 
-1. [c-workshop-second-part]()
+1. [c-workshop-second-part](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-4/c-workshop-2)
