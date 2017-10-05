@@ -17,3 +17,7 @@
 ### day-3
 
 1. [c-workshop](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-3/c-workshop)
+
+### day-4
+
+1. [c-workshop-second-part]()

@@ -6,8 +6,7 @@ int main() {
 	int a = 0;
 	// print "yeeeeeeeey" ae times
 
-	while (a < ae)
-    {
+	while (a < ae){
         printf("while loop says: yeeeeeeeey\n");
         a++;
     }
@@ -16,16 +15,14 @@ int main() {
 
     printf("\n\n");
 
-    do
-    {
+    do {
          printf("do- while loop says: yeeeeeeeey\n");
         a++;
     }while (a < ae);
 
     printf("\n\n");
 
-    for (int i = 0; i < ae; i++)
-    {
+    for (int i = 0; i < ae; i++){
          printf("for loop says: yeeeeeeeey\n");
         a++;
     }

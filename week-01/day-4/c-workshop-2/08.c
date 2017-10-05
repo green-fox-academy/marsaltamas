@@ -9,17 +9,14 @@ for each number write if the number is odd or even (don't print out the numbers)
 int main()
 {
 
-    for (int i = 0; i <= 100; i++)
-    {
+    for (int i = 0; i <= 100; i++){
 
         int result = i % 2;
 
-        if (i == 0)
-        {
+        if (i == 0){
             printf("It is null.\n");
         }
-        else
-        {
+        else {
         switch (result){
         case 0 :
             printf("Even\n", i);

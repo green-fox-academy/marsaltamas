@@ -8,8 +8,7 @@ int main() {
 
 	int a = 1;
 
-	for (int i = 1; i <= 100; i++)
-    {
+	for (int i = 1; i <= 100; i++){
          printf("for loop FizzBuzz  ");
 
         if ( i%3 == 0 && i%5 == 0 )
@@ -26,8 +25,7 @@ int main() {
     printf("\n\n");
 
 
-    while (a <=100)
-    {
+    while (a <=100){
         printf("while loop FizzBuzz  ");
 
         if ( a%3 == 0 && a%5 == 0 )
@@ -46,8 +44,7 @@ int main() {
     printf("\n\n");
     a = 1;
 
-    do
-    {
+    do {
         printf("do-while loop FizzBuzz  ");
 
         if ( a%3 == 0 && a%5 == 0 )

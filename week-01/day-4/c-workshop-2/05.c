@@ -5,8 +5,7 @@ int main() {
 
 	int a = 1;
 
-	while (a < 20)
-    {
+	while (a < 20){
         if (!(a%2))
         printf("while loop: a = %d is even.\n", a);
 
@@ -17,8 +16,7 @@ int main() {
 
     printf("\n\n");
 
-    do
-    {
+    do {
         if (!(a%2))
         printf("do-while loop: a = %d is even.\n", a);
 
@@ -27,8 +25,7 @@ int main() {
 
     printf("\n\n");
 
-	for(int i = 1; i < 21; i++)
-    {
+	for (int i = 1; i < 21; i++){
 
 
         if (!(i%2))
