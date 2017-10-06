@@ -20,9 +20,28 @@ ASCII value of character B = 66
 int main()
 {
 
-    for (int i = 0; i < 256; i++){
+    for (int i = 0; i < 256; i++) {
 
-        printf("ASCII value of character %c = %d\n", i, i);
+        switch (i) {
+        case 7 :
+            printf("ASCII value of character \"Bell\" = %d\n", i, i);
+            break;
+        case 8 :
+            printf("ASCII value of character \"Backspace\" = %d\n", i, i);
+            break;
+        case 9 :
+            printf("ASCII value of character \"Horizontal tab\" = %d\n", i, i);
+            break;
+        case 10 :
+            printf("ASCII value of character \"Line feed\" = %d\n", i, i);
+            break;
+        case 13 :
+            printf("ASCII value of character \"Carriage return\" = %d\n", i, i);
+            break;
+        default :
+            printf("ASCII value of character %c = %d\n", i, i);
+        }
+
     }
 
 	return 0;

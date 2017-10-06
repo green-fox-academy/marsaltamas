@@ -21,3 +21,8 @@
 ### day-4
 
 1. [c-workshop-second-part](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-4/c-workshop-2)
+
+### day-5
+
+1. [practice excercises](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-5)
+2. polishing up excercises from previous days

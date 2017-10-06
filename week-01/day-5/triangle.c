@@ -12,18 +12,29 @@ if you change the rows variable the output should be different as well
 */
 int main()
 {
-    int rows = 19;
+    int rows = 100;
+    int int_to_count_digits_of = rows;
+    int num_of_digits = 0;
 
-    for (int i = 1; i <= rows; i++){
+    while (int_to_count_digits_of != 0){
 
-        for (int j = 1; j <= i; j++){
+        int_to_count_digits_of = (int_to_count_digits_of - (int_to_count_digits_of%10))/10;
+        num_of_digits++;
+    }
 
-            printf("%d", i);
+    printf("num of digits %d\n", num_of_digits);
+
+    for (int i = 1; i <= rows; i++) {
+
+        for (int j = 1; j <= i; j++) {
+
+            printf("%*d", num_of_digits, i);
         }
 
         printf("\n");
 
 
     }
+
     return 0;
 }

@@ -21,11 +21,11 @@ create a program which draws a diamond, like this:
         for (int j = 1; j<4+i; j++){
 
                 if((j<8-(7/2+i)) || (j>((7/2+i))))
-                         printf("%c", ' ');
+                         printf("%2c", ' ');
                 else
-                        printf("%c", '*');
+                        printf("%2c", '*');
 
-                printf("%c", ' ');
+                //printf("%c", ' ');
 
 
         }
@@ -39,11 +39,11 @@ create a program which draws a diamond, like this:
             for (int j = 2 + i; j>0; j--){
 
                     if((j<8-(7/2+x)) || (j>((7/2+x))))
-                             printf("%c", ' ');
+                             printf("%2c", ' ');
                     else
-                            printf("%c", '*');
+                            printf("%2c", '*');
 
-                    printf("%c", ' ');
+                   // printf("%c", ' ');
 
             }
             printf("\n");

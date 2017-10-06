@@ -10,26 +10,25 @@
 int main()
 {
 
-    int start = 10;
-    int end = 30;
-    int counter_odd = 0;
+    int start = 11;
+    int end = 40;
+    int counter_of_odds = 0;
 
-    for (int i = start+1; i < end; i++){
+    for (int i = start+1; i < end; i++) {
 
-        if (i % 2){
+        if (i % 2) {
 
-            if (counter_odd == 0)
-                printf(" %d", i);
+            if (counter_of_odds == 0)
+                printf("%d", i);
             else
                 printf(", %d", i);
 
-            counter_odd++;
-
+            counter_of_odds++;
         }
 
     }
 
-    printf(" This is %d odd number between %d and %d.", counter_odd, start, end);
+    printf(".\nThis is %d odd numbers between %d and %d.", counter_of_odds, start, end);
 
 
 	return 0;
