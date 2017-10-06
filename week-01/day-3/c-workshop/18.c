@@ -2,6 +2,7 @@
 #include <stdint.h>
 
 int main() {
+
 	uint16_t number = 253;
 	uint8_t eigth_bit_max = 0b11111111;
 

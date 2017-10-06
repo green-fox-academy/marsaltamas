@@ -16,8 +16,6 @@ int main() {
 
     // Try with %x
 
-
-
     // Multiply a by 2
     a = a * 2;
 

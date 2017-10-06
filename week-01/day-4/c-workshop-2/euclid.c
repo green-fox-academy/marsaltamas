@@ -8,11 +8,17 @@ use Euclid's algorithm, if you don't know it look it up on the internet
 
 int main()
 {
-    int x = 72;
-    int y = 12;
+    int x = 48;
+    int y = 72;
     int gcd = 0;
     int temp = 0;
 
+    if (x < y) {
+
+        temp = x;
+        x = y;
+        y = temp;
+    }
 
     if (x != 0 && y != 0){
 

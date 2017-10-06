@@ -6,15 +6,10 @@ int main() {
 
 	// if w is even increment out by one
 
-	if ( ! ((int) w % 2))
+	if (!((int) w % 2))
         out += 1;
 
-
-
         printf("%d", out);
-
-
-
 
 	return 0;
 }

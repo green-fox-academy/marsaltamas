@@ -14,13 +14,7 @@ int main()
     else
         printf("Avarage party...");
 
-
-
-
-
 return 0;
-
-
 }
 
 /* Write a program that has two int variables girls_number, and boys_number

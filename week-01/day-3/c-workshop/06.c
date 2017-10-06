@@ -4,8 +4,7 @@ int main() {
 	double f = 16;
 	// please square root f's value
 
-	printf("sqrt of f is %f", sqrt(f));
-
+	printf("sqrt of f is %.0f", sqrt(f));
 
 	return 0;
 }

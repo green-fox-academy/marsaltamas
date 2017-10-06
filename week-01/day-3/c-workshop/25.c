@@ -9,7 +9,7 @@ int main()
 {
     int a = -1000;
     int b = 400;
-     int c = 1100;
+    int c = 1100;
 
     int largest = a;
 
