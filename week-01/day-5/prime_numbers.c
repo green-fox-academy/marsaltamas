@@ -13,12 +13,11 @@ output :
 int main()
 {
     int from = 1;
-    int to = -1;
+    int to = 1;
     int prime_counter = 0;
-    // this checks if the given number is prime
-    int prime = 0;
+    int prime = 0; // set to 1 if examined number is prime, otherwise 0.
 
-    // conditions for ranges and number of 2
+    // conditions for ranges and number 2
     if (from == 1 && to > 1) {
 
         printf("2 is a prime number.\n");
@@ -49,7 +48,7 @@ int main()
         }
     }
 
-         printf("Number of primes %d.", prime_counter);
+         printf("Number of primes was %d.", prime_counter);
 
    return 0;
 

@@ -11,7 +11,7 @@ int main()
 {
 
     int start = 11;
-    int end = 40;
+    int end = 27;
     int counter_of_odds = 0;
 
     for (int i = start+1; i < end; i++) {

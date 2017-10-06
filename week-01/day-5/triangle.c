@@ -12,7 +12,7 @@ if you change the rows variable the output should be different as well
 */
 int main()
 {
-    int rows = 100;
+    int rows = 12;
     int int_to_count_digits_of = rows;
     int num_of_digits = 0;
 
