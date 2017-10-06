@@ -23,7 +23,7 @@ Take care of the rounding (when giving back 5 coins):
 
 int main()
 {
-    int amount_of_money = 203;
+    int amount_of_money = 40201;
     int amount_of_money_left;
 
     //creating banknote values
@@ -104,69 +104,57 @@ int main()
                        (amount_of_money_left/money_20000)*money_20000, amount_of_money_left/money_20000, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_20000;
 
-            }
-            else if (amount_of_money_left >= money_10000){
+            } else if (amount_of_money_left >= money_10000){
                 total_paid = total_paid + ((amount_of_money_left/money_10000)*money_10000);
                 printf("U paid %d Fts using %d pcs of HUF 10 000 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_10000)*money_10000, amount_of_money_left/money_10000, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_10000;
-            }
-            else if (amount_of_money_left >= money_5000){
+            } else if (amount_of_money_left >= money_5000){
                 total_paid = total_paid + ((amount_of_money_left/money_5000)*money_5000);
                 printf("U paid %d Fts using %d pcs of HUF 5 000 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_5000)*money_5000, amount_of_money_left/money_5000, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_5000;
-            }
-
-            else if (amount_of_money_left >= money_2000){
+            } else if (amount_of_money_left >= money_2000){
                 total_paid = total_paid + ((amount_of_money_left/money_2000)*money_2000);
                 printf("U paid %d Fts using %d pcs of HUF 2 000 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_2000)*money_2000, amount_of_money_left/money_2000, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_2000;
-            }
-            else if (amount_of_money_left >= money_1000){
+            } else if (amount_of_money_left >= money_1000){
                 total_paid = total_paid + ((amount_of_money_left/money_1000)*money_1000);
                 printf("U paid %d Fts using %d pcs of HUF 1 000 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_1000)*money_1000, amount_of_money_left/money_1000, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_1000;
-            }
-            else if (amount_of_money_left >= money_500){
+            } else if (amount_of_money_left >= money_500){
                 total_paid = total_paid + ((amount_of_money_left/money_500)*money_500);
                 printf("U paid %d Fts using %d pcs of HUF 500 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_500)*money_500, amount_of_money_left/money_500, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_500;
-            }
-            else if (amount_of_money_left >= money_200){
+            } else if (amount_of_money_left >= money_200){
                 total_paid = total_paid + ((amount_of_money_left/money_200)*money_200);
                 printf("U paid %d Fts using %d pcs of HUF 200 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_200)*money_200, amount_of_money_left/money_200, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_200;
-            }
-            else if (amount_of_money_left >= money_100){
+            } else if (amount_of_money_left >= money_100){
                 total_paid = total_paid + ((amount_of_money_left/money_100)*money_100);
                 printf("U paid %d Fts using %d pcs of HUF 100 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_100)*money_100, amount_of_money_left/money_100, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_100;
-            }
-            else if (amount_of_money_left >= money_50){
+            } else if (amount_of_money_left >= money_50){
                 total_paid = total_paid + ((amount_of_money_left/money_50)*money_50);
                 printf("U paid %d Fts using %d pcs of HUF 50 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_50)*money_50, amount_of_money_left/money_50, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_50;
-            }
-            else if (amount_of_money_left >= money_20){
+            } else if (amount_of_money_left >= money_20){
                 total_paid = total_paid + ((amount_of_money_left/money_20)*money_20);
                 printf("U paid %d Fts using %d pcs of HUF 20 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_20)*money_20, amount_of_money_left/money_20, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_20;
-            }
-            else if (amount_of_money_left >= money_10){
+            } else if (amount_of_money_left >= money_10){
                 total_paid = total_paid + ((amount_of_money_left/money_10)*money_10);
                 printf("U paid %d Fts using %d pcs of HUF 10 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_10)*money_10, amount_of_money_left/money_10, total_paid);
                 amount_of_money_left  = amount_of_money_left%money_10;
-            }
-            else if (amount_of_money_left >= money_5){
+            } else if (amount_of_money_left >= money_5){
                 total_paid = total_paid + ((amount_of_money_left/money_5)*money_5);
                 printf("U paid %d Fts using %d pcs of HUF 5 bank note. Total paid so far: %d.\n",
                        (amount_of_money_left/money_5)*money_5, amount_of_money_left/money_5, total_paid);
