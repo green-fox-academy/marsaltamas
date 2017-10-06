@@ -12,8 +12,8 @@ output :
 
 int main()
 {
-    int from = 11;
-    int to = 34;
+    int from = 1;
+    int to = -1;
     int prime_counter = 0;
     // this checks if the given number is prime
     int prime = 0;
