@@ -12,11 +12,11 @@ int main()
 
     int result = num % 2;
 
-    if (num == 0){
+    if (num == 0) {
         printf("num = %d.", num);
     }
-    else{
-    switch (result){
+    else {
+    switch (result) {
     case 0 :
         printf("num = %d is even.", num);
         break;

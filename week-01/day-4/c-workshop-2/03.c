@@ -7,7 +7,7 @@ int main() {
 
 	// print the numbers till ad from 0
 
-	while (a <= ad){
+	while (a <= ad) {
         printf("Running while loop a = %d.\n", a);
         a++;
     }
@@ -19,11 +19,11 @@ int main() {
     do {
         printf("Running do-while loop a = %d.\n", a);
         a++;
-    }while (a <= ad);
+    } while (a <= ad);
 
      printf("\n\n");
 
-     for (int i = 0; i <= ad; i++){
+     for (int i = 0; i <= ad; i++) {
         printf("Running for loop a = %d.\n", i);
      }
 

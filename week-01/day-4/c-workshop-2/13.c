@@ -18,10 +18,10 @@ int main() {
     float celsius;
 
 
-   for (int i = 0; i < 101; i+=10){
+   for (int i = 0; i < 101; i+=10) {
 
     fahrenheit = i;
-    celsius = ((fahrenheit - 32)/1.8);
+    celsius = ((fahrenheit - 32) / 1.8);
 
     printf("Fahrenheit = %.2f\tCelsius = %.2f\n", fahrenheit, celsius);
 

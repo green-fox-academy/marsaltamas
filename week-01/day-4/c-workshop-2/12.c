@@ -21,7 +21,7 @@ int main()
 {
 
     printf("Printing with if:\n");
-    for (int i = 1; i <= 7; i++){
+    for (int i = 1; i <= 7; i++) {
 
 
         if (i == 1)
@@ -44,9 +44,9 @@ int main()
     printf("\n\n");
       printf("Printing with switch:\n");
 
-      for (int i = 1; i <= 7; i++){
+      for (int i = 1; i <= 7; i++) {
 
-        switch (i){
+        switch (i) {
         case 1 :
             printf("Monday\n");
             break;

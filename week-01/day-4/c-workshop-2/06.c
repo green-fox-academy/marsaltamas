@@ -8,14 +8,14 @@ int main() {
 
 	int a = 1;
 
-	for (int i = 1; i <= 100; i++){
+	for (int i = 1; i <= 100; i++) {
          printf("for loop FizzBuzz  ");
 
-        if ( i%3 == 0 && i%5 == 0 )
+        if (i%3 == 0 && i%5 == 0)
             printf("FizzBuzz\n");
-        else if ( i%3 == 0 )
+        else if (i%3 == 0)
             printf("Fizz\n");
-        else if ( i%5 == 0 )
+        else if (i%5 == 0)
             printf("Buzz\n");
         else
             printf("i = %d\n", i);
@@ -25,14 +25,14 @@ int main() {
     printf("\n\n");
 
 
-    while (a <=100){
+    while (a <= 100){
         printf("while loop FizzBuzz  ");
 
-        if ( a%3 == 0 && a%5 == 0 )
+        if (a%3 == 0 && a%5 == 0)
             printf("FizzBuzz\n");
-        else if ( a%3 == 0 )
+        else if (a%3 == 0)
             printf("Fizz\n");
-        else if ( a%5 == 0 )
+        else if (a%5 == 0)
             printf("Buzz\n");
         else
             printf("a = %d\n", a);
@@ -47,18 +47,18 @@ int main() {
     do {
         printf("do-while loop FizzBuzz  ");
 
-        if ( a%3 == 0 && a%5 == 0 )
+        if (a%3 == 0 && a%5 == 0)
             printf("FizzBuzz\n");
-        else if ( a%3 == 0 )
+        else if (a%3 == 0)
             printf("Fizz\n");
-        else if ( a%5 == 0 )
+        else if (a%5 == 0)
             printf("Buzz\n");
         else
             printf("a = %d\n", a);
 
         a++;
 
-    }while (a <=100);
+    } while (a <= 100);
 
 	return 0;
 }

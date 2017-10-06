@@ -26,7 +26,7 @@ int main()
     else
         result = 3;
 
-    switch (result){
+    switch (result) {
     case 1 :
         printf("Temperature is %d. It is too cold for the AC.", temperature);
         break;
@@ -35,7 +35,6 @@ int main()
         break;
     default :
         printf("Temperature is %d. It is too hot, AC turned on.", temperature);
-
     }
 
     return 0;

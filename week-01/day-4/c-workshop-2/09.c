@@ -24,7 +24,7 @@ int main()
         result = 3;
 
 
-    switch  (result){
+    switch  (result) {
     case 1 :
         printf("num1 = %5d is bigger than\nnum2 = %5d.", num1, num2);
         break;
@@ -33,7 +33,6 @@ int main()
         break;
     default :
         printf("num1 = %5d equals\nnum2 = %5d.", num1, num2);
-
     }
 
     return 0;
