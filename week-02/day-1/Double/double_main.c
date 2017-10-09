@@ -7,10 +7,8 @@
 
 int doubling(int to_double);
 
-
 int main()
 {
-
     printf("%d doubled is %d\n", TO_DOUBLEMIN2, doubling(TO_DOUBLEMIN2));
     printf("%d doubled is %d\n", TO_DOUBLE0, doubling(TO_DOUBLE0));
     printf("%d doubled is %d\n", TO_DOUBLE2, doubling(TO_DOUBLE2));
