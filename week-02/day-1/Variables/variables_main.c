@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "variables_header.h"
 #include <stdio.h>
+#include "func_decl.h"
 
 /*
 Write a program where you have five functions
@@ -9,7 +9,6 @@ these functions should do various mathematical operations on a given integer
 last but not least there should be a variable which counts how many operations
 have been done on the given integer
 */
-
 
 int main()
     {
