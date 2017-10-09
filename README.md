@@ -26,3 +26,14 @@
 
 1. [practice excercises](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-5)
 2. polishing up excercises from previous days
+
+
+## week-2
+
+### day-1
+
+1. [headers, functions, recursion](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-1)
+
+### day-2
+
+2. [arrays, user input](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-2)
