@@ -36,6 +36,9 @@
 .dep/
 .project
 .settings/
+*.layout
+*.cbp
+*.depend
 
 
 # make and build files
