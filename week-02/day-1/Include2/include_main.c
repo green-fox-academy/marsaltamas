@@ -1,10 +1,7 @@
-
-
-
-// TODO: Include needed header files
-
 #include <stdio.h>
 #include "another_file.h"
+
+// TODO: Include needed header files
 
 int main() {
     // Set the default state of the variable
@@ -17,13 +14,11 @@ int main() {
     // Manipulate numbers
     StringManipulator(str);
     IntegerManipulator(&number);
+    StringResetter(str);
 
     // See the results
     printf("Result of StringManipulator(): %s\n", str);
     printf("Result of IntegerManipulator(): %d\n", number);
-
-    // Setting back the original string.
-    StringResetter(str);
     printf("Result of StringResetter(): %s\n", str);
 
     return 0;
