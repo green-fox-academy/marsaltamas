@@ -8,17 +8,17 @@ int main() {
     // Print out the two arrays character-by-character
 
 
-    for (int i = 0; i < strlen(char_array); i++)
+    for (int i = 0; i < strlen(char_array) - 1; i++)
     {
         printf("%c\n", char_array[i]);
     }
 
-    printf("\n");
-
-    for (int i = 0; i < strlen(char_array_the_same); i++)
-    {
-        printf("%c\n", char_array_the_same[i]);
-    }
+//    printf("\n");
+//
+//    for (int i = 0; i < strlen(char_array_the_same); i++)
+//    {
+//        printf("%c\n", char_array_the_same[i]);
+//    }
 
 	//TODO:
     // What is the difference between the arrays? - in the first case there is an end line character
