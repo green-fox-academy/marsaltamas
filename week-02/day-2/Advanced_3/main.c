@@ -41,8 +41,8 @@ int main()
             if (arr[i] == arr[y])
                 flag++;
 
-                if(flag > 1)
-                    break;
+            if(flag > 1)
+                break;
         }
 
         if (flag < 2) {
