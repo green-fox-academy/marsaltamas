@@ -4,10 +4,10 @@
 
 int main()
 {
-	int number_array[8] = {-48, -59, -2, -8, -2, -56, -78, -12};
+	int number_array[8] = {-48, -59, -2, 100, -2, -56, -78, -12};
 
 	int largest = INT_MIN;
-	int second_largest =INT_MIN;
+	int second_largest = INT_MIN;
 
 	for (int i = 0; i < sizeof(number_array) / sizeof(number_array[0]); i++) {
 
