@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-int give_me_limit (void);
+int give_me_limit(void);
+void array_printer(int arr[], int size, int step);
 
 int main()
 {
@@ -12,16 +13,11 @@ int main()
 
 
     for (int i = 0; i < size; i++) {
-
         array[i] = i;
-
     }
 
+    array_printer(array, size, 1000);
 
-    for (int i = 0; i < size; i+=10000) {
-
-        printf("Array pos. #%d is %d.\n", i, array[i]);
-    }
 
 }
 
@@ -39,3 +35,12 @@ int give_me_limit (void)
     return size;
 }
 
+void array_printer (int arr[], int size, int step)
+{
+
+    for (int i = 0; i < size; i = i + step) {
+
+        printf("Array element at pos #%d is %d.\n", i, arr[i]);
+    }
+
+}
