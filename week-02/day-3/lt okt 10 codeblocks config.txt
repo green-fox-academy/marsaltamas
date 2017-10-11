@@ -1,0 +1,93 @@
+Compiler setup
+Project
+Genral settings
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Syntax higlits
+
+http://wiki.codeblocks.org/index.php/Syntax_highlighting_custom_colour_themes
+https://medium.com/@yzhong.cs/change-editor-theme-for-code-blocks-windows-linux-mac-92e9c15cbca4
+
+codeblocks not running
+backup default config from add data/roaming/
+save color_theme.conf
+start cb_share_config
+select color_theme.conf and default.conf
+check all
+transfer 
+save
+caret
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+??????????????????????????????????????????????????????
+which one is better, bright on dark OR dark on bright?
+??????????????????????????????????????????????????????
+
++++++
+pros+
++++++
+
+white on black layouts causes less energy using. 
+
+Changing it can make you change our view and focus
+
+Nice and cool, better feeling
+
+Reduced strain over long time usage - >
+
+Constand wite burns your eyes, worth to change sometimes to fresh up
+
+Suggested to check which contrast pair works best for you
+
+-----
+cons-
+-----
+
+science of readability  -> advertising works in the early 80s
+(green ob black was the standard montior)
+"dark text on white background suits more people".
+
+eg.: Bauer and Cavonius (1980): 26% more accurate in reading text
+when they read it with dark characters on a light background.
+
+People with astigmatism (aproximately 50% of the population)
+find it harder to read white text on black than black text on white.
+
+A kismértékû asztigmiát a szem alkalmazkodása korrigálja. 
+A nagyobb mértékû asztigmia a látászavaron kívül fejfájást és a szem gyors fáradását okozza.
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+A „sötétség hormonja”
+
+
+A melatonin az alvási ciklust irányító hormon
+Álmosságot okoz
+Megnöveli a REM-ciklus hosszát
+élénk álmokat eredményez
+Hat a test hõmérsékletére
+Befolyásolja az immunrendszert is, bár ennek módja még nem ismert.
+
+A melatonin képzését a hipotalamusz vezérli a fény/sötétség változásairól kapott információ alapján
+Sötétben keletkezik ezért a „sötétség hormonjá”-nak is nevezik
+A fény megszûnésérõl az információ a retinában keletkezik a melanopszin nevû fotopigmentekben,
+melyek a 484 nm-es kék fényt érzékelik. 
+
+-> a kék fény ennek a hormonnak a termelését megakadályozza
+
+https://justgetflux.com/
+------------------------
+
+During the day time, the screen is at its normal tone and intensity
+as the evening closes, it transitions into dimmer settings
+
+When I tried to test the difference (after getting used to it) by disabling it,
+it made it painful to look at the normal screen. So, it does work
+However, takes some time to get used to it.
+
+also for phone -> no blue light before sleeping, so more melotonins
+
+
