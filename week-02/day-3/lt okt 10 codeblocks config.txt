@@ -33,7 +33,7 @@ white on black layouts causes less energy using.
 
 Changing it can make you change our view and focus
 
-Nice and cool, better feeling
+Nice and cool, better to work in an environment you like
 
 Reduced strain over long time usage - >
 
@@ -57,6 +57,8 @@ find it harder to read white text on black than black text on white.
 
 A kismértékû asztigmiát a szem alkalmazkodása korrigálja. 
 A nagyobb mértékû asztigmia a látászavaron kívül fejfájást és a szem gyors fáradását okozza.
+
+Harder for mentors to change between screens
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
