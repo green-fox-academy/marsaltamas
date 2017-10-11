@@ -1,32 +1,27 @@
 # include <stdlib.h>
 # include <stdio.h>
 
-int look_up [100];
-
-int fibonacchi_w_memo(int);
-
-int fibonacchi_w_memo(int n)
-{
-     if (n == 0)
-        return 1;
-    else if (n == 1)
-        return 1;
-    else if(look_up[n] == 0)
-                look_up[n] = fibonacchi_w_memo(n - 1) + fibonacchi_w_memo(n - 2);
-
-    return look_up[n];
-}
+void fibonacchi_w_memo(int);
 
 int main ()
 {
-    for (int i = 0; i < 15; i++) {
-    printf("%d   ", fibonacchi_w_memo(i));
+    fibonacchi_w_memo(40);
+
+    return 0;
+}
+
+void fibonacchi_w_memo(int to_element)
+{
+    int n = 1;
+    int n_min_1 =0;
+    int temp = 0;
+
+    for (int i = 1; i < to_element; i++) {
+        temp = n;
+        n = n + n_min_1;
+        printf("Element #%d of the Fibonacchi series is %d.\n", i, n);
+        n_min_1 = temp;
     }
 
-    printf("\n");
-
-    for (int i = 0; i < 15; i++) {
-    printf("%d   ", look_up [i]);
-    }
-
+    return n;
 }
