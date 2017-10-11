@@ -1,6 +1,5 @@
 #ifndef VARIABLES_HEADER
 #define VARIABLES_HEADER
-
 #include <stdio.h>
 
 int input;

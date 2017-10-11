@@ -37,3 +37,9 @@
 ### day-2
 
 2. [arrays, user input](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-2)
+
+### day-3
+
+1. [lightning talk](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-3)
+2. [Sieve of Eratosthenes](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-3/Sieve%20of%20Eratosthenes)
+3. practice materials from w2d1 and w2d2

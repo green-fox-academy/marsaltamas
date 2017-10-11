@@ -1,43 +1,29 @@
 # include <stdlib.h>
 # include <math.h>
 
-void power_function (int x, int y)
-{
-
-        char * mess = "sorry, i take only integers as power.\n";
-
-
-
-    int result = 1;
-
-    for (int i = 0; i < y; i++) {
-
-
-        result = result * x;
-
-    }
-
-        if (x == 0)
-            printf("valami/n");
-        else
-            printf("%d", result);
-
-}
+// a function returning the result if we raise an integer to a base integer
+int power_function (int x, int y);
 
 int main()
 {
-
-    int base = 1;
+    int base = 5;
     int power = 3;
-    double db_base = (double) base;
-    double db_power = (double) power;
-    int displ = 0;
+    double base_d = (double) base;
+    double power_d = (double) power;
 
-    displ = power_function(base, power);
-
-
-    printf("result of own power function: %d\n", displ);
-    printf("check nr with inbuilt pow() function: %f", pow(base, power));
+    printf("The #%d power of %d is %d.\n", power, base,  power_function(base, power));
+    printf("Checking result with inbuilt pow() function: %.0f.", pow(base_d, power_d));
 
     return 0;
+}
+
+int power_function (int x, int y)
+{
+    int result = 1;
+
+    for (int i = 0; i < y; i++) {
+        result = result * x;
+    }
+
+    return result;
 }
