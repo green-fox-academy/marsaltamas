@@ -1,0 +1,2 @@
+#define BIGGER_NUM 1000
+#define SMALLER_NUM 32
