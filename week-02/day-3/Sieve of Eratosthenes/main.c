@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+
 int give_me_limit(void);
 void array_printer(int arr[][2], int size, int step);
 
@@ -10,7 +11,7 @@ int main()
     // setting up limit
     int size = give_me_limit();
     // array hold values up to given limit, at first pos it holds flag, at second it holds value
-    static int array[500][2];
+    /*static*/ int array[1000][2];
 
     // loding array up to given limit with values and flags - flag 0 = not prime, flag 1 = prime/not checked
     for (int i = 0; i < size; i++) {
@@ -21,14 +22,26 @@ int main()
     array_printer(array, size, 1);
 
     // changes flag value agains test case
-    for (int i = 0; i < size; i++) {
-        if (array[i][2] % 2 == 0)
-            array[i][1] = 0;
+    for (int divider = 2; divider < size; divider++) {
+        for (int i = 0; i < size; i++) {
+            if (array[i][2] % (divider) == 0)
+                array[i][1] = 0;
+        }
+        // removes flagged items
+            for (int k = 0; k < size; k++){
+            if (array[k][1] == 0){
+                for (int i = k; i < size; i++) {
+                    array[i][1] = array[i+1][1];
+                    array[i][2] = array[i+1][2];
+                }
+                k--;
+                size--;
+             }
+        }
     }
 
+     array_printer(array, size, 1);
 
-
-    array_printer(array, size, 1);
 
 }
 
@@ -41,7 +54,7 @@ int give_me_limit (void)
         printf("Please enter a limit up to which you want to list prime numbers (between 1 and 10 000 000): ");
         scanf("%d", &size);
         printf("You entered %d.\n", size);
-    } while (size < 1 || size > 500);
+    } while (size < 1 || size > 1000);
 
     return size;
 }
@@ -55,6 +68,6 @@ void array_printer (int arr[][2], int size, int step)
 
     }
 
-    puts("\n");
+    printf("\n");
 
 }
