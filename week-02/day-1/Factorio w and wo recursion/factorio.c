@@ -1,14 +1,11 @@
-
 // create a function called `factorio`
 // that returns it's input's factorial with and without recursion
 // again the parameters value should be stored in a .h file
-
 #include <stdlib.h>
-#include "factorio_variable.h"
+#include "factorio_header.h"
 
 void factorio (int n);
 int factorio_rec (int n);
-
 
 int main()
 {
@@ -30,6 +27,7 @@ void factorio(int n)
 
     return result;
 }
+
 int factorio_rec(int n)
 {
     if (n == 1)
