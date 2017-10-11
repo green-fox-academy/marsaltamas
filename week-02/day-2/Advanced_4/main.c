@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <limits.h>
 
-void array_reverser (int arr[], int size);
+void array_reverser_singl_arr (int arr[], int size);
 void array_printer (int arr[], int size);
-void array_reverser_with_sec_arr (int arr[], int size);
+void array_reverser_singl_arr_with_sec_arr (int arr[], int size);
 
 int main()
 {
@@ -27,18 +27,18 @@ int main()
 
     array_printer(my_array, sizeof(my_array) / sizeof(my_array[1]));
 
-    array_reverser(my_array, sizeof(my_array) / sizeof(my_array[1]));
+    array_reverser_singl_arr(my_array, sizeof(my_array) / sizeof(my_array[1]));
 
     array_printer(my_array, sizeof(my_array) / sizeof(my_array[1]));
 
-    array_reverser_with_sec_arr(my_array, sizeof(my_array) / sizeof(my_array[1] ));
+    array_reverser_singl_arr_with_sec_arr(my_array, sizeof(my_array) / sizeof(my_array[1] ));
 
     array_printer(my_array, sizeof(my_array) / sizeof(my_array[1]));
 
     return 0;
 }
 
-void array_reverser (int arr[], int size)
+void array_reverser_singl_arr (int arr[], int size)
 {
     int temp = 0;
     for (int i = 0; i < size/2; i++) {
@@ -46,10 +46,10 @@ void array_reverser (int arr[], int size)
         arr[i] = arr[size - 1 - i];
         arr[size - 1 - i] = temp;
     }
-    printf("\nI am funct array_reverser. I have reversed the array\n");
+    printf("\nI am funct array_reverser_singl_arr. I have reversed the array\n");
 }
 
-void array_reverser_with_sec_arr (int arr[], int size)
+void array_reverser_singl_arr_with_sec_arr (int arr[], int size)
 {
     int temp_array[50];
 
@@ -60,7 +60,7 @@ void array_reverser_with_sec_arr (int arr[], int size)
     for (int i = 0; i < size; i++) {
         arr[i] = temp_array[i];
     }
-    printf("\nI am funct array_reverser_with_sec_arr. I have reversed the array\n");
+    printf("\nI am funct array_reverser_singl_arr_with_sec_arr. I have reversed the array\n");
 }
 
 void  array_printer (int arr[], int size)
