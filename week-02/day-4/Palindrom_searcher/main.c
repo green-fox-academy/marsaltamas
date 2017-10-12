@@ -31,12 +31,16 @@ int main()
             for (int i = position; i <= length + length / 2; i++){
 
                 word2[length - charcount] = word1[i];
-                word3[charcount] = word1[i];
+                word3[charcount - 1] = word1[i];
+                charcount--;
             }
-            word2[length] = "\0";
-            word3[length] = "\0";
+            word2[length] = '\0';
+            word3[length] = '\0';
 
-            if (strcmp(word2, word3))
+            printf("word 2 is %s\n", word2);
+            printf("word 2 is %s\n", word3);
+
+            if (!strcmp(word2, word3))
                 printf("You found a partial palindrom: %s\n", word2);
         }
     }
