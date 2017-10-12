@@ -1,4 +1,8 @@
+#ifndef GUSSER_FUNCTIONS
+#define GUSSER_FUNCTIONS
+
 #include "guesser.h"
+#include <stdlib.h>
 
 void welcome()
 {
@@ -70,24 +74,24 @@ void play(int target, int lives, int min, int max)
     do {
         printf("Enter your guess: \n");
         scanf("%d", &guess);
+        lives--;
+
+        printf("lives count: %d\n", lives);
 
         if (guess == target) {
             win();
             break;
-        } else if (lives) {
-            if (guess < min || guess > max) {
-                printf("Your guess was out of the original ranges.\n"
-                       "Focus your guesses between %d and %d.\n"
-                       "Anyway, you have %d lives left.\n", min, max, lives--);
-            } else {
-               printf("You have %d lives left. Guess again!\n", lives--);
-            }
+        } else if (guess < min || guess > max) {
+            printf("Your guess was out of the original ranges.\n"
+                   "Focus your guesses between %d and %d.\n", min, max);
+            if (lives > 0)
+                printf("Anyway, you have %d lives left.\n", lives);
         } else {
-            lose(target);
-            break;
+           printf("You have %d lives left. Guess again!\n", lives);
         }
-        } while (1);
+    } while (lives > 0);
 
+    lose(target);
 }
 
 void win()
@@ -104,15 +108,13 @@ void lose(int target)
     printf("Hit 1 if you want to play again, and hit any other key to quit: \n");
     fflush(stdin);
     scanf("%d", &cont);
+    fflush(stdin);
 
-    printf( "%d countinue code", cont);
-
-    if (cont) {
+    if (cont == 1) {
         printf("Hope this time you will do better! Good luck!\n");
         game(1, 1, 1, 1);
-    }
-    else if (cont != 1) {
-        printf("See you next time!\n");
+    } else {
+        printf("Thanks for playing! See you next time!\n");
         exit(0);
     }
 
@@ -131,4 +133,8 @@ void game(int min, int max, int target, int lives)
 
 }
 
+
+
+
+#endif // GUSSER_FUNCTIONS
 
