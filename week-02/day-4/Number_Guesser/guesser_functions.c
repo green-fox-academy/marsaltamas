@@ -1,8 +1,4 @@
-#ifndef GUSSER_FUNCTIONS
-#define GUSSER_FUNCTIONS
-
 #include "guesser.h"
-#include <stdlib.h>
 
 void welcome()
 {
@@ -74,24 +70,29 @@ void play(int target, int lives, int min, int max)
     do {
         printf("Enter your guess: \n");
         scanf("%d", &guess);
-        lives--;
+        --lives;
 
-        printf("lives count: %d\n", lives);
+        if (lives > 0) {
+        if (guess > target)
+            printf("Your guess was higher than the target nr.\n");
+        else if (guess < target)
+             printf("Your guess was lower than the target nr.\n");
+        }
 
         if (guess == target) {
             win();
             break;
-        } else if (guess < min || guess > max) {
+        } else if ((guess < min || guess > max) && lives > 0) {
             printf("Your guess was out of the original ranges.\n"
-                   "Focus your guesses between %d and %d.\n", min, max);
-            if (lives > 0)
-                printf("Anyway, you have %d lives left.\n", lives);
-        } else {
+                   "Focus your guesses between %d and %d.\n"
+                    "Anyway, you have %d lives left.\n", min, max, lives);
+        } else if (lives > 0) {
            printf("You have %d lives left. Guess again!\n", lives);
+        } else {
+            lose(target);
         }
-    } while (lives > 0);
 
-    lose(target);
+    } while (lives > 0);
 }
 
 void win()
@@ -104,7 +105,7 @@ void lose(int target)
     int cont = 0;
 
     printf("You have 0 lives left\n");
-    printf("You failed miserably. Anyway, the machine thought %d.", target);
+    printf("You failed miserably. Anyway, the machine thought %d.\n", target);
     printf("Hit 1 if you want to play again, and hit any other key to quit: \n");
     fflush(stdin);
     scanf("%d", &cont);
@@ -122,19 +123,12 @@ void lose(int target)
 
 void game(int min, int max, int target, int lives)
 {
-
-
     min = give_min_limit();
     max = give_max_limit(min);
     target = random_generator(min, max);
-    printf("target now is %d\n", target);
     lives = calculate_lives(min, max);
     play(target, lives, min, max);
-
 }
 
 
-
-
-#endif // GUSSER_FUNCTIONS
 
