@@ -22,10 +22,10 @@ void start_guessing()
 {
     system("cls");
     printf(
-           "                 W     \n"
-           "              -------  \n"
-           "                 I   \n"
-           "                ZZZ  \n"
+           "                 W\n"
+           "              -------\n"
+           "                 I\n"
+           "                ZZZ\n"
            "I am a WIZARD and this is a game where you will have to guess a number between 1 and 100\n\n"
            "Guess it right and i will show you the EXIT of the DUNGEON.\n\n"
            "Otherwise you are DEAD!\n\n");
@@ -78,6 +78,7 @@ int calculate_lives(int min, int max)
 {
     int range = 0;
     int lives = 0;
+
     range = max - min;
 
     do {
@@ -102,7 +103,7 @@ void play(int target, int lives, int min, int max)
         if (guess > target)
             printf("Your guess was higher than the target nr.\n");
         else if (guess < target)
-             printf("Your guess was lower than the target nr.\n");
+            printf("Your guess was lower than the target nr.\n");
         }
 
         if (guess == target) {
@@ -113,7 +114,7 @@ void play(int target, int lives, int min, int max)
                    "Focus your guesses between %d and %d.\n"
                     "Anyway, you have %d lives left.\n", min, max, lives);
         } else if (lives > 0) {
-           printf("You have %d lives left. Guess again!\n", lives);
+            printf("You have %d lives left. Guess again!\n", lives);
         } else {
             lose(target);
         }
@@ -135,7 +136,7 @@ void lose(int target)
     printf("You failed miserably. Anyway, i thought %d.\n", target);
     printf("You were defeated. You will never leave the dungeon. |R|I|P|.\n\n"
             "Hit a key to finish game.\n");
-            getch();
+    getch();
 }
 
 void game(int min, int max, int target, int lives)
@@ -164,7 +165,7 @@ void monster_fight()
            "I am a MONSTER, if your defeat me, you can loot my cave and leave the dungeon.\n"
            "You have %d hp and i have %d hp. Hit any key to start!\n\n", hp_player, hp_monster);
 
-           getch();
+    getch();
 
     while (1) {
 
@@ -211,7 +212,7 @@ void map_crawler ()
 
     system("cls");
 
-    char input  = 0;
+    char input = 0;
 
     printf("%s", map1);
 
@@ -276,7 +277,7 @@ void map_crawler ()
                 }
             }
 
-    }   while (1);
+    } while (1);
 
     printf("\ngame over");
 }
