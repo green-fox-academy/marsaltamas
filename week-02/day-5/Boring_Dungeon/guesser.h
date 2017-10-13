@@ -50,7 +50,7 @@ char map5m[] =
     "             |   |\n"
     "             |   |\n"
     "           |Gx___|\n"
-    "You are about to play a number guessing game!\n"
+    "You are about to play a NUMBER GUESSING game!\n"
     "Press a key to start!\n\n";
 
 char map6m[] =

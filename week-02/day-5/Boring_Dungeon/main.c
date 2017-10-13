@@ -2,9 +2,8 @@
 
 int main()
 {
-
     welcome();
-    getchar();
+    getch();
     map_crawler();
 
     return 0;
@@ -15,22 +14,21 @@ void welcome()
     printf("                  ---------------------------------\n"
            "                  ''''WELCOME TO BORING DUNGEON''''\n"
            "                  ---------------------------------\n"
-           "                  -----PRESS ANY KEY TO START------");
+           "                  -----PRESS ANY KEY TO START------\n\n"
+           "                           Move with WASD\n");
 }
 
 void start_guessing()
 {
     system("cls");
     printf(
-           "     W     \n"
-           "  -------  \n"
-           "     I   \n"
-           "    ZZZ  \n"
-           "I am a WIZARD and this is a game where you will have to guess a number between 1 and 100\n"
-           "you will have a certain amount of lives to guess depending on the range\n"
-           "you provide. You can never be sure if you can guess the number.\n\n"
-           "If you guess the number, i will show you the EXIT of the DUNGEON.\n\n"
-           "Otherwise you are as good dead!\n\n");
+           "                 W     \n"
+           "              -------  \n"
+           "                 I   \n"
+           "                ZZZ  \n"
+           "I am a WIZARD and this is a game where you will have to guess a number between 1 and 100\n\n"
+           "Guess it right and i will show you the EXIT of the DUNGEON.\n\n"
+           "Otherwise you are DEAD!\n\n");
 
     game(1, 1, 1, 1);
 }
@@ -150,24 +148,23 @@ void game(int min, int max, int target, int lives)
 }
 
 
-
 void monster_fight()
 {
-    int hp_player = 3;
-    int hp_monster = 3;
+    int hp_player = 2;
+    int hp_monster = 2;
     int dmg_monster = 0;
     int dmg_player = 0;
 
     system("cls");
     printf(
-           "     O     \n"
-           "  -------  \n"
-           "     I   \n"
-           "    MMM  \n"
+           "                 O     \n"
+           "              -------  \n"
+           "                 I   \n"
+           "                MMM  \n"
            "I am a MONSTER, if your defeat me, you can loot my cave and leave the dungeon.\n"
            "You have %d hp and i have %d hp. Hit any key to start!\n\n", hp_player, hp_monster);
 
-           getchar();
+           getch();
 
     while (1) {
 
@@ -194,7 +191,8 @@ void monster_fight()
 
         if (hp_player== 0) {
             printf("%s", map_defeat);
-            printf("You were defeated. You will never leave the dungeon. |R|I|P|.\n\n"
+            printf("You were defeated. You will never leave the dungeon.\n\n"
+                   "                       |R|I|P|"
                    "Hit a key to finish game.\n");
             getch();
             break;
@@ -258,7 +256,7 @@ void map_crawler ()
                     if (input == 'w') {
                     system("cls");
                     printf("%s", map3);
-                    position = 7;
+                    position = 3;
                     } else if (input == 'a') {
                     system("cls");
                     printf("%s", map5g);
