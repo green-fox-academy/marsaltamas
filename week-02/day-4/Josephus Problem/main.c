@@ -8,8 +8,8 @@ void josephus_solver (int n_th, int participants);
 
 int main()
 {
-   int n_th = 7; // n_th person to be eliminated
-   int participants = 150;
+   int n_th = 2; // n_th person to be eliminated
+   int participants = 41;
 
    josephus_solver(n_th, participants);
 
