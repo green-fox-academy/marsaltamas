@@ -16,68 +16,30 @@ struct task {
 struct task tasks[100];
 int num_tasks = 0;
 
+void print_welcome();
 void options();
 void see_tasks();
 void tasks_prio();
 void new_task();
 void rm_task();
 void complete_task();
+void prompt();
 
 int main()
 {
 
-
-	char choice;
-
+    print_welcome();
 	options();
-
-	while (1) {
-
-		Sleep(500);
-		//clear_screen();
-		printf("Please enter what you want to do: ");
-		choice = getchar();
-		char c = 0;
-		while (c != '\n')
-			c = getchar();
-
-        switch (choice) {
-		 case '0':
-			printf("program will end now");
-			break;
-		case '1':
-			see_tasks();
-			break;
-		case '2':
-			tasks_prio();
-			break;
-		case '3':
-			new_task();
-			break;
-		case '4':
-			rm_task();
-			break;
-		case '5':
-			complete_task();
-			break;
-        case '6':
-			options();
-			break;
-        case '7':
-			clear_screen();
-			break;
-		default:
-			printf("Please choose from the given options\n");
-		}
-	}
+	prompt();
 
 	return 0;
 }
 
-void print()
+void print_welcome()
 {
 
-	print("hello");
+	printf("hello, this is a ToDo app, you can organize your tasks here!\n\n"
+            "============================================================\n");
 
 }
 
@@ -127,7 +89,7 @@ void new_task()
 {
 	printf("Enter the name of the task: \n");
 	gets(&tasks[num_tasks].name);
-	printf("Enter the priority of the task: \n");
+	printf("Enter the priority of the task (between 1 and 5): \n");
 	scanf("%d", &tasks[num_tasks].prio);
 	getchar();
 	tasks[num_tasks].done = 0;
@@ -163,4 +125,51 @@ void complete_task()
 void clear_screen()
 {
 	system("cls");
+}
+
+void prompt()
+{
+    char choice;
+
+	while (1) {
+
+
+		Sleep(500);
+		//clear_screen();
+		printf("Please enter what you want to do: ");
+		choice = getchar();
+		char c = 0;
+		while (c != '\n')
+			c = getchar();
+
+        switch (choice) {
+		 case '0':
+			printf("program will end now");
+			break;
+		case '1':
+			see_tasks();
+			break;
+		case '2':
+			tasks_prio();
+			break;
+		case '3':
+			new_task();
+			break;
+		case '4':
+			rm_task();
+			break;
+		case '5':
+			complete_task();
+			break;
+        case '6':
+			options();
+			break;
+        case '7':
+			clear_screen();
+			break;
+		default:
+			printf("Please choose from the given options\n");
+		}
+	}
+
 }
