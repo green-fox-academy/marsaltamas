@@ -10,37 +10,13 @@ int scan_min(void);
 int scan_max(void);
 int rand_gen(int min, int max);
 int lives_calc(int min, int max);
-void start_game(int min, int max);
+void start_game(void);
 void guess(int to_guess, int lives);
 
 
 int main()
 {
-//	int x, y;
-//	int count;
-//	int guess = 0;
-
-//	int rand_max;
-//	int rand_min;
-
-	start_game(scan_min(), scan_max());
-
-//	for (count = 1; count <= x; count++) {
-//		printf("\n>");
-//		scanf("%d", &guess);
-//
-//			if (guess == rand_num) {
-//				printf("Yeeeeey, you did well! It took you %d tires!", count);
-//				break;
-//			} else if (guess > rand_num) {
-//				printf("Too big, You have %d, lives left\n", x - count);
-//			} else {
-//				printf("Too low, You have %d, lives left\n", x - count);
-//			}
-//	}
-//
-//	if (count = x)
-//		printf("You have used all your lives!");
+	start_game();
 
 	return 0;
 }
@@ -83,13 +59,40 @@ int lives_calc(int min, int max)
     return lives;
 }
 
-void start_game(int max, int min)
+void start_game(void)
 {
+    int min = scan_min();
+    int max = scan_max();
     int lives = lives_calc(min, max);
     int to_guess = rand_gen(min, max);
     printf("I have a number between %d and %d. You have %d lives\n", min, max, lives);
     printf("num to guess %d", to_guess);
-    //guess(to_guess, lives);
+    guess(to_guess, lives);
+}
+
+void guess(to_guess, lives)
+{
+
+    int guess = 0;
+    int count = 0;
+
+	for (count = 1; count <= lives; count++) {
+		printf("\n>");
+		scanf("%d", &guess);
+
+			if (guess == to_guess) {
+				printf("Yeeeeey, you did well! It took you %d tries!", count);
+				break;
+			} else if (guess > to_guess) {
+				printf("Too big, You have %d, lives left\n", lives - count);
+			} else {
+				printf("Too low, You have %d, lives left\n", lives - count);
+			}
+	}
+
+	if (count == lives)
+		printf("You have used all your lives!");
+
 }
 
 
