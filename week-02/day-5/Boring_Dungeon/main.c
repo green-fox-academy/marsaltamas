@@ -54,6 +54,7 @@ int give_min_limit()
 
     do {
         printf("It should be above 0 and below 100: \n");
+        fflush(stdin);
         scanf("%d", &min);
     } while (min < 1 || min > 99);
 
@@ -68,6 +69,7 @@ int give_max_limit(int min)
 
     do {
         printf("It should be above the min, which is %d and below 101: \n", min);
+        fflush(stdin);
         scanf("%d", &max);
     } while (max <= min || max > 100);
 
