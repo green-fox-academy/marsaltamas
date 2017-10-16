@@ -74,11 +74,11 @@ void see_tasks()
 
 void tasks_prio()
 {
+    printf("Prio | Tasks\n");
 
 	for (int i = 0; i < num_tasks; i++) {
 		for (int j = 5; j > 0; j-- ) {
 			if (tasks[i].prio == j) {
-				printf("Prio | Tasks\n");
 				printf("%d - %s\n", tasks[i].prio, tasks[i].name);
 			}
 		}
@@ -145,7 +145,7 @@ void prompt()
         switch (choice) {
 		 case '0':
 			printf("program will end now");
-			break;
+			exit(0);
 		case '1':
 			see_tasks();
 			break;
