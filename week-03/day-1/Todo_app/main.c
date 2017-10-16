@@ -83,6 +83,7 @@ void tasks_prio()
 			}
 		}
 	}
+	fflush(stdin);
 }
 
 void new_task()
@@ -133,9 +134,6 @@ void prompt()
 
 	while (1) {
 
-
-		Sleep(500);
-		//clear_screen();
 		printf("Please enter what you want to do: ");
 		choice = getchar();
 		char c = 0;
@@ -169,7 +167,7 @@ void prompt()
 			break;
 		default:
 			printf("Please choose from the given options\n");
+			//break;
 		}
 	}
-
 }
