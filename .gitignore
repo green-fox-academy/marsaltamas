@@ -51,3 +51,6 @@
 # I keep these, since I prefer having the reference of the final build
 # *.elf
 # *.hex
+
+# exception
+!/marsaltamas/week-03/day-3/CLI_Calculator/*/*
