@@ -20,26 +20,22 @@ int main()
 	srand(time(NULL));
 	int rand_num = rand() % (rand_max + 1 - rand_min) + rand_min;
 	y = rand_max - rand_min;
-	x = log10(y) / log10(2);
+	x = log10(y) / log10(2) + 0;
 
-	printf("I have a number between %d and %d. You have %d lives\n", rand_min, rand_max, x - 3);
+	printf("I have a number between %d and %d. You have %d lives\n", rand_min, rand_max, x);
 
-	for (count = 0; count < x - 1; count++) {
+	for (count = 1; count <= x; count++) {
 		printf("\n>");
 		scanf("%d", &guess);
 
-		while (1) {
 			if (guess == rand_num) {
-				printf("Yeeeeey, you did well! It took you %d tires!", count + 1);
+				printf("Yeeeeey, you did well! It took you %d tires!", count);
 				break;
+			} else if (guess > rand_num) {
+				printf("Too big, You have %d, lives left\n", x - count);
+			} else {
+				printf("Too low, You have %d, lives left\n", x - count);
 			}
-
-			if (guess > rand_num)
-				printf("Too big, You have %d, lives left\n", x - 3 - count);
-			else
-				printf("Too low, You have %d, lives left\n", x - 3 - count);
-		}
-
 	}
 
 	if (count = x)
