@@ -52,3 +52,9 @@
 
 1. [worked on Boring_Dungeon](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-5/Boring_Dungeon)
 2. 2nd mentor demo
+
+## week-3
+
+### day-1
+
+1. [Debugging](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/day-1)
