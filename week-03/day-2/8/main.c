@@ -31,10 +31,15 @@ void transform (char str[], int original_base, int new_base)
 {
 
     char buffer[100];
+    int num_zero = atoi(str);
     int num_to_convert_in_decimal = strtol(str, NULL, original_base);
 
-    if (original_base > 32 || original_base < 2 || new_base < 2) {
+    if (!num_zero) {
+        printf("Zero is zero in all num systems.");
+    } else if (original_base > 32 || original_base < 2 || new_base < 2) {
         on_exit();
+    } else if (num_to_convert_in_decimal == 0) {
+        printf("You entered an invalid number or parametrized your input number with incorrect base declaration.");
     } else {
         printf("The original input %s of base %d converted to %d form is %s.\n", str, original_base, new_base,
             itoa(num_to_convert_in_decimal, buffer, new_base));
