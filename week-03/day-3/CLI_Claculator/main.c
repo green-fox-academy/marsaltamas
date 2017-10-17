@@ -25,20 +25,16 @@ void read_input(void);
 char *operation_prompt(void);
 void input_processor(char input[]);
 void bye(void);
-int addition(int operand1, int operand2);
-int substraction(int operand1, int operand2);
-double logartihm(int base, int x);
+int addition(char operand1[], char operand2[]);
+int substraction(char operand1[], char operand2[]);
+double logartihm(char operand1[], char operand2[]);
 int is_input_valid (char operand1[], char operand2[], char opertr[], char operand_trest[]);
 
 
 
 int main()
 {
-
-
-
     open_screen();
-    atexit(bye);
     return 0;
 }
 
@@ -71,52 +67,15 @@ void open_screen (void)
 
     printf("%s", open_screen);
 
-    char input[8];
-    int i = 0;
     char c = 0;
 
-    while (c !=  '\n') {
-            c = getchar();
-            input[i] = c;
-            if(input[0] == '\n'){
-                operation_prompt();
-            }
-            i++;
-    }
+    do {
 
-        if (input[0] != '\n')
-                input[i - 1] = '\0';
+        c = getchar();
 
-        if (!strcoll(input, "help")) {
-            printf("%d\n", strcoll(input, "help"));
-            help();
-        } else if (!strcoll(input, "clear")) {
-            printf("%d\n", strcoll(input, "clear"));
-            clear();
-        } else if (!strcoll(input, "exit")) {
-            printf("%d\n", strcoll(input, "exit"));
-            void exit_function();
-        } else if (input[0] != '\n') {
-            error_message();
-        }
-//
-//    switch (check) {
-//        case 435:
-//            printf("%d\n", strcoll(input, "help"));
-//            help();
-//        case 14:
-//            printf("%d\n", strcoll(input, "help"));
-//            exit_function();
-//        case 74:
-//            printf("%d\n", strcoll(input, "help"));
-//            clear();
-//        case 10:
-//            printf("%d\n", strcoll(input, "help"));
-//            operation_prompt();
-//        default:
-//            error_message();
-//    }
+    } while (c !=  '\n');
 
+    operation_prompt();
 
 }
 
@@ -134,6 +93,8 @@ void clear(void)
 
 void exit_function(void)
 {
+    printf("exit was called\n"); // dev message
+    atexit(bye);
     exit(0);
 }
 
@@ -157,8 +118,13 @@ char  *operation_prompt(void)
     input_processor(input);
 }
 
+// this function takes input over from operation_promt, processes it
+//and calls the appropriate functions (math operations, commands, giving back command to operation_prompt
 void input_processor(char input[])
 {
+
+    // tokenizes input line, and breaks down to 4 parts to know which operation to take
+    // operand 1, operand2, operator, and operand_tresh - if tresh is not empty, the input is considered invalid
     char operand1[10] = "\0";
     char operand2[10] = "\0";
     char opertr[10] = "\0";
@@ -183,25 +149,32 @@ void input_processor(char input[])
         reader = strtok(NULL, " ");
     }
 
-
+    // development messages
     printf("operand1 is %s\n", operand1);
     printf("operatr is %s\n", opertr);
     printf("operand2 is %s\n", operand2);
     printf("operand_tresh is %s\n", operand_tresh);
 
-
-     if (operand_tresh[0] != '\0') {
-        printf("there is no place for a 3rd operand\n");
-     } else {
+    // checking operands how to proceed
+    // to rewrite in else if statements
+    if (!strcoll(operand1, "help")) {
+        help();
+    } else if (!strcoll(operand1, "clear")) {
+        clear();
+    } else if (!strcoll(operand1, "exit")) {
+        exit_function();
+    } else if (operand_tresh[0] != '\0') {
+        printf("Too many operands had been added.\n");
+    } else {
         switch(opertr[0]) {
             case '+':
-                printf("addition was %d\n", addition(5, 6));
+                printf("addition was %d\n", addition(operand1, operand2));
                 break;
             case '-':
-                printf("substrction was %d\n", substraction(6, 5));
+                printf("substrction was %d\n", substraction(operand1, operand2));
                 break;
             case 'l':
-                printf("log was %f\n", logartihm(2, 8));
+                printf("log was %f\n", logartihm(operand1, operand2));
         }
      }
 
@@ -215,21 +188,26 @@ void bye(void)
            "====================================\n");
 }
 
-int addition(int operand1, int operand2)
-{
-    return operand1 + operand2;
+int addition(char operand1[], char operand2[]) {
+    //return operand1 + operand2;
+    printf("addition was called");
+    return 2;
 }
 
-int substraction(int operand1, int operand2)
+int substraction(char operand1[], char operand2[])
 {
-    return operand1 - operand2;
+    //return operand1 - operand2;
+      printf("substraction was called");
+     return 2;
 }
-double logartihm(int base, int x)
+double logartihm(char operand1[], char operand2[])
 {
 
-    // should take opertr as 3rd argument and chack with strcmpr or similar for correct matching
-  double base_d = (double) base;
-  double x_d = (double) x;
-
-  return (log10(x_d) / log10(base_d));
+//    // should take opertr as 3rd argument and chack with strcmpr or similar for correct matching
+//  double base_d = (double) operand1;
+//  double x_d = (double) operand2;
+//
+//  return (log10(x_d) / log10(base_d));
+    printf("log was called");
+    return 0;
 }
