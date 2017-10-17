@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 void transform (char str[], int original_base, int new_base);
 
@@ -26,8 +27,12 @@ int main()
 
 void transform (char str[], int original_base, int new_base)
 {
-    long ret = 0;
-    ret = strtol(str, NULL, new_base);
 
-    printf("%d", ret);
+    char buffer[100];
+    int num_to_convert_in_decimal = strtol(str, NULL, original_base);
+
+    printf("The original input %s of base %d converted to %d form is %s.\n", str, original_base, new_base,
+           itoa(num_to_convert_in_decimal, buffer, new_base));
+
+
 }
