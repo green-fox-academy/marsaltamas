@@ -3,6 +3,7 @@
 #include <math.h>
 
 void transform (char str[], int original_base, int new_base);
+void on_exit(void);
 
 //TODO: write a program, which transforms a number from a number system to another.
 //use the stdlib.h functions, and take care of error handling (see the reference)
@@ -22,6 +23,8 @@ int main()
     scanf("%d", &new_base);
 
     transform(str, original_base, new_base);
+    atexit(on_exit);
+
     return(0);
 }
 
@@ -31,8 +34,16 @@ void transform (char str[], int original_base, int new_base)
     char buffer[100];
     int num_to_convert_in_decimal = strtol(str, NULL, original_base);
 
-    printf("The original input %s of base %d converted to %d form is %s.\n", str, original_base, new_base,
-           itoa(num_to_convert_in_decimal, buffer, new_base));
+    if (original_base > 32 || original_base < 2 || new_base < 2) {
+        on_exit();
+    } else {
+        printf("The original input %s of base %d converted to %d form is %s.\n", str, original_base, new_base,
+            itoa(num_to_convert_in_decimal, buffer, new_base));
+    }
+}
 
-
+void on_exit(void)
+{
+    printf("I can convert numbers from bases between 2 and 32 only. However, i convert numbers to any base above 2.\n");
+    exit(0);
 }
