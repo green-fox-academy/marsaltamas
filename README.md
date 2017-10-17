@@ -58,3 +58,8 @@
 ### day-1
 
 1. [Debugging](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/day-1)
+
+
+### day-2
+
+1. [Parsing, typecasting](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/day-2)
