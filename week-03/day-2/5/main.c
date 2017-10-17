@@ -13,9 +13,9 @@ unsigned int fourhundred85(int input);
 int main()
 {
 
-    uint16_t val = fourhundred85(270);
+    uint16_t val = fourhundred85(485);
 
-    printf("%d\n", val);
+    printf("%d\n", (uint8_t) val);
 
     return 0;
 }

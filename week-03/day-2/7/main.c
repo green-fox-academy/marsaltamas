@@ -12,9 +12,9 @@ int main()
 
     for (int i = 0; i < sizeof(i_array) / sizeof(i_array[0]); i++)  {
 
-        i_array[i] = uc_array[i];
-        printf("i_array[%d]: %c\n", i, i_array[i]);
-        printf("uc_array[%d]: %c\n", i, uc_array[i]);
+        uc_array[i] = i_array[i];
+        printf("i_array[%d]: %d\n", i, i_array[i]);
+        printf("uc_array[%d]: %d\n", i, uc_array[i]);
     }
 
     // same result as from the int array

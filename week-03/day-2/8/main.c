@@ -23,7 +23,6 @@ int main()
     scanf("%d", &new_base);
 
     transform(str, original_base, new_base);
-    atexit(on_exit);
 
     return(0);
 }
@@ -45,5 +44,4 @@ void transform (char str[], int original_base, int new_base)
 void on_exit(void)
 {
     printf("I can convert numbers from bases between 2 and 32 only. However, i convert numbers to any base above 2.\n");
-    exit(0);
 }
