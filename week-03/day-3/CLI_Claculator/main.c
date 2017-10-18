@@ -28,10 +28,14 @@ char *operation_prompt(void);
 void input_processor(char input[]);
 void bye(void);
 void addition(char operand1[], char operand2[]);
-float substraction(char operand1[], char operand2[]);
+void substraction(char operand1[], char operand2[]);
+void multiplication(char operand1[], char operand2[]);
+void division(char operand1[], char operand2[]);
+void modulo(char operand1[], char operand2[]);
+void squaring(char operand1[], char operand2[]);
 double logartihm(char operand1[], char operand2[]);
 int is_input_valid (char operand1[], char operand2[], char opertr[], char operand_trest[]);
-int is_number(char to_check[]);
+int is_float(char to_check[]);
 void set_cursor_pos(int x, int y);
 int get_cursor_x();
 int get_cursor_y();
@@ -193,8 +197,16 @@ void input_processor(char input[])
         //printf("addition was %f \n", addition(operand1, operand2));
         addition(operand1, operand2);
     } else if (!strcoll(opertr, "-")){
-        printf("substraction was %f \n", substraction(operand1, operand2));
-    } else if (!strcoll(opertr, "log")){
+        substraction(operand1, operand2);
+    }  else if (!strcoll(opertr, "*")){
+        multiplication(operand1, operand2);
+    }  else if (!strcoll(opertr, "/")){
+        division(operand1, operand2);
+    }  else if (!strcoll(opertr, "%")){
+        modulo(operand1, operand2);
+    }  else if (!strcoll(opertr, "^")){
+        squaring(operand1, operand2);
+    }  else if (!strcoll(opertr, "log")){
         printf("log was %f \n", logartihm(operand1, operand2));
     } else {
         printf("Invalid input. \n");
@@ -229,7 +241,7 @@ float float_converter(char to_convert[])
 
 // checks if string is containing numbers in correct format, or not
 // return 1 if format is ok, 0 if format is not float.
-int is_number(char to_check[])
+int is_float(char to_check[])
 {
     char *end_p;
     strtof(to_check, &end_p);
@@ -244,7 +256,6 @@ int is_number(char to_check[])
 
 /*
 MATH OPERATIONS
----------------
 ---------------
 Basics (mandatory) tasks
 
@@ -276,7 +287,6 @@ converting numbers back to string if necessary
 returning with result to the proper location on the screen with calling placement function
 */
 
-
 void addition(char operand1[], char operand2[])
 {
     int x_pos = (strlen(operand1) + strlen(operand2) + 3);
@@ -285,8 +295,8 @@ void addition(char operand1[], char operand2[])
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
-    int op1_test = is_number(operand1);
-    int op2_test = is_number(operand2);
+    int op1_test = is_float(operand1);
+    int op2_test = is_float(operand2);
 
     set_cursor_pos(x_pos, y_pos);
 
@@ -301,15 +311,131 @@ void addition(char operand1[], char operand2[])
     }
 }
 
-float substraction(char operand1[], char operand2[])
+void substraction(char operand1[], char operand2[])
 {
-    //return operand1 - operand2;
-    printf("substraction was called \n");
+    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
+    int y_pos = get_cursor_y() - 1;
 
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
-    return op1 - op2;
+    int op1_test = is_float(operand1);
+    int op2_test = is_float(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are not numbers.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is not a number.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is not a number.\n");
+    } else {
+        printf(" = %f\n", op1 - op2);
+    }
+}
+
+
+void multiplication(char operand1[], char operand2[])
+{
+    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
+    int y_pos = get_cursor_y() - 1;
+
+    float op1 = float_converter(operand1);
+    float op2 = float_converter(operand2);
+
+    int op1_test = is_float(operand1);
+    int op2_test = is_float(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are not numbers.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is not a number.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is not a number.\n");
+    } else {
+        printf(" = %f\n", op1 * op2);
+    }
+}
+
+void division(char operand1[], char operand2[])
+{
+    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
+    int y_pos = get_cursor_y() - 1;
+
+    float op1 = float_converter(operand1);
+    float op2 = float_converter(operand2);
+
+    int op1_test = is_float(operand1);
+    int op2_test = is_float(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are not numbers.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is not a number.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is not a number.\n");
+    } else if (!op2) {
+        printf(" = Division by 0 is not allowed.\n");
+    } else {
+        printf(" = %f\n", op1 / op2);
+    }
+}
+
+void modulo(char operand1[], char operand2[])
+{
+    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
+    int y_pos = get_cursor_y() - 1;
+
+    float op1 = float_converter(operand1);
+    float op2 = float_converter(operand2);
+
+    int op1_test = is_float(operand1);
+    int op2_test = is_float(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are not numbers.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is not a number.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is not a number.\n");
+    } else if (!op2) {
+        printf(" = Modulo by 0 is undefined.\n");
+    } else {
+        printf(" = %f\n", fmod(op1, op2));
+    }
+}
+
+void squaring(char operand1[], char operand2[])
+{
+    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
+    int y_pos = get_cursor_y() - 1;
+
+    float op1 = float_converter(operand1);
+    float op2 = float_converter(operand2);
+
+    int op1_test = is_float(operand1);
+    int op2_test = is_float(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are not numbers.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is not a number.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is not a number.\n");
+    } else if (!op1 && !op2) {
+        printf(" = The 0th power of 0 is ambiguous.\n");
+    } else {
+        printf(" = %f\n", pow(op1, op2));
+    }
 }
 
 double logartihm(char operand1[], char operand2[])
