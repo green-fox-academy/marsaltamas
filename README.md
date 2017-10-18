@@ -63,3 +63,7 @@
 ### day-2
 
 1. [Parsing, typecasting](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/day-2)
+
+### day-3
+
+1. [CLI Calculator](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/day-3/CLI_Claculator)
