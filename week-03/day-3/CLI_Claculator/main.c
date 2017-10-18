@@ -4,17 +4,16 @@
 #include <math.h>
 
 /*
-operation
+OPERATIN PROCESS
 
 1. open screen
 2. operation prompt to ask for and store user input, and if enter was hit, it calls for input_processor
 3. input processor processes text
-4. input processor passes parameters to operation_selector
-5. operation_selector picks proper operation, and passes parameters to it, and returns with the result
-6. result is placed to screen
-7. control passed back to operation_promt
-*/
+4. input processor evaluates input to call the proper function to keep on the operation flow
+5. called function  receiving parameters to process and to return with the result at expected screen location
+6. control passed back to operation_promt
 
+*/
 
 void open_screen (void);
 void help(void);
@@ -25,12 +24,10 @@ void read_input(void);
 char *operation_prompt(void);
 void input_processor(char input[]);
 void bye(void);
-int addition(char operand1[], char operand2[]);
-int substraction(char operand1[], char operand2[]);
+float addition(char operand1[], char operand2[]);
+float substraction(char operand1[], char operand2[]);
 double logartihm(char operand1[], char operand2[]);
 int is_input_valid (char operand1[], char operand2[], char opertr[], char operand_trest[]);
-
-
 
 int main()
 {
@@ -76,7 +73,6 @@ void open_screen (void)
     } while (c !=  '\n');
 
     operation_prompt();
-
 }
 
 void help(void)
@@ -126,9 +122,9 @@ void input_processor(char input[])
     // tokenizes input line, and breaks down to 4 parts to know which operation to take
     // operand 1, operand2, operator, and operand_tresh - if tresh is not empty, the input is considered invalid
     char operand1[10] = "\0";
-    char operand2[10] = "\0";
+    char operand2[6] = "\0";
     char opertr[10] = "\0";
-    char operand_tresh[10] = "\0";
+    char operand_tresh[2] = "\0";
 
     char *reader;
 
@@ -156,7 +152,15 @@ void input_processor(char input[])
     printf("operand_tresh is %s\n", operand_tresh);
 
     // checking operands how to proceed
-    // to rewrite in else if statements
+    // todo: rewrite in else if statements
+
+    /* check sequence:
+    1. length of input, and length of eachc input is in between bouds
+    2. if operand1 is command
+    3. if op4 is empty
+    4. operatr check to know which match func to call - > further specific error handling in math op. functions
+    5. else: unknown command
+    */
     if (!strcoll(operand1, "help")) {
         help();
     } else if (!strcoll(operand1, "clear")) {
@@ -165,18 +169,13 @@ void input_processor(char input[])
         exit_function();
     } else if (operand_tresh[0] != '\0') {
         printf("Too many operands had been added.\n");
-    } else {
-        switch(opertr[0]) {
-            case '+':
-                printf("addition was %d\n", addition(operand1, operand2));
-                break;
-            case '-':
-                printf("substrction was %d\n", substraction(operand1, operand2));
-                break;
-            case 'l':
-                printf("log was %f\n", logartihm(operand1, operand2));
-        }
-     }
+    } else if (!strcoll(opertr, "+")){
+        printf("addition was %f \n", addition(operand1, operand2));
+    } else if (!strcoll(opertr, "-")){
+        printf("substrction was %f \n", substraction(operand1, operand2));
+    } else if (!strcoll(opertr, "log")){
+        printf("log was %f \n", logartihm(operand1, operand2));
+    }
 
     operation_prompt();
 }
@@ -188,26 +187,78 @@ void bye(void)
            "====================================\n");
 }
 
-int addition(char operand1[], char operand2[]) {
-    //return operand1 + operand2;
-    printf("addition was called");
-    return 2;
+// CONVERTERS
+
+float float_converter(char to_convert[])
+{
+    return atof(to_convert);
 }
 
-int substraction(char operand1[], char operand2[])
+
+/*
+MATH OPERATIONS
+---------------
+Basics (mandatory) tasks
+
++
+-
+*
+/
+%
+squaring
+square root
+logarithm
+binary to
+hexadecimal to
+decimal to
+
+Advanced tasks
+nth roots.
+
+WORK ORDER
+----------
+taking strings
+validating strings
+    VALIDTION SEQUENCE
+        -isnumber
+        -isnumber ok with given operation
+converting to numbers
+executing operations
+converting numbers back to string if necessary
+returning with result to the proper location on the screen with calling placement function
+*/
+
+
+float addition(char operand1[], char operand2[]) {
+    //return operand1 + operand2;
+    printf("addition was called \n");
+
+    float op1 = float_converter(operand1);
+    float op2 = float_converter(operand2);
+
+    return op1 + op2;
+}
+
+float substraction(char operand1[], char operand2[])
 {
     //return operand1 - operand2;
-      printf("substraction was called");
-     return 2;
+    printf("substraction was called \n");
+
+    float op1 = float_converter(operand1);
+    float op2 = float_converter(operand2);
+
+    return op1 - op2;
 }
+
 double logartihm(char operand1[], char operand2[])
 {
 
-//    // should take opertr as 3rd argument and chack with strcmpr or similar for correct matching
+//  should take opertr as 3rd argument and chack with strcmpr or similar for correct matching
 //  double base_d = (double) operand1;
 //  double x_d = (double) operand2;
 //
 //  return (log10(x_d) / log10(base_d));
-    printf("log was called");
+    printf("log was called \n");
     return 0;
 }
+
