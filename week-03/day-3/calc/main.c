@@ -120,12 +120,15 @@ void input_processor(char input[])
 {
     // tokenizes input line, and breaks down to 4 parts to know which operation to take
     // operand 1, operand2, operator, and operand_tresh - if tresh is not empty, the input is considered invalid
-    char operand1[11] = "\0";
+    char operand1[10] = "\0";
     char operand2[6] = "\0";
-    char opertr[11] = "\0";
+    char opertr[10] = "\0";
     char operand_tresh[2] = "\0";
     char input_copy[40];
+    int inp_length = 0;
     strcpy(input_copy, input);
+    printf("copyinput has length of  %d\n", strlen(input_copy));
+    inp_length = strlen(input_copy); // accounts the original input's char length
     char *reader;
 
     reader = strtok(input, " ");
@@ -161,7 +164,7 @@ void input_processor(char input[])
     5. else: unknown command
     */
 
-    if (strlen(input_copy) > 30){
+    if (inp_length > 30){
         printf("The instructions took up to many characters.\n"
                "Please enter an instruction shorter than 30 characters.\n");
     } else if (strlen(operand1) > 10){
