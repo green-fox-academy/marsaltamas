@@ -18,35 +18,6 @@ OPERATING PROCESS
 
 */
 
-
-void set_cursor_pos(int x, int y)
-{
-	coord.X = x + 8;
-	coord.Y = y  - 6;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-}
-
-int getCursorX() {
-
-    int x = 0;
-
-    if(GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &SBInfo)) {
-        x = SBInfo.dwCursorPosition.X;
-    }
-
-    return x;
-}
-
-int getCursorY() {
-
-    int y = 0;
-    if(GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &SBInfo)) {
-        y = SBInfo.dwCursorPosition.Y;
-    }
-
-    return y;
-}
-
 void open_screen (void);
 void help(void);
 void clear(void);
@@ -56,10 +27,15 @@ void read_input(void);
 char *operation_prompt(void);
 void input_processor(char input[]);
 void bye(void);
-float addition(char operand1[], char operand2[]);
+void addition(char operand1[], char operand2[]);
 float substraction(char operand1[], char operand2[]);
 double logartihm(char operand1[], char operand2[]);
 int is_input_valid (char operand1[], char operand2[], char opertr[], char operand_trest[]);
+int is_number(char to_check[]);
+void set_cursor_pos(int x, int y);
+int get_cursor_x();
+int get_cursor_y();
+
 
 int main()
 {
@@ -138,11 +114,11 @@ char  *operation_prompt(void)
 {
     char input[50];
 
-    printf("ready to take instructions\n");
+   // printf("ready to take instructions\n");
     gets(input);
 
-    printf("operation_prompt took the following as input: ");
-    puts(input);
+   // printf("operation_prompt took the following as input: ");
+    //puts(input);
     input_processor(input);
 }
 
@@ -178,10 +154,10 @@ void input_processor(char input[])
     }
 
     // development messages
-    printf("operand1 is %s\n", operand1);
-    printf("operatr is %s\n", opertr);
-    printf("operand2 is %s\n", operand2);
-    printf("operand_tresh is %s\n", operand_tresh);
+//    printf("operand1 is %s\n", operand1);
+//    printf("operatr is %s\n", opertr);
+//    printf("operand2 is %s\n", operand2);
+//    printf("operand_tresh is %s\n", operand_tresh);
 
     /*  CHECKING OPERANDS HOW TO PROCEED
 
@@ -213,7 +189,9 @@ void input_processor(char input[])
     } else if (operand_tresh[0] != '\0') {
         printf("Too many operands had been added.\n");
     } else if (!strcoll(opertr, "+")){
-        printf("addition was %f \n", addition(operand1, operand2));
+        set_cursor_pos(get_cursor_x(), get_cursor_y());
+        //printf("addition was %f \n", addition(operand1, operand2));
+        addition(operand1, operand2);
     } else if (!strcoll(opertr, "-")){
         printf("substraction was %f \n", substraction(operand1, operand2));
     } else if (!strcoll(opertr, "log")){
@@ -239,13 +217,27 @@ float float_converter(char to_convert[])
     float number;
     char *end_p;
     number = strtof(to_convert, &end_p);
-    printf("endpointer value was %d\n", *end_p);
+   // printf("endpointer value was %d\n", *end_p);
 
     if (*end_p != 0) {
-        printf("Operand is not a number\n");
+     //   printf("Operand is not a number\n");
         return 0.000001;
     } else {
         return number;
+    }
+}
+
+// checks if string is containing numbers in correct format, or not
+// return 1 if format is ok, 0 if format is not float.
+int is_number(char to_check[])
+{
+    char *end_p;
+    strtof(to_check, &end_p);
+
+    if (*end_p != 0) {
+        return 0;
+    } else {
+        return 1;
     }
 }
 
@@ -285,14 +277,28 @@ returning with result to the proper location on the screen with calling placemen
 */
 
 
-float addition(char operand1[], char operand2[]) {
-    //return operand1 + operand2;
-    printf("addition was called \n");
+void addition(char operand1[], char operand2[])
+{
+    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
+    int y_pos = get_cursor_y() - 1;
 
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
-    return op1 + op2;
+    int op1_test = is_number(operand1);
+    int op2_test = is_number(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are not numbers.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is not a number.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is not a number.\n");
+    } else {
+        printf(" = %f\n", op1 + op2);
+    }
 }
 
 float substraction(char operand1[], char operand2[])
@@ -318,3 +324,32 @@ double logartihm(char operand1[], char operand2[])
     return 0;
 }
 
+// FUNCTIONS TO GET AND SET CORSOR POSITION
+
+void set_cursor_pos(int x, int y)
+{
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+int get_cursor_x() {
+
+    int x = 0;
+
+    if(GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &SBInfo)) {
+        x = SBInfo.dwCursorPosition.X;
+    }
+
+    return x;
+}
+
+int get_cursor_y() {
+
+    int y = 0;
+    if(GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &SBInfo)) {
+        y = SBInfo.dwCursorPosition.Y;
+    }
+
+    return y;
+}
