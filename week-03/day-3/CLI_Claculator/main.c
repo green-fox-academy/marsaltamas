@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <windows.h>
+COORD coord = {0,0};
+CONSOLE_SCREEN_BUFFER_INFO SBInfo;
 
 /*
-OPERATIN PROCESS
+OPERATING PROCESS
 
 1. open screen
 2. operation prompt to ask for and store user input, and if enter was hit, it calls for input_processor
@@ -14,6 +17,35 @@ OPERATIN PROCESS
 6. control passed back to operation_promt
 
 */
+
+
+void set_cursor_pos(int x, int y)
+{
+	coord.X = x + 8;
+	coord.Y = y  - 6;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+int getCursorX() {
+
+    int x = 0;
+
+    if(GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &SBInfo)) {
+        x = SBInfo.dwCursorPosition.X;
+    }
+
+    return x;
+}
+
+int getCursorY() {
+
+    int y = 0;
+    if(GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &SBInfo)) {
+        y = SBInfo.dwCursorPosition.Y;
+    }
+
+    return y;
+}
 
 void open_screen (void);
 void help(void);
@@ -151,9 +183,9 @@ void input_processor(char input[])
     printf("operand2 is %s\n", operand2);
     printf("operand_tresh is %s\n", operand_tresh);
 
-    // checking operands how to proceed
+    /*  CHECKING OPERANDS HOW TO PROCEED
 
-    /* check sequence:
+    check sequence:
     1. length of input, and length of eachc input is in between bouds
     2. if operand1 is command
     3. if op4 is empty
@@ -186,6 +218,8 @@ void input_processor(char input[])
         printf("substraction was %f \n", substraction(operand1, operand2));
     } else if (!strcoll(opertr, "log")){
         printf("log was %f \n", logartihm(operand1, operand2));
+    } else {
+        printf("Invalid input. \n");
     }
 
     operation_prompt();
@@ -202,7 +236,17 @@ void bye(void)
 
 float float_converter(char to_convert[])
 {
-    return atof(to_convert);
+    float number;
+    char *end_p;
+    number = strtof(to_convert, &end_p);
+    printf("endpointer value was %d\n", *end_p);
+
+    if (*end_p != 0) {
+        printf("Operand is not a number\n");
+        return 0.000001;
+    } else {
+        return number;
+    }
 }
 
 

@@ -124,11 +124,11 @@ void input_processor(char input[])
     char operand2[6] = "\0";
     char opertr[10] = "\0";
     char operand_tresh[2] = "\0";
-    char input_copy[40];
-    int inp_length = 0;
-    strcpy(input_copy, input);
-    printf("copyinput has length of  %d\n", strlen(input_copy));
-    inp_length = strlen(input_copy); // accounts the original input's char length
+    char ggggggg[40];
+    int lllllllllllllllll = 0;
+    strcpy(ggggggg, input);
+    printf("copyinput has length of  %d\n", strlen(ggggggg));
+    lllllllllllllllll = strlen(ggggggg); // accounts the original input's char length
     char *reader;
 
     reader = strtok(input, " ");
@@ -164,7 +164,9 @@ void input_processor(char input[])
     5. else: unknown command
     */
 
-    if (inp_length > 30){
+    printf("copy lenght strlen %d\n", strlen(ggggggg));
+    lllllllllllllllll = strlen(ggggggg);
+    if (lllllllllllllllll > 30){
         printf("The instructions took up to many characters.\n"
                "Please enter an instruction shorter than 30 characters.\n");
     } else if (strlen(operand1) > 10){
