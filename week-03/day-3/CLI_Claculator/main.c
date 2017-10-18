@@ -33,6 +33,7 @@ void multiplication(char operand1[], char operand2[]);
 void division(char operand1[], char operand2[]);
 void modulo(char operand1[], char operand2[]);
 void squaring(char operand1[], char operand2[]);
+void square_root(char operand1[], char operand2[]);
 double logartihm(char operand1[], char operand2[]);
 int is_input_valid (char operand1[], char operand2[], char opertr[], char operand_trest[]);
 int is_float(char to_check[]);
@@ -206,6 +207,8 @@ void input_processor(char input[])
         modulo(operand1, operand2);
     }  else if (!strcoll(opertr, "^")){
         squaring(operand1, operand2);
+    }  else if (!strcoll(opertr, "<")){
+        square_root(operand1, operand2);
     }  else if (!strcoll(opertr, "log")){
         printf("log was %f \n", logartihm(operand1, operand2));
     } else {
@@ -438,6 +441,34 @@ void squaring(char operand1[], char operand2[])
     }
 }
 
+void square_root(char operand1[], char operand2[])
+{
+    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
+    int y_pos = get_cursor_y() - 1;
+
+    float op1 = float_converter(operand1);
+    float op2 = float_converter(operand2);
+
+    int op1_test = is_float(operand1);
+    int op2_test = is_float(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are not numbers. Operand1 must be 2. Operand 2 must be 0 or greater.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is not a number. Operand 1 must be 2.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is not a number. Operand 2 must be 0 or greater.\n");
+    } else if (op1 != 2) {
+        printf(" = Operand 1 must be 2. I can calculate only the square root of Operand 2.\n");
+    } else if (op2 < 0) {
+        printf(" = Operand 2 must be 0 or greater.\n");
+    } else {
+        printf(" = %f\n", sqrt(op2));
+    }
+}
+
 double logartihm(char operand1[], char operand2[])
 {
 
@@ -454,9 +485,9 @@ double logartihm(char operand1[], char operand2[])
 
 void set_cursor_pos(int x, int y)
 {
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
 int get_cursor_x() {
