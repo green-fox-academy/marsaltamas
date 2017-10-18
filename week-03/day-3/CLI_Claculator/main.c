@@ -34,7 +34,7 @@ void division(char operand1[], char operand2[]);
 void modulo(char operand1[], char operand2[]);
 void squaring(char operand1[], char operand2[]);
 void square_root(char operand1[], char operand2[]);
-double logartihm(char operand1[], char operand2[]);
+void logarithm(char operand1[], char operand2[]);
 int is_input_valid (char operand1[], char operand2[], char opertr[], char operand_trest[]);
 int is_float(char to_check[]);
 void set_cursor_pos(int x, int y);
@@ -210,7 +210,7 @@ void input_processor(char input[])
     }  else if (!strcoll(opertr, "<")){
         square_root(operand1, operand2);
     }  else if (!strcoll(opertr, "log")){
-        printf("log was %f \n", logartihm(operand1, operand2));
+        logarithm(operand1, operand2);
     } else {
         printf("Invalid input. \n");
     }
@@ -286,7 +286,7 @@ validating strings
         -isnumber ok with given operation
 converting to numbers
 executing operations
-converting numbers back to string if necessary
+printing result on screen
 returning with result to the proper location on the screen with calling placement function
 */
 
@@ -469,16 +469,32 @@ void square_root(char operand1[], char operand2[])
     }
 }
 
-double logartihm(char operand1[], char operand2[])
+void logarithm(char operand1[], char operand2[])
 {
+    int x_pos = (strlen(operand1) + strlen(operand2) + 5);
+    int y_pos = get_cursor_y() - 1;
 
-//  should take opertr as 3rd argument and chack with strcmpr or similar for correct matching
-//  double base_d = (double) operand1;
-//  double x_d = (double) operand2;
-//
-//  return (log10(x_d) / log10(base_d));
-    printf("log was called \n");
-    return 0;
+    float op1 = float_converter(operand1);
+    float op2 = float_converter(operand2);
+
+    int op1_test = is_float(operand1);
+    int op2_test = is_float(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are not numbers. Operand1 must be a positive real number not not equals 1. Operand 2 must be above 0.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is not a number. Operand1 must be a positive real number not not equals 1.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is not a number. Operand 2 must be above 0.\n");
+    } else if (op1 <= 0 || op1 ==1) {
+        printf(" = Operand1 must be a positive real number not not equals 1.\n");
+    } else if (op2 <= 0) {
+        printf(" = Operand 2 must be above 0.\n");
+    } else {
+        printf(" = %f\n", log10(op2) / log10(op1));
+    }
 }
 
 // FUNCTIONS TO GET AND SET CORSOR POSITION
