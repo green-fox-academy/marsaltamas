@@ -3,8 +3,8 @@
 #include <string.h>
 #include <math.h>
 #include <windows.h>
-COORD coord = {0,0};
-CONSOLE_SCREEN_BUFFER_INFO SBInfo;
+COORD coord = {0,0}; // coord struct for setting print location on stdout
+CONSOLE_SCREEN_BUFFER_INFO SBInfo; // to get cursor's current location
 
 
     /* TODO
@@ -13,7 +13,7 @@ CONSOLE_SCREEN_BUFFER_INFO SBInfo;
      */
 
 /*
-OPERATING PROCESS
+OPERATION PROCESS
 
 1. open screen
 2. operation prompt to ask for and store user input, and if enter was hit, it calls for input_processor
@@ -62,6 +62,7 @@ int main()
     return 0;
 }
 
+//Prints out at program start
 void open_screen (void)
 {
     char open_screen[] =
@@ -94,9 +95,7 @@ void open_screen (void)
     char c = 0;
 
     do {
-
         c = getchar();
-
     } while (c !=  '\n');
 
     set_cursor_pos(0, get_cursor_y()-1);
@@ -104,6 +103,7 @@ void open_screen (void)
     operation_prompt();
 }
 
+// prints out as a help with usage
 void help(void)
 {
     char help_screen[] =
@@ -141,9 +141,7 @@ void help(void)
     char c = 0;
 
     do {
-
         c = getchar();
-
     } while (c !=  '\n');
 
     set_cursor_pos(0, get_cursor_y()-1);
@@ -188,11 +186,11 @@ and calls the appropriate functions (math operations, commands, giving back comm
 void input_processor(char input[])
 {
     // tokenizes input line, and breaks down to 4 parts to know which operation to take
-    // operand 1, operand2, operator, and operand_tresh - if tresh is not empty, the input is considered invalid
+    // operand 1, operand2, operator, and operand_trash - if trash is not empty, the input is considered invalid
     char operand1[11] = "\0";
     char operand2[6] = "\0";
     char opertr[11] = "\0";
-    char operand_tresh[2] = "\0";
+    char operand_trash[2] = "\0";
     char input_copy[40];
     strcpy(input_copy, input);
     char *reader;
@@ -208,7 +206,7 @@ void input_processor(char input[])
         } else if (operand2[0] == '\0') {
             strcpy(operand2, reader);
         } else {
-            strcpy(operand_tresh, reader);
+            strcpy(operand_trash, reader);
         }
 
         reader = strtok(NULL, " ");
@@ -218,10 +216,11 @@ void input_processor(char input[])
 
     check sequence:
     1. length of input, and length of each input is in between bounds
-    2. if operand1 is command
-    3. if op4 is empty
-    4. operatr check to know which match func to call - > further specific error handling in math op. functions
-    5. else: unknown command
+    2. is operator a valid operator?
+    3. if operand1 is command
+    4. if operand_trash is empty
+    5. operatr check to know which match func to call - > further specific error handling in math op. functions
+    5. else: error message for other unhandled situations
     */
 
 
@@ -246,7 +245,7 @@ void input_processor(char input[])
         clear();
     } else if (!strcoll(operand1, "exit")) {
         exit_function();
-    } else if (operand_tresh[0] != '\0') {
+    } else if (operand_trash[0] != '\0') {
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         printf("-> Too many operands had been added.\n");
     } else if (!strcoll(opertr, "+")){
@@ -389,13 +388,7 @@ int is_valid_operator(char opertr[])
 
 /*MATH OPERATIONS
 ---------------
-Basics (mandatory) tasks
-
-+
--
-*
-/
-%
++, -, *, /, %
 squaring
 square root
 logarithm
@@ -406,6 +399,8 @@ decimal to
 Advanced tasks
 nth roots.
 
+
+----------
 WORK ORDER
 ----------
 taking strings
@@ -415,8 +410,7 @@ validating strings
         -isnumber ok with given operation
 converting to numbers
 executing operations
-printing result on screen
-returning with result to the proper location on the screen with calling placement function
+printing result to the proper location on the screen
 */
 
 void addition(char operand1[], char operand2[])
@@ -591,7 +585,7 @@ void bin_to(char operand1[], char operand2[])
 {
     int op2 = strtol(operand2, NULL, 10); // operand2's int value
 
-    int op1_test = is_correct_base(2, operand1);
+    int op1_test = is_correct_base(2, operand1); // is operand1 in bin format?
     int op2_test = is_correct_target_base(operand2);
 
     if ((!op1_test) && (!op2_test)) {
@@ -629,7 +623,7 @@ void dec_to(char operand1[], char operand2[])
 {
     int op2 = strtol(operand2, NULL, 10); // operand2's int value
 
-    int op1_test = is_correct_base(10, operand1); // is operand1 in hex format?
+    int op1_test = is_correct_base(10, operand1); // is operand1 in dec format?
     int op2_test = is_correct_target_base(operand2);
 
     if ((!op1_test) && (!op2_test)) {
