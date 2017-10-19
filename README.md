@@ -66,4 +66,4 @@
 
 ### day-3, day-4, day-5
 
-1. [CLI Calculator](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/CLI_Claculator)
+1. [CLI Calculator](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/CLI_Calculator)
