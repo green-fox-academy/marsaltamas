@@ -8,7 +8,6 @@ CONSOLE_SCREEN_BUFFER_INFO SBInfo;
 
 
     /* TODO
-    - operatr checker to put out message invalid operatr - SOLUTION: a function with the array of commands returning 0 or 1.
     - separate to .h files
     - limit int range - nums over 2 bill not working properly + inndicate it in help
      */
@@ -49,6 +48,7 @@ int is_input_valid (char operand1[], char operand2[], char opertr[], char operan
 int is_float(char to_check[]);
 int is_correct_target_base(char to_convert[]);
 int is_correct_base(int convert_from, char to_convert[]);
+int is_valid_operator(char opertr[]);
 void set_cursor_pos(int x, int y);
 int get_cursor_x();
 int get_cursor_y();
@@ -237,7 +237,10 @@ void input_processor(char input[])
     } else if (strlen(opertr) > 5){
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         printf("-> Invalid operator. \n");
-    } else if (!strcoll(operand1, "help")) {
+    } else if (!is_valid_operator(opertr)){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
+        printf("-> Invalid operator. \n");
+    }else if (!strcoll(operand1, "help")) {
         help();
     } else if (!strcoll(operand1, "clear")) {
         clear();
@@ -364,6 +367,24 @@ int is_correct_target_base(char to_convert[])
         return 0;
     else
         return 1;
+}
+
+//takes the operator as a string, return 1 if it is valid, otherwise return 0.
+int is_valid_operator(char opertr[])
+{
+
+    char operators[11][6] = {"+", "-", "*", "/", "%", "^", "<", "log", "binto", "hexto", "decto"};
+    int flag = 0;
+
+    for (int i = 0; i < 11; i++) {
+        if (!(strcmp(operators[i], opertr)))
+            flag++;
+    }
+
+    if (flag == 1)
+        return 1;
+    else
+        return 0;
 }
 
 /*MATH OPERATIONS
