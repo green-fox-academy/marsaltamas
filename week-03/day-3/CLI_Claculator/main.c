@@ -17,9 +17,9 @@ OPERATION PROCESS
 
 1. open screen
 2. operation prompt to ask for and store user input, and if enter was hit, it calls for input_processor
-3. input processor processes text
-4. input processor evaluates input to call the proper function to keep on the operation flow
-5. called function  receiving parameters to process and to return with the result at expected screen location
+3. input processor processes input string received from stdin from the user
+4. input processor evaluates input to call the proper function
+5. called function receives parameters to process and to print the result at expected screen location
 6. control passed back to operation_promt
 
 */
@@ -215,12 +215,12 @@ void input_processor(char input[])
     /*  CHECKING OPERANDS HOW TO PROCEED
 
     check sequence:
-    1. length of input, and length of each input is in between bounds
+    1. length of input, and length of the tokenized string elements
     2. is operator a valid operator?
     3. if operand1 is command
     4. if operand_trash is empty
-    5. operatr check to know which match func to call - > further specific error handling in math op. functions
-    5. else: error message for other unhandled situations
+    5. operatr check to know which math func to call - > further specific error handling in math op. functions
+    5. else: error message for other unattended situations
     */
 
 
@@ -404,11 +404,12 @@ nth roots.
 WORK ORDER
 ----------
 taking strings
+converting operands to numbers
 validating strings
     VALIDTION SEQUENCE
-        -isnumber
-        -isnumber ok with given operation
-converting to numbers
+        -is valid number format
+        -is given math operation executable mathematically or by CLI Calculator
+        - check sequence for each operation is printed out verbally to screen, so explaining comments were not added
 executing operations
 printing result to the proper location on the screen
 */
