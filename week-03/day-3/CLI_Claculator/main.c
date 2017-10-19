@@ -10,8 +10,7 @@ CONSOLE_SCREEN_BUFFER_INFO SBInfo;
     /* TODO
     - operatr checker to put out message invalid operatr - SOLUTION: a function with the array of commands returning 0 or 1.
     - separate to .h files
-    - limit int range - nums over 2 bill not working properly
-    - add help descriptions
+    - limit int range - nums over 2 bill not working properly + inndicate it in help
      */
 
 /*
@@ -100,12 +99,55 @@ void open_screen (void)
 
     } while (c !=  '\n');
 
+    set_cursor_pos(0, get_cursor_y()-1);
+    printf("%s", "Ready to take instructions:\n");
     operation_prompt();
 }
 
 void help(void)
 {
-    printf("there is the help\n");
+    char help_screen[] =
+     "               HELP CLI Calculator\n"
+    " ================================================\n"
+    " usage: [number] [operation] [number]\n"
+    " only three space separated operands are accepted\n"
+    " numbers can not be longer than 10 characters\n"
+    " ================================================\n"
+    " Commands:\n"
+    "\n"
+    " +	summation\n"
+    " -	subtraction\n"
+    " *	multiplication\n"
+    " /	division\n"
+    " %	division with remainder\n"
+    " ^	squaring\n"
+    " <	square root\n"
+    " log logarithm\n"
+    " ================================================\n"
+    " Possible target bases ranging between 2 and 36.\n"
+    " binto	binary to hex or dec\n"
+    " hexto	hexadecimal to bin or dec\n"
+    " decto	decimal to bin or hex\n"
+    " ================================================\n"
+    " exit	exiting from the program\n"
+    " clear	clear the screen\n"
+    " help	print usage\n"
+    " ================================================\n"
+    " Hit enter to continue!\n"
+    " ================================================\n";
+
+    printf("%s", help_screen);
+
+    char c = 0;
+
+    do {
+
+        c = getchar();
+
+    } while (c !=  '\n');
+
+    set_cursor_pos(0, get_cursor_y()-1);
+    printf("%s", "Ready to take instructions:\n");
     operation_prompt();
 }
 
