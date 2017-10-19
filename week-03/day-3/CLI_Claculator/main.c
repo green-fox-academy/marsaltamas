@@ -184,7 +184,8 @@ void input_processor(char input[])
         printf("Operand2 took up to many characters.\n"
                "Please enter a number up to 10 characters.\n");
     } else if (strlen(opertr) > 5){
-        printf("Invalid operator. \n");
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
+        printf("-> Invalid operator. \n");
     } else if (!strcoll(operand1, "help")) {
         help();
     } else if (!strcoll(operand1, "clear")) {
@@ -192,10 +193,9 @@ void input_processor(char input[])
     } else if (!strcoll(operand1, "exit")) {
         exit_function();
     } else if (operand_tresh[0] != '\0') {
-        printf("Too many operands had been added.\n");
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
+        printf("-> Too many operands had been added.\n");
     } else if (!strcoll(opertr, "+")){
-        set_cursor_pos(get_cursor_x(), get_cursor_y());
-        //printf("addition was %f \n", addition(operand1, operand2));
         addition(operand1, operand2);
     } else if (!strcoll(opertr, "-")){
         substraction(operand1, operand2);
@@ -212,7 +212,8 @@ void input_processor(char input[])
     }  else if (!strcoll(opertr, "log")){
         logarithm(operand1, operand2);
     } else {
-        printf("Invalid input. \n");
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
+        printf("-> Invalid input. \n");
     }
 
     operation_prompt();
