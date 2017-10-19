@@ -3,64 +3,10 @@
 #include <string.h>
 #include <math.h>
 #include <windows.h>
+#include "declarations.h"
+
 COORD coord = {0,0}; // coord struct for setting print location on stdout
 CONSOLE_SCREEN_BUFFER_INFO SBInfo; // to get cursor's current location
-
-
-    /* TODO
-    - separate to .h files
-    - limit int range - nums over 2 bill not working properly + inndicate it in help
-     */
-
-/*
-OPERATION PROCESS
-
-1. open screen
-2. operation prompt to ask for and store user input, and if enter was hit, it calls for input_processor
-3. input processor processes input string received from stdin from the user
-4. input processor evaluates input to call the proper function
-5. called function receives parameters to process and to print the result at expected screen location
-6. control passed back to operation_promt
-
-*/
-
-void open_screen (void);
-void help(void);
-void clear(void);
-void exit_function(void);
-void error_message(void);
-void read_input(void);
-char *operation_prompt(void);
-void input_processor(char input[]);
-void bye(void);
-void addition(char operand1[], char operand2[]);
-void substraction(char operand1[], char operand2[]);
-void multiplication(char operand1[], char operand2[]);
-void division(char operand1[], char operand2[]);
-void modulo(char operand1[], char operand2[]);
-void squaring(char operand1[], char operand2[]);
-void square_root(char operand1[], char operand2[]);
-void logarithm(char operand1[], char operand2[]);
-void bin_to(char operand1[], char operand2[]);
-void hex_to(char operand1[], char operand2[]);
-void dec_to(char operand1[], char operand2[]);
-int is_input_valid (char operand1[], char operand2[], char opertr[], char operand_trest[]);
-int is_float(char to_check[]);
-int is_correct_target_base(char to_convert[]);
-int is_correct_base(int convert_from, char to_convert[]);
-int is_valid_operator(char opertr[]);
-void set_cursor_pos(int x, int y);
-int get_cursor_x();
-int get_cursor_y();
-float float_converter(char to_convert[]);
-void b_to_b_converter(int convert_from, char to_convert[], int convert_to);
-
-
-int main()
-{
-    open_screen();
-    return 0;
-}
 
 //Prints out at program start
 void open_screen (void)
@@ -321,7 +267,6 @@ void b_to_b_converter(int convert_from, char to_convert[], int convert_to)
 
     printf(" = %s\n", to_return);
 }
-
 
 // FORMAT CHECKERS
 
@@ -668,3 +613,4 @@ int get_cursor_y() {
 
     return y;
 }
+

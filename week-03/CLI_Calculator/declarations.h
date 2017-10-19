@@ -1,4 +1,5 @@
-
+#ifndef DECLARATIONS_H
+#define DECLARATION_H
 
 void open_screen (void);
 void help(void);
@@ -30,3 +31,5 @@ int get_cursor_x();
 int get_cursor_y();
 float float_converter(char to_convert[]);
 void b_to_b_converter(int convert_from, char to_convert[], int convert_to);
+
+#endif // DECLARATIONS_H
