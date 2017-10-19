@@ -45,6 +45,8 @@ void modulo(char operand1[], char operand2[]);
 void squaring(char operand1[], char operand2[]);
 void square_root(char operand1[], char operand2[]);
 void logarithm(char operand1[], char operand2[]);
+void bin_to(char operand1[], char operand2[]);
+void hex_to(char operand1[], char operand2[]);
 int is_input_valid (char operand1[], char operand2[], char opertr[], char operand_trest[]);
 int is_float(char to_check[]);
 int is_correct_target_base(char to_convert[]);
@@ -221,6 +223,8 @@ void input_processor(char input[])
         logarithm(operand1, operand2);
     } else if (!strcoll(opertr, "binto")){
         bin_to(operand1, operand2);
+    } else if (!strcoll(opertr, "hexto")){
+        hex_to(operand1, operand2);
     } else {
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         printf("-> Invalid input. \n");
@@ -575,6 +579,30 @@ void bin_to(char operand1[], char operand2[])
         printf(" = Operand2 is invalid.\nIt must be must be and integer in the range of 2 and 36.\n");
     } else {
          printf(" = %s\n", b_to_b_converter(2, operand1, op2));
+    }
+}
+
+void hex_to(char operand1[], char operand2[])
+{
+    int x_pos = (strlen(operand1) + strlen(operand2) + 7);
+    int y_pos = get_cursor_y() - 1;
+
+    int op2 = strtol(operand2, NULL, 10); // operand2's int value
+
+    int op1_test = is_correct_base(16, operand1); // is operand1 in hex format?
+    int op2_test = is_correct_target_base(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are invalid.\nOperand1 must be a hexadecimal number.\n"
+               "Operand 2 must be and integer in the range of 2 and 36.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is invalid. It must a hexadecimal number.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is invalid.\nIt must be must be and integer in the range of 2 and 36.\n");
+    } else {
+         printf(" = %s\n", b_to_b_converter(16, operand1, op2));
     }
 }
 
