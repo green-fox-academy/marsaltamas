@@ -56,7 +56,7 @@ void set_cursor_pos(int x, int y);
 int get_cursor_x();
 int get_cursor_y();
 float float_converter(char to_convert[]);
-char *b_to_b_converter(int convert_from, char to_convert[], int convert_to);
+void b_to_b_converter(int convert_from, char to_convert[], int convert_to);
 
 
 int main()
@@ -261,7 +261,7 @@ float float_converter(char to_convert[])
 }
 
 
-char *b_to_b_converter(int convert_from, char to_convert[], int convert_to)
+void b_to_b_converter(int convert_from, char to_convert[], int convert_to)
 {
     char to_return[50];
     long int lint_value = 0;
@@ -270,7 +270,7 @@ char *b_to_b_converter(int convert_from, char to_convert[], int convert_to)
 
     itoa(lint_value, to_return, convert_to);
 
-    return to_return;
+    printf(" = %s\n", to_return);
 }
 
 
@@ -581,7 +581,7 @@ void bin_to(char operand1[], char operand2[])
     } else if (!op2_test) {
         printf(" = Operand2 is invalid.\nIt must be must be and integer in the range of 2 and 36.\n");
     } else {
-         printf(" = %s\n", b_to_b_converter(2, operand1, op2));
+         b_to_b_converter(2, operand1, op2);
     }
 }
 
@@ -605,7 +605,7 @@ void hex_to(char operand1[], char operand2[])
     } else if (!op2_test) {
         printf(" = Operand2 is invalid.\nIt must be must be and integer in the range of 2 and 36.\n");
     } else {
-         printf(" = %s\n", b_to_b_converter(16, operand1, op2));
+         b_to_b_converter(16, operand1, op2);
     }
 }
 
@@ -629,7 +629,7 @@ void dec_to(char operand1[], char operand2[])
     } else if (!op2_test) {
         printf(" = Operand2 is invalid.\nIt must be must be and integer in the range of 2 and 36.\n");
     } else {
-         printf(" = %s\n", b_to_b_converter(10, operand1, op2));
+         b_to_b_converter(10, operand1, op2);
     }
 }
 
