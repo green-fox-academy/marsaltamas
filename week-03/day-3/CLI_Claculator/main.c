@@ -236,10 +236,7 @@ void input_processor(char input[])
     } else if (strlen(opertr) > 5){
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         printf("-> Invalid operator. \n");
-    } else if (!is_valid_operator(opertr)){
-        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
-        printf("-> Invalid operator. \n");
-    }else if (!strcoll(operand1, "help")) {
+    } else if (!strcoll(operand1, "help")) {
         help();
     } else if (!strcoll(operand1, "clear")) {
         clear();
@@ -281,7 +278,10 @@ void input_processor(char input[])
     } else if (!strcoll(opertr, "decto")){
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         dec_to(operand1, operand2);
-    }else {
+    } else if (!is_valid_operator(opertr) && operand1 && operand2){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
+        printf("-> Invalid operation. \n");
+    } else {
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         printf("-> Invalid input. \n");
     }
