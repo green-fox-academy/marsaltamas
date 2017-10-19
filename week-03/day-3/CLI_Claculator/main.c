@@ -8,9 +8,7 @@ CONSOLE_SCREEN_BUFFER_INFO SBInfo;
 
 
     /* TODO
-    - operatr checker to put out message invalid operatr - SOLUTION: a function with the array of commands returning 0 or 1
-    - Handling whitespace delay when entered numbers containing whitespaces - SOLUTION: get_cursor_x || put setcursor outside of callfunctions
-    basesd on validated input str lenght.
+    - operatr checker to put out message invalid operatr - SOLUTION: a function with the array of commands returning 0 or 1.
     - separate to .h files
     - limit int range - nums over 2 bill not working properly
     - add help descriptions
@@ -207,26 +205,37 @@ void input_processor(char input[])
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         printf("-> Too many operands had been added.\n");
     } else if (!strcoll(opertr, "+")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         addition(operand1, operand2);
     } else if (!strcoll(opertr, "-")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         substraction(operand1, operand2);
     }  else if (!strcoll(opertr, "*")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         multiplication(operand1, operand2);
     }  else if (!strcoll(opertr, "/")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         division(operand1, operand2);
     }  else if (!strcoll(opertr, "%")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         modulo(operand1, operand2);
     }  else if (!strcoll(opertr, "^")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         squaring(operand1, operand2);
     }  else if (!strcoll(opertr, "<")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         square_root(operand1, operand2);
     }  else if (!strcoll(opertr, "log")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         logarithm(operand1, operand2);
     } else if (!strcoll(opertr, "binto")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         bin_to(operand1, operand2);
     } else if (!strcoll(opertr, "hexto")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         hex_to(operand1, operand2);
     } else if (!strcoll(opertr, "decto")){
+        set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         dec_to(operand1, operand2);
     }else {
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
@@ -349,16 +358,11 @@ returning with result to the proper location on the screen with calling placemen
 
 void addition(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
-    int y_pos = get_cursor_y() - 1;
-
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
     int op1_test = is_float(operand1);
     int op2_test = is_float(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are not numbers.\n");
@@ -373,16 +377,12 @@ void addition(char operand1[], char operand2[])
 
 void substraction(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
-    int y_pos = get_cursor_y() - 1;
 
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
     int op1_test = is_float(operand1);
     int op2_test = is_float(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are not numbers.\n");
@@ -398,16 +398,11 @@ void substraction(char operand1[], char operand2[])
 
 void multiplication(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
-    int y_pos = get_cursor_y() - 1;
-
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
     int op1_test = is_float(operand1);
     int op2_test = is_float(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are not numbers.\n");
@@ -422,16 +417,11 @@ void multiplication(char operand1[], char operand2[])
 
 void division(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
-    int y_pos = get_cursor_y() - 1;
-
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
     int op1_test = is_float(operand1);
     int op2_test = is_float(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are not numbers.\n");
@@ -448,16 +438,11 @@ void division(char operand1[], char operand2[])
 
 void modulo(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
-    int y_pos = get_cursor_y() - 1;
-
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
     int op1_test = is_float(operand1);
     int op2_test = is_float(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are not numbers.\n");
@@ -474,16 +459,11 @@ void modulo(char operand1[], char operand2[])
 
 void squaring(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
-    int y_pos = get_cursor_y() - 1;
-
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
     int op1_test = is_float(operand1);
     int op2_test = is_float(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are not numbers.\n");
@@ -500,16 +480,11 @@ void squaring(char operand1[], char operand2[])
 
 void square_root(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 3);
-    int y_pos = get_cursor_y() - 1;
-
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
     int op1_test = is_float(operand1);
     int op2_test = is_float(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are not numbers. Operand1 must be 2. Operand 2 must be 0 or greater.\n");
@@ -528,16 +503,11 @@ void square_root(char operand1[], char operand2[])
 
 void logarithm(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 5);
-    int y_pos = get_cursor_y() - 1;
-
     float op1 = float_converter(operand1);
     float op2 = float_converter(operand2);
 
     int op1_test = is_float(operand1);
     int op2_test = is_float(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are not numbers. Operand1 must be a positive real number not not equals 1. Operand 2 must be above 0.\n");
@@ -556,15 +526,10 @@ void logarithm(char operand1[], char operand2[])
 
 void bin_to(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 7);
-    int y_pos = get_cursor_y() - 1;
-
     int op2 = strtol(operand2, NULL, 10); // operand2's int value
 
     int op1_test = is_correct_base(2, operand1);
     int op2_test = is_correct_target_base(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are invalid.\nOperand1 must be a binary number.\n"
@@ -580,15 +545,10 @@ void bin_to(char operand1[], char operand2[])
 
 void hex_to(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 7);
-    int y_pos = get_cursor_y() - 1;
-
     int op2 = strtol(operand2, NULL, 10); // operand2's int value
 
     int op1_test = is_correct_base(16, operand1); // is operand1 in hex format?
     int op2_test = is_correct_target_base(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are invalid.\nOperand1 must be a hexadecimal number.\n"
@@ -604,15 +564,10 @@ void hex_to(char operand1[], char operand2[])
 
 void dec_to(char operand1[], char operand2[])
 {
-    int x_pos = (strlen(operand1) + strlen(operand2) + 7);
-    int y_pos = get_cursor_y() - 1;
-
     int op2 = strtol(operand2, NULL, 10); // operand2's int value
 
     int op1_test = is_correct_base(10, operand1); // is operand1 in hex format?
     int op2_test = is_correct_target_base(operand2);
-
-    set_cursor_pos(x_pos, y_pos);
 
     if ((!op1_test) && (!op2_test)) {
         printf(" = Operand1 and Operand2 are invalid.\nOperand1 must be a decimal number.\n"
