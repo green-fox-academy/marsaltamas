@@ -216,11 +216,11 @@ void input_processor(char input[])
 
     check sequence:
     1. length of input, and length of the tokenized string elements
-    2. is operator a valid operator?
-    3. if operand1 is command
-    4. if operand_trash is empty
-    5. operatr check to know which math func to call - > further specific error handling in math op. functions
-    5. else: error message for other unattended situations
+    2. if operand1 is command
+    3. if operand_trash is empty
+    4. operatr check to know which math func to call - > further specific error handling in math op. functions
+    5. is operator a valid operator?
+    6. else: error message for other unattended situations
     */
 
 
@@ -280,7 +280,7 @@ void input_processor(char input[])
         dec_to(operand1, operand2);
     } else if (!is_valid_operator(opertr) && operand1 && operand2){
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
-        printf("-> Invalid operation. \n");
+        printf("-> Invalid operation requested.\n");
     } else {
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         printf("-> Invalid input. \n");
