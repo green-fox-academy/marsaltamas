@@ -6,6 +6,16 @@
 COORD coord = {0,0};
 CONSOLE_SCREEN_BUFFER_INFO SBInfo;
 
+
+    /* TODO
+    - operatr checker to put out message invalid operatr - SOLUTION: a function with the array of commands returning 0 or 1
+    - Handling whitespace delay when entered numbers containing whitespaces - SOLUTION: get_cursor_x || put setcursor outside of callfunctions
+    basesd on validated input str lenght.
+    - separate to .h files
+     */
+
+
+
 /*
 OPERATING PROCESS
 
@@ -37,9 +47,13 @@ void square_root(char operand1[], char operand2[]);
 void logarithm(char operand1[], char operand2[]);
 int is_input_valid (char operand1[], char operand2[], char opertr[], char operand_trest[]);
 int is_float(char to_check[]);
+int is_correct_target_base(char to_convert[]);
+int is_correct_base(int convert_from, char to_convert[]);
 void set_cursor_pos(int x, int y);
 int get_cursor_x();
 int get_cursor_y();
+float float_converter(char to_convert[]);
+char *b_to_b_converter(int convert_from, char to_convert[], int convert_to);
 
 
 int main()
@@ -102,7 +116,6 @@ void clear(void)
 
 void exit_function(void)
 {
-    printf("exit was called\n"); // dev message
     atexit(bye);
     exit(0);
 }
@@ -158,12 +171,6 @@ void input_processor(char input[])
         reader = strtok(NULL, " ");
     }
 
-    // development messages
-//    printf("operand1 is %s\n", operand1);
-//    printf("operatr is %s\n", opertr);
-//    printf("operand2 is %s\n", operand2);
-//    printf("operand_tresh is %s\n", operand_tresh);
-
     /*  CHECKING OPERANDS HOW TO PROCEED
 
     check sequence:
@@ -173,6 +180,7 @@ void input_processor(char input[])
     4. operatr check to know which match func to call - > further specific error handling in math op. functions
     5. else: unknown command
     */
+
 
     if (strlen(input_copy) > 30){
         printf("The instructions took up to many characters.\n"
@@ -211,6 +219,8 @@ void input_processor(char input[])
         square_root(operand1, operand2);
     }  else if (!strcoll(opertr, "log")){
         logarithm(operand1, operand2);
+    } else if (!strcoll(opertr, "binto")){
+        bin_to(operand1, operand2);
     } else {
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         printf("-> Invalid input. \n");
@@ -243,6 +253,22 @@ float float_converter(char to_convert[])
     }
 }
 
+
+char *b_to_b_converter(int convert_from, char to_convert[], int convert_to)
+{
+    char to_return[50];
+    long int lint_value = 0;
+
+    lint_value = strtol(to_convert, NULL, convert_from);
+
+    itoa(lint_value, to_return, convert_to);
+
+    return to_return;
+}
+
+
+// FORMAT CHECKERS
+
 // checks if string is containing numbers in correct format, or not
 // return 1 if format is ok, 0 if format is not float.
 int is_float(char to_check[])
@@ -255,6 +281,36 @@ int is_float(char to_check[])
     } else {
         return 1;
     }
+}
+
+/* returns 1 if the given string can be converted from the given base to int
+ returns 0 if it can't be converted or out of the range of 2 or 36 in int form
+ convert_from must be between 2 and 36 as an int due to strtol parameter rules*/
+int is_correct_base(int convert_from, char to_convert[])
+{
+    char *end_p;
+    strtol(to_convert, &end_p, convert_from);
+
+    if (*end_p != 0)
+        return 0;
+    else
+        return 1;
+
+}
+
+/* returns 1 if the given string contains a valid range and format for target base
+ returns 0 if it can't be converted or out of the range of 2 or 36 in int form
+ convert_to must be between 2 and 36 as an int due to strtol parameter rules*/
+int is_correct_target_base(char to_convert[])
+{
+    long int target_base = 0;
+    char *end_p;
+    target_base = strtol(to_convert, &end_p, 10);
+
+    if (*end_p != 0 || target_base > 36 || target_base < 2)
+        return 0;
+    else
+        return 1;
 }
 
 
@@ -498,7 +554,31 @@ void logarithm(char operand1[], char operand2[])
     }
 }
 
-// FUNCTIONS TO GET AND SET CORSOR POSITION
+void bin_to(char operand1[], char operand2[])
+{
+    int x_pos = (strlen(operand1) + strlen(operand2) + 7);
+    int y_pos = get_cursor_y() - 1;
+
+    int op2 = strtol(operand2, NULL, 10); // operand2's int value
+
+    int op1_test = is_correct_base(2, operand1);
+    int op2_test = is_correct_target_base(operand2);
+
+    set_cursor_pos(x_pos, y_pos);
+
+    if ((!op1_test) && (!op2_test)) {
+        printf(" = Operand1 and Operand2 are invalid.\nOperand1 must be a binary number.\n"
+               "Operand 2 must be and integer in the range of 2 and 36.\n");
+    } else if (!op1_test) {
+        printf(" = Operand1 is invalid. It must a binary number.\n");
+    } else if (!op2_test) {
+        printf(" = Operand2 is invalid.\nIt must be must be and integer in the range of 2 and 36.\n");
+    } else {
+         printf(" = %s\n", b_to_b_converter(2, operand1, op2));
+    }
+}
+
+// FUNCTIONS TO GET AND SET CURSOR POSITION
 
 void set_cursor_pos(int x, int y)
 {
