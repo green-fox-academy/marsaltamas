@@ -12,9 +12,9 @@ CONSOLE_SCREEN_BUFFER_INFO SBInfo;
     - Handling whitespace delay when entered numbers containing whitespaces - SOLUTION: get_cursor_x || put setcursor outside of callfunctions
     basesd on validated input str lenght.
     - separate to .h files
+    - limit int range - nums over 2 bill not working properly
+    - add help descriptions
      */
-
-
 
 /*
 OPERATING PROCESS
@@ -111,18 +111,21 @@ void help(void)
     operation_prompt();
 }
 
+// clears screen
 void clear(void)
 {
     system("cls");
     operation_prompt();
 }
 
+// exits from program
 void exit_function(void)
 {
     atexit(bye);
     exit(0);
 }
 
+//prints error message to stdout
 void error_message(void)
 {
     printf("Unknown command, please enter a valid command.\n");
@@ -135,16 +138,13 @@ char  *operation_prompt(void)
 {
     char input[50];
 
-   // printf("ready to take instructions\n");
     gets(input);
 
-   // printf("operation_prompt took the following as input: ");
-    //puts(input);
     input_processor(input);
 }
 
-// this function takes input over from operation_promt, processes it
-//and calls the appropriate functions (math operations, commands, giving back command to operation_prompt
+/*this function takes input over from operation_promt, processes it
+and calls the appropriate functions (math operations, commands, giving back command to operation_prompt */
 void input_processor(char input[])
 {
     // tokenizes input line, and breaks down to 4 parts to know which operation to take
@@ -177,7 +177,7 @@ void input_processor(char input[])
     /*  CHECKING OPERANDS HOW TO PROCEED
 
     check sequence:
-    1. length of input, and length of eachc input is in between bouds
+    1. length of input, and length of each input is in between bounds
     2. if operand1 is command
     3. if op4 is empty
     4. operatr check to know which match func to call - > further specific error handling in math op. functions
@@ -236,6 +236,7 @@ void input_processor(char input[])
     operation_prompt();
 }
 
+// message printed to stdout when exiting program
 void bye(void)
 {
     printf("====================================\n"
@@ -245,22 +246,17 @@ void bye(void)
 
 // CONVERTERS
 
+//converts string to float
 float float_converter(char to_convert[])
 {
     float number;
     char *end_p;
     number = strtof(to_convert, &end_p);
-   // printf("endpointer value was %d\n", *end_p);
 
-    if (*end_p != 0) {
-     //   printf("Operand is not a number\n");
-        return 0.000001;
-    } else {
-        return number;
-    }
+    return number;
 }
 
-
+//taking a string as a long int, and converts it from a given base to another base, and prints it out as a string
 void b_to_b_converter(int convert_from, char to_convert[], int convert_to)
 {
     char to_return[50];
@@ -276,8 +272,8 @@ void b_to_b_converter(int convert_from, char to_convert[], int convert_to)
 
 // FORMAT CHECKERS
 
-// checks if string is containing numbers in correct format, or not
-// return 1 if format is ok, 0 if format is not float.
+/* checks if string is containing numbers in correct format, or not
+return 1 if format is ok, 0 if format is not float. */
 int is_float(char to_check[])
 {
     char *end_p;
@@ -302,7 +298,6 @@ int is_correct_base(int convert_from, char to_convert[])
         return 0;
     else
         return 1;
-
 }
 
 /* returns 1 if the given string contains a valid range and format for target base
@@ -320,9 +315,7 @@ int is_correct_target_base(char to_convert[])
         return 1;
 }
 
-
-/*
-MATH OPERATIONS
+/*MATH OPERATIONS
 ---------------
 Basics (mandatory) tasks
 
