@@ -171,17 +171,17 @@ void input_processor(char input[])
 
 
     if (strlen(input_copy) > 30){
-        printf("The instructions took up to many characters.\n"
-               "Please enter an instruction shorter than 30 characters.\n");
+        printf("\t\tThe instructions took up to many characters.\n"
+               "\t\tPlease enter an instruction shorter than 30 characters.\n");
     } else if (strlen(operand1) > 10){
-        printf("Operand1 took up to many characters.\n"
-               "Please enter a number up to 10 characters.\n");
+        printf("\t\tOperand1 took up to many characters.\n"
+               "\t\tPlease enter a number up to 10 characters.\n");
     } else if (strlen(operand2) > 10){
-        printf("Operand2 took up to many characters.\n"
-               "Please enter a number up to 10 characters.\n");
+        printf("\t\tOperand2 took up to many characters.\n"
+               "\t\tPlease enter a number up to 10 characters.\n");
     } else if (strlen(opertr) > 5){
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
-        printf("-> Invalid operator. \n");
+        printf(" = Invalid operator. \n");
     } else if (!strcoll(operand1, "help")) {
         help();
     } else if (!strcoll(operand1, "clear")) {
@@ -190,7 +190,7 @@ void input_processor(char input[])
         exit_function();
     } else if (operand_trash[0] != '\0') {
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
-        printf("-> Too many operands had been added.\n");
+        printf(" = Too many operands had been added.\n");
     } else if (!strcoll(opertr, "+")){
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         addition(operand1, operand2);
@@ -224,12 +224,12 @@ void input_processor(char input[])
     } else if (!strcoll(opertr, "decto")){
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
         dec_to(operand1, operand2);
-    } else if (!is_valid_operator(opertr) && operand1 && operand2){
+    } else if (!is_valid_operator(opertr) && operand1 != NULL && operand2 != NULL){
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
-        printf("-> Invalid operation requested.\n");
+        printf(" = Invalid operation requested.\n");
     } else {
         set_cursor_pos(strlen(input_copy), get_cursor_y() - 1);
-        printf("-> Invalid input. \n");
+        printf(" = Invalid input. \n");
     }
 
     operation_prompt();
@@ -513,7 +513,8 @@ void logarithm(char operand1[], char operand2[])
     int op2_test = is_float(operand2);
 
     if ((!op1_test) && (!op2_test)) {
-        printf(" = Operand1 and Operand2 are not numbers. Operand1 must be a positive real number not not equals 1. Operand 2 must be above 0.\n");
+        printf(" = Operand1 and Operand2 are not numbers.\n"
+               "Operand1 must be a positive real number not equals 1. Operand 2 must be above 0.\n");
     } else if (!op1_test) {
         printf(" = Operand1 is not a number. Operand1 must be a positive real number not not equals 1.\n");
     } else if (!op2_test) {
