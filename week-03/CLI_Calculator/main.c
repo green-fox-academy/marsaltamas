@@ -1,8 +1,7 @@
 #include "declarations.h"
 
     /* TODO
-    - separate to .h files
-    - limit int range - nums over 2 bill not working properly + inndicate it in help
+    - limit int range - nums over 2 bill not working properly, proly due to float.h + inndicate it in help
      */
 
 /*
