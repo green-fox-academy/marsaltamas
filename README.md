@@ -5,11 +5,11 @@
 day-1 |  day-2 | day-3 |day-4 | day-5
 ----------|----------|--------|---|---
  training | [git-lesson-repository](https://github.com/marsaltamas/git-lesson-repository) | [c-workshop](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-3/c-workshop) | [c-workshop-second-part](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-4/c-workshop-2) | [practice excercises](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-5) 
-	 | [hello-world](https://github.com/marsaltamas/hello-world) | | |practice
-	 | [static-demo](https://github.com/marsaltamas/static-demo)| | |
-	 | [moved content to week-01/day-2 file](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-2) | | | 
- 	| [performed tasks on week-01/day-3 file](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-3) | | | 
- 	| [creating webpage](https://github.com/marsaltamas/marsaltamas.github.io) | | | 
+o| [hello-world](https://github.com/marsaltamas/hello-world) | | |practice
+o| [static-demo](https://github.com/marsaltamas/static-demo)| | |
+o| [moved content to week-01/day-2 file](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-2) | | | 
+o| [performed tasks on week-01/day-3 file](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-3) | | | 
+o| [creating webpage](https://github.com/marsaltamas/marsaltamas.github.io) | | | 
 
 ## week-2
 
