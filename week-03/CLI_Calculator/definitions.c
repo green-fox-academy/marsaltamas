@@ -109,14 +109,6 @@ void exit_function(void)
     exit(0);
 }
 
-//prints error message to stdout
-void error_message(void)
-{
-    printf("Unknown command, please enter a valid command.\n");
-
-    operation_prompt();
-}
-
 //reads user input into buffer, and returns the input string
 char  *operation_prompt(void)
 {
