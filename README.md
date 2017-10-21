@@ -13,28 +13,11 @@ o| [creating webpage](https://github.com/marsaltamas/marsaltamas.github.io) | | 
 
 ## week-2
 
-### day-1
-
-1. [headers, functions, recursion](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-1)
-
-### day-2
-
-2. [arrays, user input](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-2)
-
-### day-3
-
-1. [lightning talk](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-3)
-2. [Sieve of Eratosthenes](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-3/Sieve%20of%20Eratosthenes)
-3. practice materials from w2d1 and w2d2
-
-### day-4
-
-1. [worked on w2d4 projects](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-4)
-
-### day-5
-
-1. [worked on Boring_Dungeon](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-5/Boring_Dungeon)
-2. 2nd mentor demo
+day-1 	  |  day-2   | day-3  |day-4 | day-5
+----------|----------|--------|------|-------
+[headers, functions, recursion](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-1)|[arrays, user input](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-2)|[lightning talk](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-3) |[worked on w2d4 projects](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-4) |[worked on Boring_Dungeon](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-5/Boring_Dungeon)
+oooooooooo|oooooooooo|[Sieve of Eratosthenes](https://github.com/greenfox-academy/marsaltamas/tree/master/week-02/day-3/Sieve%20of%20Eratosthenes)|oooooo|2nd mentor demo
+oooooooooo|oooooooooo|practice materials from w2d1 and w2d2|oooooo|
 
 ## week-3
 
