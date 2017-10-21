@@ -4,7 +4,7 @@
 
 nr.|day-1 |  day-2 | day-3 |day-4 | day-5
 ---|----------|----------|--------|---|---
- 1| |training | [git-lesson-repository](https://github.com/marsaltamas/git-lesson-repository) | [c-workshop](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-3/c-workshop) | [c-workshop-second-part](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-4/c-workshop-2) | [practice excercises](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-5) 
+ 1|training | [git-lesson-repository](https://github.com/marsaltamas/git-lesson-repository) | [c-workshop](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-3/c-workshop) | [c-workshop-second-part](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-4/c-workshop-2) | [practice excercises](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-5) 
  2| | [hello-world](https://github.com/marsaltamas/hello-world) | | |practice
  3| | [static-demo](https://github.com/marsaltamas/static-demo)| | |
  4| | [moved content to week-01/day-2 file](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-2) | | | 
