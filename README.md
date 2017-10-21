@@ -21,15 +21,12 @@ oooooooooo|oooooooooo|practice materials from w2d1 and w2d2|oooooo|
 
 ## week-3
 
-### day-1
+day-1 	  |  day-2   | day-3  |day-4 | day-5
+----------|----------|--------|------|-------
+[Debugging](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/day-1)|[Parsing, typecasting](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/day-2)|[CLI Calculator](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/CLI_Calculator)|[CLI Calculator](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/CLI_Calculator)|[CLI Calculator](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/CLI_Calculator)
 
-1. [Debugging](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/day-1)
+## week-4
 
-
-### day-2
-
-1. [Parsing, typecasting](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/day-2)
-
-### day-3, day-4, day-5
-
-1. [CLI Calculator](https://github.com/greenfox-academy/marsaltamas/tree/master/week-03/CLI_Calculator)
+day-1 	  |  day-2   | day-3  |day-4 | day-5
+----------|----------|--------|------|-------
+	  |	     |	      |      |	
