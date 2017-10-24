@@ -23,7 +23,8 @@ double avg_gold(Pirate_t pirate_array[], int size);
 
 char *richest_w_wood(Pirate_t pirat_array[], int size);
 
-int main() {
+int main()
+{
     struct Pirate pirates[] = {
         {"Jack", 0, 18},
         {"Uwe", 1, 8},
