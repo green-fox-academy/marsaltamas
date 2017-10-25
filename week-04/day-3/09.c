@@ -1,75 +1,46 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef struct complex
+typedef struct
 {
-    float real;
-    float imag;
-} complex;
+    float x;
+    float y;
 
-//TODO: create 3 functions, which calculates the sum, subtraction and multiplication of a complex number.
-// you can read about complex number's operations here: https://www.mathsisfun.com/numbers/complex-numbers.html
-// for checking results: https://www.symbolab.com/solver/complex-numbers-calculator/
+} point_t;
 
-void printer(complex n);
+typedef struct
+{
+    point_t start;
+    point_t end;
 
-complex addition(complex n1, complex n2);
-complex substraction(complex n1, complex n2);
-complex multibplication(complex n1, complex n2);
+} section_t;
+
+typedef struct
+{
+    point_t p;
+    float right_side;
+} equation_t;
+
+point_t intersection_point(section_t sec1, section_t sec2);
+
+//TODO: write a C program which can find the intersection point of two section
 
 int main()
 {
-    complex n1, n2, sum, substracted, multiplicated;
-    n1.real = 5;
-    n1.imag = 7.2;
+    section_t first_sect, second_sect;
 
-    n2.real = 6;
-    n2.imag = 8.1;
+    first_sect.start.x = -8;
+    first_sect.start.y = 1;
+    first_sect.end.x = 2;
+    first_sect.end.y = 5;
 
-    sum = addition(n1, n2);
-    printer(sum);
+    second_sect.start.x = -4;
+    second_sect.start.y = 9;
+    second_sect.end.x = 2;
+    second_sect.end.y = -3;
 
-    substracted = substraction(n1, n2);
-    printer(substracted);
-
-    multiplicated = multibplication(n1, n2);
-    printer(multiplicated);
+    point_t intersect = intersection_point(first_sect, second_sect);
+    printf("Intersection point: x = %f, y = %f.\n", intersect.x, intersect.y);
 
     return 0;
-}
-void printer(complex n)
-{
-    printf("Real part was %f\n", n.real);
-    printf("Imaginary part was %f\n", n.imag);
-    printf("=======================\n");
-}
-complex addition(complex n1, complex n2)
-{
-    complex sum;
-    complex multiplicated;
-    complex substracted;
-
-    sum.real = n1.real + n2.real;
-    sum.imag = n1.imag + n2.imag;
-
-    return sum;
-}
-
-complex substraction(complex n1, complex n2)
-{
-    complex substracted;
-
-    substracted.real = n1.real - n2.real;
-    substracted.imag = n1.imag - n2.imag;
-
-    return substracted;
-}
-
-complex multibplication(complex n1, complex n2)
-{
-    complex multiplicated;
-
-    multiplicated.real = (n1.real * n2.real) - (n1.imag * n2.imag);
-    multiplicated.imag = (n1.real * n2.imag) + (n1.imag * n2.real);
-
-    return multiplicated;
 }

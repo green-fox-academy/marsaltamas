@@ -1,58 +1,75 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
 
-    //TODO: make a custom type from union and nested structs. this type should be 8 bit wide.
-	//you should be able to assign values:
-	// - each bits
-	// - upper 3 bits and lower 5 bits
-	// - the whole 8-bit memory
+typedef struct complex
+{
+    float real;
+    float imag;
+} complex;
 
-struct whole {
-    uint8_t a;
-};
+//TODO: create 3 functions, which calculates the sum, subtraction and multiplication of a complex number.
+// you can read about complex number's operations here: https://www.mathsisfun.com/numbers/complex-numbers.html
+// for checking results: https://www.symbolab.com/solver/complex-numbers-calculator/
 
-struct first {
-    uint8_t a : 1;
-};
+void printer(complex n);
 
-struct upper3 {
-    uint8_t upper : 3;
-};
-
-struct lower5 {
-    uint8_t lower : 5;
-};
-
-struct upper_lower {
-    struct upper3 _upper3;
-    struct lower5 _lower5;
-};
-
-typedef union {
-    struct whole _whole;
-    struct first _1st;
-    struct upper_lower _upper_lower;
-} my_memory;
+complex addition(complex n1, complex n2);
+complex substraction(complex n1, complex n2);
+complex multibplication(complex n1, complex n2);
 
 int main()
 {
-    my_memory mem;
-    char upper[9];
-    char lower[9];
+    complex n1, n2, sum, substracted, multiplicated;
+    n1.real = 5;
+    n1.imag = 7.2;
 
-    mem._whole.a = 0b11100010;
-    printf("The whole memory: %d\n", mem._whole.a);
+    n2.real = 6;
+    n2.imag = 8.1;
 
-    mem._upper_lower._lower5.lower = 0b10100;
-    mem._upper_lower._upper3.upper = 0b101;
+    sum = addition(n1, n2);
+    printer(sum);
 
-    printf("upper 3 and lower 5 is %s:%s\n", itoa(mem._upper_lower._upper3.upper, upper, 2), itoa(mem._upper_lower._lower5.lower, lower, 2));
+    substracted = substraction(n1, n2);
+    printer(substracted);
 
-    mem._1st.a = 1;
-    printf("The first bit of mem %d\n", mem._1st.a);
-
-    printf("size of my_memory %d\n", sizeof(my_memory));
+    multiplicated = multibplication(n1, n2);
+    printer(multiplicated);
 
     return 0;
+}
+void printer(complex n)
+{
+    printf("Real part was %f\n", n.real);
+    printf("Imaginary part was %f\n", n.imag);
+    printf("=======================\n");
+}
+complex addition(complex n1, complex n2)
+{
+    complex sum;
+    complex multiplicated;
+    complex substracted;
+
+    sum.real = n1.real + n2.real;
+    sum.imag = n1.imag + n2.imag;
+
+    return sum;
+}
+
+complex substraction(complex n1, complex n2)
+{
+    complex substracted;
+
+    substracted.real = n1.real - n2.real;
+    substracted.imag = n1.imag - n2.imag;
+
+    return substracted;
+}
+
+complex multibplication(complex n1, complex n2)
+{
+    complex multiplicated;
+
+    multiplicated.real = (n1.real * n2.real) - (n1.imag * n2.imag);
+    multiplicated.imag = (n1.real * n2.imag) + (n1.imag * n2.real);
+
+    return multiplicated;
 }

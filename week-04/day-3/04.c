@@ -50,7 +50,7 @@ double distance(point_t *a, point_t *b)
 {
     double distance;
 
-    distance = sqrt(pow(a -> x - b -> x, 2) + pow(a -> y - b -> y, 2));
+    distance = sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
 
     return distance;
 }

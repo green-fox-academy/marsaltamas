@@ -1,116 +1,78 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-#include <string.h>
-#include <time.h>
-#include <dos.h>
+
+typedef struct Pirate {
+    char name[256];
+    int has_wooden_leg;
+    short int gold_count;
+} Pirate_t;
 
 // TODO:
-// Create a struct that represents a House
-// It should store:
-//  - The address of the house
-//  - The price in EUR
-//  - The number of rooms
-//  - The area of the house in square meters
+// Create a function that takes an array of pirates (and it's length) then returns the sum of the golds of all pirates
 
-typedef struct House {
-    char adress[10];
-    float price;
-    int room_number;
-    float area;
-} House;
-
-// print out a house
-void house_printer(House house);
-
-//returns a house with random value members
-House house_builder(void);
+int gold(Pirate_t pirate_array[], int size);
+void printer(Pirate_t pirate_array[], int size);
 
 // TODO:
-// The market price of the houses is 400 EUR / square meters
-// Create a function that takes a pointer to a house and decides if it's worth to buy
-// (if the price is lower than the calculated price from it's area)
+// Create a function that takes an array of pirates (and it's length) then returns the average of the gold / pirate
 
-int worth_it(House *house);
+double avg_gold(Pirate_t pirate_array[], int size);
 
 // TODO:
-// Create a function that takes an array of houses (and it's length), and counts the
-// houses that are worth to buy.
+// Create a function that takes an array of pirates (and it's length) then returns the name of the
+// richest that has wooden leg
 
-int worth_it_ev_array(House *houses, int size);
-
-// for seeding random generator with time
-void delay(int number_of_ms);
+char *richest_w_wood(Pirate_t pirat_array[], int size);
 
 int main()
 {
-    House house1 = house_builder();
-    house_printer(house1);
-    worth_it(&house1);
+    struct Pirate pirates[] = {
+        {"Jack", 0, 18},
+        {"Uwe", 1, 8},
+        {"Hook", 1, 12},
+        {"Halloween kid", 0, 0},
+        {"Sea Wolf", 1, 14},
+        {"Morgan", 0, 1}
+    };
 
-    House house[100];
-
-    for (int i = 0; i < 5; i++) { // building 5 houses randomly
-        house[i] = house_builder();
-    }
-
-    printf("number of houses worth it: %d\n", worth_it_ev_array(house, 5));
+    printer(pirates, 6);
+    printf("The pirates have a total of %d gold.\n", gold(pirates, 6));
+    printf("The pirates have %.2f gold on average.\n", avg_gold(pirates, 6));
+    printf("The richest with wooden leg is %s", richest_w_wood(pirates, 6));
 
     return 0;
 }
 
-void house_printer(House house)
+void printer(Pirate_t pirate_array[], int size)
 {
-    printf("address: %s\n", house.adress);
-    printf("price: %.2f\n", house.price);
-    printf("number of rooms: %d\n", house.room_number);
-    printf("area: %.2f\n", house.area);
-}
-
-House house_builder(void)
-{
-    srand(time(NULL));
-
-    delay(1000);
-    House house;
-
-    strcpy(house.adress, "address");
-    house.price = (float) (rand() % 1000) * 50;
-    house.room_number = rand() % 10;
-    house.area = (float) (rand() % 100);
-
-    return house;
-}
-
-int worth_it(House *house)
-{
-    if (house->price / house->area < 400) {
-        printf("Worth it.\n");
-        return 1;
-    }
-    else {
-        printf("Doesn't worth it.\n");
-        return 0;
+    for (int i = 0; i < size; i++) {
+        printf("name: %s\n", pirate_array[i].name);
+        printf("has wooden leg %d\n", pirate_array[i].has_wooden_leg);
+        printf("gold: %d\n", pirate_array[i].gold_count);
     }
 }
 
-int worth_it_ev_array(House houses[], int size)
+int gold(Pirate_t pirate_array[], int size)
 {
-    int quantity_worht_it = 0;
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum = sum + pirate_array[i].gold_count;
+    }
+    return sum;
+}
+
+double avg_gold(Pirate_t pirate_array[], int size)
+{
+    return (float) gold(pirate_array, size) / size;
+}
+
+char *richest_w_wood(Pirate_t pirat_array[], int size)
+{
+    static Pirate_t richest_w_wood = {" ", 0, 0};
 
     for (int i = 0; i < size; i++) {
-        if (worth_it(&houses[i]))
-            quantity_worht_it++;
+        if (pirat_array[i].gold_count > richest_w_wood.gold_count && pirat_array[i].has_wooden_leg)
+            richest_w_wood = pirat_array[i];
     }
 
-    return quantity_worht_it;
-}
-
-void delay(int number_of_ms)
-{
-    // Storing start time
-    clock_t start_time = clock();
-
-    // looping till required time is not achieved
-    while (clock() < start_time + number_of_ms);
+    return richest_w_wood.name;
 }
