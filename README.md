@@ -29,4 +29,4 @@ nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
 
 nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
 ---|----------|----------|--------|------|-------
- 1|	  |	     |	      |      |	
+ 1|	holiday  |[Pointers](https://github.com/greenfox-academy/marsaltamas/tree/master/week-04/day-2)|[Stuc, enum, union](https://github.com/greenfox-academy/marsaltamas/tree/master/week-04/day-3)|  [ToDo App in C]  | [ToDo App in C]	
