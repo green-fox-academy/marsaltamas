@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define TRUE 1
 #define FALSE 0
+#define COMMANDS 9
 
-typedef struct Task{
+typedef struct Task {
     char description[100];
     int priority;
     struct Checked {
@@ -14,6 +16,10 @@ typedef struct Task{
 } Task;
 
 void print_usage(void);
+void operation_prompt(void);
+void input_processor(char input[]);
+
+char commands[COMMANDS][3] = {"-a", "-wr", "-rd", "-l", "-e", "-rm", "-c", "-p", "-lp"};
 
 int main()
 {
@@ -35,4 +41,27 @@ void print_usage(void)
             "-c   Completes a task\n"
             "-p   Add priority to a task\n"
             "-lp  Lists all the tasks by priority\n");
+
+    operation_prompt();
 }
+
+void input_processor(char input[]){
+
+    char command[4];
+    char *tokenizer;
+
+    tokenizer = strtok(input, " ");
+    strcpy(command, tokenizer);
+
+    printf("%s\n", command);
+
+}
+
+void operation_prompt(void)
+{
+    char input[100];
+
+    input_processor(gets(input));
+}
+
+
