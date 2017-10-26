@@ -11,13 +11,18 @@
  */
 
  /* TODO
-  * set up input processor for reading command
-  * set up TASK struct - how to track task items quantity
-  * add task function
-  * list task function
-  * file writing
-  * file reading
-  * etc
+  * read from file
+  * add priority
+  * list by priority
+  * error handling:
+  *             - add task
+  *             - remove task
+  *             - command
+  *             - checked task
+  * exceptions handling
+  * functionalize duplicated code
+  * add comments
+  * structure headers
   */
 
 
