@@ -12,7 +12,7 @@ typedef struct Task {
         char checked_display[4];
         int is_checked;
     } checked;
-    struct Task *next;
+    //struct Task *next;
 } Task;
 
 void print_usage(void);
@@ -20,10 +20,58 @@ void operation_prompt(void);
 void input_processor(char input[]);
 
 char commands[COMMANDS][3] = {"-a", "-wr", "-rd", "-l", "-e", "-rm", "-c", "-p", "-lp"};
+Task task_list[10];
+
+void add_task(Task *task_list)
+{
+    Task new_task;
+    gets(new_task.description);
+    fflush(stdin);
+    scanf("%d", &new_task.priority);
+      fflush(stdin);
+    gets(new_task.checked.checked_display);
+      fflush(stdin);
+    scanf("%d", &new_task.checked.is_checked);
+      fflush(stdin);
+
+    for (int i = 0; i < 10; i++) {
+        if (task_list[i].priority != 1) {
+            task_list[i] = new_task;
+            break;
+        }
+    }
+
+}
+
+void task_printer(Task *task_list)
+{
+    printf("\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n=======================================================\n");
+    for (int i = 0; i < 10; i++) {
+            if (task_list[i].priority) {
+                printf("%3d ", i +1);
+                printf("%s\t", task_list[i].checked.checked_display);
+                printf(" %d | ", task_list[i].priority);
+                printf("%s\n", task_list[i].description);
+                //printf("is_checked: %d\n", task_list[i].checked.is_checked);
+                printf("_______________________________________________________\n");
+            }
+    }
+}
 
 int main()
 {
-    print_usage();
+
+    Task test_task = {"task 1", 1, "[x]", 1};
+    Task test_task2 = {"task 2", 1, "[x]", 1};
+    Task test_task3 = {"task 3", 1, "[x]", 1};
+    task_list[0] = test_task;
+    task_list[1] = test_task2;
+    task_list[2] = test_task3;
+    //add_task(task_list);
+    //add_task(task_list);
+
+    task_printer(task_list);
+    //print_usage();
     return 0;
 }
 
@@ -63,5 +111,3 @@ void operation_prompt(void)
 
     input_processor(gets(input));
 }
-
-
