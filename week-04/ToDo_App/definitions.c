@@ -158,7 +158,16 @@ void write(char target_file[])
 
     file_p = fopen(target_file, "w");
 
-    fputs("test", file_p);
+    fprintf(file_p, "\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n=======================================================\n");
+    for (int i = 0; i < 10; i++) {
+            if (task_list[i].active == TRUE) {
+                fprintf(file_p, "%3d ", i + 1);
+                fprintf(file_p, "%s\t", task_list[i].checked_display);
+                fprintf(file_p, " %d | ", task_list[i].priority);
+                fprintf(file_p, "%s\n", task_list[i].description);
+                fprintf(file_p, "_______________________________________________________\n");
+            }
+    }
 
     fclose(file_p);
 
