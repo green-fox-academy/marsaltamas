@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "prototypes.h"
 #define TRUE 1
 #define FALSE 0
 #define COMMANDS 9
+
 
 /* OPERATION
  * checking for existing txt file
@@ -15,57 +17,28 @@
  * control back to op_prompt
  */
 
-typedef struct Task {
-    char description[100];
-    int priority;
-    struct Checked {
-        char checked_display[4];
-        int is_checked;
-    } checked;
-    //struct Task *next;
-} Task;
+ /* TODO
+  * set up input processor for reading command
+  * set up TASK struct - how to track task items quantity
+  * add task function
+  * list task function
+  * file writing
+  * file reading
+  * etc
+  */
 
-void print_usage(void);
-void operation_prompt(void);
-void input_processor(char input[]);
-
-char commands[COMMANDS][3] = {"-a", "-wr", "-rd", "-l", "-e", "-rm", "-c", "-p", "-lp"};
+char commands_array[COMMANDS][3] = {
+    "-a",   //0
+    "-wr",  //1
+    "-rd",  //2
+    "-l",   //3
+    "-e",   //4
+    "-rm",  //5
+    "-c",   //6
+    "-p",   //7
+    "-lp"   //8
+    };
 Task task_list[10];
-
-void add_task(Task *task_list)
-{
-    Task new_task;
-    gets(new_task.description);
-    fflush(stdin);
-    scanf("%d", &new_task.priority);
-      fflush(stdin);
-    gets(new_task.checked.checked_display);
-      fflush(stdin);
-    scanf("%d", &new_task.checked.is_checked);
-      fflush(stdin);
-
-    for (int i = 0; i < 10; i++) {
-        if (task_list[i].priority != 1) {
-            task_list[i] = new_task;
-            break;
-        }
-    }
-}
-
-void task_printer(Task *task_list)
-{
-    printf("\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n=======================================================\n");
-    for (int i = 0; i < 10; i++) {
-            if (task_list[i].priority) {
-                printf("%3d ", i +1);
-                printf("%s\t", task_list[i].checked.checked_display);
-                printf(" %d | ", task_list[i].priority);
-                printf("%s\n", task_list[i].description);
-                //printf("is_checked: %d\n", task_list[i].checked.is_checked);
-                printf("_______________________________________________________\n");
-            }
-    }
-}
 
 int main()
 {
@@ -78,10 +51,49 @@ int main()
     task_list[2] = test_task3;
     //add_task(task_list);
     //add_task(task_list);
+    //list_tasks(task_list);
 
-    task_printer(task_list);
-    //print_usage();
+    print_usage();
+
     return 0;
+}
+
+void add_task(Task *task_list)
+{
+//    Task new_task;
+//    gets(new_task.description);
+//    fflush(stdin);
+//    scanf("%d", &new_task.priority);
+//      fflush(stdin);
+//    gets(new_task.checked.checked_display);
+//      fflush(stdin);
+//    scanf("%d", &new_task.checked.is_checked);
+//      fflush(stdin);
+
+    printf("Add task was called\n");
+
+//    for (int i = 0; i < 10; i++) {
+//        if (task_list[i].priority != 1) {
+//            task_list[i] = new_task;
+//            break;
+//        }
+//    }
+}
+
+void list_tasks(Task *task_list)
+{
+    printf("\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n=======================================================\n");
+    for (int i = 0; i < 10; i++) {
+            if (task_list[i].priority) {
+                printf("%3d ", i +1);
+                printf("%s\t", task_list[i].checked.checked_display);
+                printf(" %d | ", task_list[i].priority);
+                printf("%s\n", task_list[i].description);
+                //printf("is_checked: %d\n", task_list[i].checked.is_checked);
+                printf("_______________________________________________________\n");
+            }
+    }
+    operation_prompt();
 }
 
 void print_usage(void)
@@ -105,6 +117,7 @@ void print_usage(void)
 void input_processor(char input[]){
 
     char command[4];
+    int command_nr;
     char *tokenizer;
 
     tokenizer = strtok(input, " ");
@@ -112,11 +125,32 @@ void input_processor(char input[]){
 
     printf("%s\n", command);
 
+    // call for command selector
+    for (int i = 0; i < COMMANDS; i++) {
+        if (!strcmp(command, commands_array[i])) {
+            command_nr = i;
+            break;
+        }
+    }
+
+    switch (command_nr) {
+    case 0:
+        add_task(task_list);
+        break;
+    case 3:
+        list_tasks(task_list);
+    default:
+        printf("Invalid instruction.\n");
+    }
+
+    operation_prompt();
 }
 
 void operation_prompt(void)
 {
     char input[100];
+
+    printf("Please enter instructions:\n");
 
     input_processor(gets(input));
 }
