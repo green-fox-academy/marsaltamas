@@ -23,9 +23,9 @@
 
 int main()
 {
-    Task test_task = {"task 1", 1, "[x]", 1};
-    Task test_task2 = {"task 2", 1, "[x]", 1};
-    Task test_task3 = {"task 3", 1, "[x]", 1};
+    Task test_task = {"task 1", 1, "[x]", 1, TRUE};
+    Task test_task2 = {"task 2", 1, "[x]", 1, TRUE};
+    Task test_task3 = {"task 3", 1, "[x]", 1, TRUE};
     task_list[0] = test_task;
     task_list[1] = test_task2;
     task_list[2] = test_task3;
