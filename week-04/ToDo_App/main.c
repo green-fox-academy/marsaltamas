@@ -19,7 +19,8 @@
   *             - remove task
   *             - command
   *             - checked task
-  * exceptions handling
+  *             - file opening and reading
+  * exceptions handling: can not add more tasks if task array is full
   * functionalize duplicated code
   * add comments
   * structure headers
