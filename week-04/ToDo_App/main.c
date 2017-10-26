@@ -5,6 +5,16 @@
 #define FALSE 0
 #define COMMANDS 9
 
+/* OPERATION
+ * checking for existing txt file
+ * if exists, reading in txt and uploading task_list array
+ * printing usage
+ * operation_prompt to read input line and forward it to input_processor
+ * input_processor processes input until first space, and calls proper command, or sends error message
+ * command takes input lie as argument and processes it further, executing command, or sending error message
+ * control back to op_prompt
+ */
+
 typedef struct Task {
     char description[100];
     int priority;
@@ -40,7 +50,6 @@ void add_task(Task *task_list)
             break;
         }
     }
-
 }
 
 void task_printer(Task *task_list)
