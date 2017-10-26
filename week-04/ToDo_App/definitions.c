@@ -36,9 +36,10 @@ void print_usage(void)
 void clear_screen(void)
 {
     system("cls");
-    operation_prompt();
 }
-void exit_program(void){
+
+void exit_program(void)
+{
     exit(0);
 }
 
@@ -69,9 +70,6 @@ void add_task(Task *task_list, char input[])
         } else
             printf("Invalid instruction. Enclose the task between \"...\".\n");
     }
-
-
-    operation_prompt();
 }
 
 void list_tasks(Task *task_list)
@@ -86,7 +84,6 @@ void list_tasks(Task *task_list)
                 printf("_______________________________________________________\n");
             }
     }
-    operation_prompt();
 }
 
 void input_processor(char input[])
@@ -126,6 +123,9 @@ void input_processor(char input[])
     case 4:
         empty_list();
         break;
+    case 5:
+        remove_task(input);
+        break;
     case 6:
         check_task(input);
         break;
@@ -138,7 +138,6 @@ void input_processor(char input[])
    default:
         printf("Invalid instruction.\n");
     }
-
     operation_prompt();
 }
 
@@ -176,8 +175,6 @@ void write(char target_file[])
     }
 
     fclose(file_p);
-
-    operation_prompt();
 }
 
 void check_task(char input[])
@@ -186,8 +183,6 @@ void check_task(char input[])
 
     strcpy(task_list[task_nr - 1].checked_display, "[x]");
     task_list[task_nr -1].is_checked = TRUE;
-
-    operation_prompt();
 }
 
 void empty_list(void)
@@ -199,6 +194,15 @@ void empty_list(void)
         task_list[i].priority = 0;
         task_list[i].is_checked = FALSE;
     }
+}
 
-    operation_prompt();
+void remove_task(char input[])
+{
+    int task_nr = atoi(input);
+
+    for (int i = task_nr - 1; i < 10; i++) {
+        task_list[i] = task_list[i + 1];
+        if (task_list[i + 1].active == FALSE)
+            break;
+    }
 }
