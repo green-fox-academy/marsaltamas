@@ -61,4 +61,10 @@ struct tm stop(time_t raw_tm) {
 void time_diff(struct tm t1, struct tm t2, struct tm *diff){
     diff->tm_min = t2.tm_min - t1.tm_min;
     diff->tm_sec = t2.tm_sec - t1.tm_sec;
+
+    if (diff->tm_sec < 0) {
+        diff->tm_min-= 1;
+        diff->tm_sec+= 60;
+
+    }
 }
