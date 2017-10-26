@@ -25,5 +25,7 @@ void clear_screen(void);
 void exit_program(void);
 void write(char target_file[]);
 void check_task(char input[]);
+void empty_list(void);
+
 
 #endif // PROTOTYPES_H

@@ -123,6 +123,9 @@ void input_processor(char input[])
     case 3:
         list_tasks(task_list);
         break;
+    case 4:
+        empty_list();
+        break;
     case 6:
         check_task(input);
         break;
@@ -182,4 +185,20 @@ void check_task(char input[])
     int task_nr = atoi(input);
 
     strcpy(task_list[task_nr - 1].checked_display, "[x]");
+    task_list[task_nr -1].is_checked = TRUE;
+
+    operation_prompt();
+}
+
+void empty_list(void)
+{
+    for (int i = 0; i < 10; i++) {
+        task_list[i].active = FALSE;
+        strcpy(task_list[i].checked_display, "[ ]");
+        strcpy(task_list[i].description, "");
+        task_list[i].priority = 0;
+        task_list[i].is_checked = FALSE;
+    }
+
+    operation_prompt();
 }
