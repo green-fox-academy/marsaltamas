@@ -123,6 +123,9 @@ void input_processor(char input[])
     case 3:
         list_tasks(task_list);
         break;
+    case 6:
+        check_task(input);
+        break;
     case 9:
         exit_program();
         break;
@@ -174,3 +177,9 @@ void write(char target_file[])
     operation_prompt();
 }
 
+void check_task(char input[])
+{
+    int task_nr = atoi(input);
+
+    strcpy(task_list[task_nr - 1].checked_display, "[x]");
+}
