@@ -46,13 +46,11 @@ void add_task(Task *task_list, char input[])
 {
     Task new_task;
     char *reader = NULL;
-    printf("Add task was called\n");
-    printf("line got to addtask: %s\n", input);
 
     if(input[0] != 34) // 34 == "
-        printf("Invalid instruction. Enclose the task between parenthesis.\n");
+        printf("Invalid instruction. Enclose the task between \"...\".\n");
     else {
-        input++;
+        input++; // dodge first dbl quot mark
         reader = strchr(input, 34);
         if (reader != NULL) {
             *reader = '\0';
@@ -61,17 +59,18 @@ void add_task(Task *task_list, char input[])
             new_task.is_checked = 0;
             new_task.priority = 0;
             new_task.active = TRUE;
-        }
 
-
+            for (int i = 0; i < 10; i++) {
+                if (task_list[i].active != 1) {
+                    task_list[i] = new_task;
+                    break;
+                }
+            }
+        } else
+            printf("Invalid instruction. Enclose the task between \"...\".\n");
     }
 
-    for (int i = 0; i < 10; i++) {
-        if (task_list[i].active != 1) {
-            task_list[i] = new_task;
-            break;
-        }
-    }
+
     operation_prompt();
 }
 
@@ -118,6 +117,9 @@ void input_processor(char input[])
     case 0:
         add_task(task_list, input);
         break;
+    case 1:
+        write(input);
+        break;
     case 3:
         list_tasks(task_list);
         break;
@@ -134,4 +136,32 @@ void input_processor(char input[])
     operation_prompt();
 }
 
+void write(char target_file[])
+{
+    printf("write was called.\n");
+
+    char *reader = NULL;
+
+    if(target_file[0] != 34) // 34 == "
+        printf("Invalid instruction. Enclose the target file between \"...\".\n");
+    else {
+        target_file++; // dodge first dbl quot mark
+        reader = strchr(target_file, 34);
+        if (reader != NULL) {
+            *reader = '\0';
+        }
+        else
+            printf("Invalid instruction. Enclose the target file between \"...\".\n");
+    }
+
+    FILE *file_p;
+
+    file_p = fopen(target_file, "w");
+
+    fputs("test", file_p);
+
+    fclose(file_p);
+
+    operation_prompt();
+}
 

@@ -23,5 +23,6 @@ void add_task(Task *task_list, char input[]);
 void list_tasks(Task *task_list);
 void clear_screen(void);
 void exit_program(void);
+void write(char target_file[]);
 
 #endif // PROTOTYPES_H

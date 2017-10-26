@@ -39,6 +39,7 @@
 *.layout
 *.cbp
 *.depend
+*.txt
 
 
 # make and build files
