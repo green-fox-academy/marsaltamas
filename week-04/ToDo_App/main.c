@@ -11,9 +11,7 @@
  */
 
  /* TODO
-  * read from file
   * add priority
-  * list by priority
   * error handling:
   *             - add task
   *             - remove task
@@ -29,16 +27,16 @@
 
 int main()
 {
-    Task test_task1 = {"task 1", 1, "[ ]", 1, TRUE};
-    Task test_task2 = {"task 2", 1, "[ ]", 1, TRUE};
-    Task test_task3 = {"task 3", 1, "[ ]", 1, TRUE};
-    Task test_task4 = {"task 4", 1, "[ ]", 1, TRUE};
-    Task test_task5 = {"task 5", 1, "[ ]", 1, TRUE};
-    Task test_task6 = {"task 6", 1, "[ ]", 1, TRUE};
-    Task test_task7 = {"task 7", 1, "[ ]", 1, TRUE};
-    Task test_task8 = {"task 8", 1, "[ ]", 1, TRUE};
-    Task test_task9 = {"task 9", 1, "[ ]", 1, TRUE};
-    Task test_task10 = {"task 10", 1, "[ ]", 1, TRUE};
+    Task test_task1 = {"task 1", 2, "[ ]", 1, TRUE};
+    Task test_task2 = {"task 2", 5, "[ ]", 1, TRUE};
+    Task test_task3 = {"task 3", 5, "[ ]", 1, TRUE};
+    Task test_task4 = {"task 4", 4, "[ ]", 1, TRUE};
+    Task test_task5 = {"task 5", 5, "[ ]", 1, TRUE};
+    Task test_task6 = {"task 6", 5, "[ ]", 1, TRUE};
+    Task test_task7 = {"task 7", 2, "[ ]", 1, TRUE};
+    Task test_task8 = {"task 8", 3, "[ ]", 1, TRUE};
+    Task test_task9 = {"task 9", 3, "[ ]", 1, TRUE};
+    Task test_task10 = {"task 10", 5, "[ ]", 1, TRUE};
 
     task_list[0] = test_task1;
     task_list[1] = test_task2;

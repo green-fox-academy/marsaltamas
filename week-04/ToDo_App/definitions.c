@@ -86,6 +86,37 @@ void list_tasks(Task *task_list)
     }
 }
 
+void list_by_prior(void)
+{
+    printf("\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n=======================================================\n");
+
+    int pos = 0;
+    Task temp_task;
+
+    for (int i = 5; i > 0; i--) {
+        for (int j = 0; j < 10; j++) {
+            if (task_list[j].priority == i) {
+                temp_task = task_list[pos];
+                task_list[pos] = task_list[j];
+                task_list[j] = temp_task;
+                pos++;
+            }
+        }
+    }
+
+
+
+    for (int i = 0; i < 10; i++) {
+            if (task_list[i].active == TRUE) {
+                printf("%3d ", i +1);
+                printf("%s\t", task_list[i].checked_display);
+                printf(" %d | ", task_list[i].priority);
+                printf("%s\n", task_list[i].description);
+                printf("_______________________________________________________\n");
+            }
+    }
+}
+
 void input_processor(char input[])
 {
     char command[4] = " ";
@@ -111,31 +142,34 @@ void input_processor(char input[])
     }
 
     switch (command_nr) {
-    case 0:
+    case A:
         add_task(task_list, input);
         break;
-    case 1:
+    case WR:
         write(input);
         break;
-    case 2:
+    case RD:
         read_from_file(input);
         break;
-    case 3:
+    case L:
         list_tasks(task_list);
         break;
-    case 4:
+    case E:
         empty_list();
         break;
-    case 5:
+    case RM:
         remove_task(input);
         break;
-    case 6:
+    case C:
         check_task(input);
         break;
-    case 9:
+    case X:
         exit_program();
         break;
-    case 10:
+    case LPRI:
+        list_by_prior();
+        break;
+    case CL:
         clear_screen();
         break;
    default:
@@ -218,18 +252,6 @@ void read_from_file(char soruce_file[])
             i++;
         }
     }
-
-//    fprintf(file_p, "\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n=======================================================\n");
-//    for (int i = 0; i < 10; i++) {
-//            if (task_list[i].active == TRUE) {
-//                fprintf(file_p, "%3d ", i + 1);
-//                fprintf(file_p, "%s\t", task_list[i].checked_display);
-//                fprintf(file_p, " %d | ", task_list[i].priority);
-//                fprintf(file_p, "%s\n", task_list[i].description);
-//                fprintf(file_p, "_______________________________________________________\n");
-//            }
-//    }
-//
     fclose(file_p);
 }
 
