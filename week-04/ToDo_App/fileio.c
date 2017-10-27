@@ -5,8 +5,6 @@
 
 void write(char target_file[])
 {
-    printf("write was called.\n");
-
     char *reader = NULL;
 
     if(target_file[0] != 34) // 34 == "
@@ -63,9 +61,9 @@ void read_from_file(char soruce_file[])
     }
 
     FILE *file_p;
-    char buffer[57];
-    int linecounter = 0;
-    int i = 0;
+    char buffer[57]; // holds the line read out
+    int linecounter = 0; // ensures that correct line being read
+    int i = 0; // to hold position being filled with information read
 
     file_p = fopen(soruce_file, "r");
 

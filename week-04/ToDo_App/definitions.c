@@ -46,15 +46,15 @@ void exit_program(void)
 
 void add_task(Task *task_list, char input[])
 {
-    Task new_task;
+    Task new_task; // new task to fill
     char *reader = NULL;
 
-    if(input[0] != 34) { // 34 == "
+    if(input[0] != 34) { // 34 == " -> validating command parameter
         printf("Invalid instruction. Enclose the task between \"...\".\n");
     } else {
         input++; // dodge first dbl quot mark
         reader = strchr(input, 34);
-        if (reader != NULL) {
+        if (reader != NULL) { // -> checks for 2nd quot mark to finish parameter validation
             *reader = '\0';
             strcpy(new_task.description, input);
             strcpy(new_task.checked_display, "[ ]");
@@ -62,9 +62,9 @@ void add_task(Task *task_list, char input[])
             new_task.priority = 0;
             new_task.active = TRUE;
 
-            if (task_list[9].active == TRUE) {
+            if (task_list[9].active == TRUE) { //checking if there is and empty place in the task_list
                 printf("Can not add more tasks, the list is full.\n");
-            } else {
+            } else { // adding new task to task_list
                 for (int i = 0; i < 10; i++) {
                     if (task_list[i].active != TRUE) {
                         task_list[i] = new_task;
@@ -90,7 +90,7 @@ void list_tasks(Task *task_list)
                 printf("_______________________________________________________\n");
             }
     }
-    is_list_empty();
+    is_list_empty(); // printing "empty" message if list has no active tasks
 }
 
 //checking if list contains active tasks
@@ -127,16 +127,16 @@ void list_by_prior(void)
 
 void input_processor(char input[])
 {
-    char command[4] = " ";
-    int command_nr = -1;
+    char command[4] = " "; // will store command
+    int command_nr = -1; // will hold command iD
     char *tokenizer;
 
-    if (strcmp(input, "")) { // this if protects if an empty line is inputed
+    if (strcmp(input, "")) { // this protects against an empty line input
         tokenizer = strtok(input, " ");
         if(tokenizer != NULL) { //reading further parts of input
             strcpy(command, tokenizer);
-            tokenizer = strtok(NULL, ""); //reads the entire line left if it is not empty
-            if(tokenizer != NULL) //copy the entire line left if it is not empty
+            tokenizer = strtok(NULL, ""); //reads the entire string left if it is not empty
+            if(tokenizer != NULL) //copy the entire string left if it is not empty
                 strcpy(input, tokenizer);
         }
     }
@@ -191,11 +191,11 @@ void input_processor(char input[])
 
 void check_task(char input[])
 {
-    int task_nr = atoi(input);
+    int task_nr = atoi(input); // converts command parameter to int
 
-    if (task_nr < 1 || task_nr > 10) {
+    if (task_nr < 1 || task_nr > 10) { // protection against invalid parameter
         printf("Your provided an invalid index.\n");
-    } else if (task_list[task_nr].active == FALSE) {
+    } else if (task_list[task_nr].active == FALSE) { // protects again an inactive task to be checked
         printf("There is no active task at that position.\n");
     } else if (task_list[task_nr].is_checked == TRUE) {
         printf("This task had already been checked.\n");
@@ -220,11 +220,11 @@ void empty_list(void)
 
 void remove_task(char input[])
 {
-    int task_nr = atoi(input);
+    int task_nr = atoi(input); // converts command parameter to int
 
-    if (task_nr < 1 || task_nr > 10) {
+    if (task_nr < 1 || task_nr > 10) { // protection against invalid parameter
         printf("Your provided an invalid index.\n");
-    } else if (task_list[task_nr].active == FALSE) {
+    } else if (task_list[task_nr].active == FALSE) { // protects again an inactive task to be set inactive
         printf("There is no active task at that position.\n");
     } else {
         for (int i = task_nr - 1; i < 10; i++) {

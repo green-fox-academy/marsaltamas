@@ -1,21 +1,12 @@
 #include "prototypes.h"
 
 /* OPERATION
- * checking for existing txt file
- * if exists, reading in txt and uploading task_list array
  * printing usage
  * operation_prompt to read input line and forward it to input_processor
  * input_processor processes input until first space, and calls proper command, or sends error message
- * command takes input lie as argument and processes it further, executing command, or sending error message
+ * command takes input line as argument and processes it further, executing command, or sending error message
  * control back to op_prompt
  */
-
- /* TODO
-  * functionalize duplicated code
-  * add comments
-  * structure headers
-  */
-
 
 int main()
 {
@@ -31,6 +22,7 @@ int main()
     Task test_task9 = {"task 9", 3, "[ ]", FALSE, TRUE};
     //Task test_task10 = {"task 10", 5, "[ ]", 1, TRUE};
 
+    // adding dummy tasks to task_list for testing
     task_list[0] = test_task1;
     task_list[1] = test_task2;
     task_list[2] = test_task3;
