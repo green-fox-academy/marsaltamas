@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
 #include "prototypes.h"
 
 void write(char target_file[])
@@ -25,6 +24,11 @@ void write(char target_file[])
     FILE *file_p;
 
     file_p = fopen(target_file, "w");
+
+    if (file_p == NULL) {
+        printf("I could not open the file: %s.\n", target_file);
+        return;
+    }
 
     fprintf(file_p, "\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n=======================================================\n");
     for (int i = 0; i < 10; i++) {
@@ -64,6 +68,11 @@ void read_from_file(char soruce_file[])
     int i = 0;
 
     file_p = fopen(soruce_file, "r");
+
+    if (file_p == NULL) {
+        printf("I could not open the file: %s.\n", soruce_file);
+        return;
+    }
 
     while (fgets(buffer, 57, file_p)) {
         ++linecounter;

@@ -11,8 +11,6 @@
  */
 
  /* TODO
-  * error handling:
-  *             - file opening and reading
   * functionalize duplicated code
   * add comments
   * structure headers
