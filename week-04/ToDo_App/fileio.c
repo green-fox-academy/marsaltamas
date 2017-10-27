@@ -7,12 +7,12 @@ void write(char target_file[])
 {
     char *reader = NULL;
 
-    if(target_file[0] != 34) // 34 == "
+    if(target_file[0] != 34) // 34 == " -> opening validation for command parameter
         printf("Invalid instruction. Enclose the target file between \"...\".\n");
     else {
         target_file++; // dodge first dbl quot mark
         reader = strchr(target_file, 34);
-        if (reader != NULL) {
+        if (reader != NULL) { // -> closing validation fro command parameter
             *reader = '\0';
         }
         else
@@ -48,12 +48,12 @@ void read_from_file(char soruce_file[])
 
     char *reader = NULL;
 
-    if(soruce_file[0] != 34) // 34 == "
+    if(soruce_file[0] != 34) // 34 == " -> starts validation of command parameter
         printf("Invalid instruction. Enclose the target file between \"...\".\n");
     else {
         soruce_file++; // dodge first dbl quot mark
         reader = strchr(soruce_file, 34);
-        if (reader != NULL) {
+        if (reader != NULL) { // -> closes validation of command parameter
             *reader = '\0';
         }
         else

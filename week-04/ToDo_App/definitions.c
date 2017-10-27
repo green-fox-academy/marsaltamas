@@ -235,18 +235,17 @@ void remove_task(char input[])
     }
 }
 
-
 void add_task_pri(char input[])
 {
     Task new_task;
     char *reader = NULL;
 
-    if(input[0] != 34) // 34 == "
+    if(input[0] != 34) // 34 == " -> validates first char of command parameter
         printf("Invalid instruction. Enclose the task between \"...\".\n");
     else {
         input++; // dodge first dbl quot mark
         reader = strchr(input, 34);
-        if (reader != NULL) {
+        if (reader != NULL) { // -> checks for 2nd dbl quout mark to finish parameter validation
             *reader = '\0';
             strcpy(new_task.description, input);
             strcpy(new_task.checked_display, "[ ]");

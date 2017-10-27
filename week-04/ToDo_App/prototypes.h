@@ -14,7 +14,7 @@ typedef enum Commands {
     RM,  //5
     C,   //6
     P,   //7
-    LPRI,  //8
+    LPRI,//8
     X,   //9
     CL   //10
 } Commands;
