@@ -49,9 +49,9 @@ void add_task(Task *task_list, char input[])
     Task new_task;
     char *reader = NULL;
 
-    if(input[0] != 34) // 34 == "
+    if(input[0] != 34) { // 34 == "
         printf("Invalid instruction. Enclose the task between \"...\".\n");
-    else {
+    } else {
         input++; // dodge first dbl quot mark
         reader = strchr(input, 34);
         if (reader != NULL) {
@@ -62,14 +62,19 @@ void add_task(Task *task_list, char input[])
             new_task.priority = 0;
             new_task.active = TRUE;
 
-            for (int i = 0; i < 10; i++) {
-                if (task_list[i].active != 1) {
-                    task_list[i] = new_task;
-                    break;
+            if (task_list[9].active == TRUE) {
+                printf("Can not add more tasks, the list is full.\n");
+            } else {
+                for (int i = 0; i < 10; i++) {
+                    if (task_list[i].active != TRUE) {
+                        task_list[i] = new_task;
+                        break;
+                    }
                 }
             }
-        } else
+        } else {
             printf("Invalid instruction. Enclose the task between \"...\".\n");
+        }
     }
 }
 
@@ -192,6 +197,8 @@ void check_task(char input[])
         printf("Your provided an invalid index.\n");
     } else if (task_list[task_nr].active == FALSE) {
         printf("There is no active task at that position.\n");
+    } else if (task_list[task_nr].is_checked == TRUE) {
+        printf("This task had already been checked.\n");
     } else {
         strcpy(task_list[task_nr - 1].checked_display, "[x]");
         task_list[task_nr -1].is_checked = TRUE;
