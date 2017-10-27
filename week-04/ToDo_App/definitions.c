@@ -254,20 +254,25 @@ void add_task_pri(char input[])
             new_task.priority = 0;
             new_task.active = TRUE;
 
-            reader++;
+            if (task_list[9].active == TRUE) {
+                    printf("Can not add more tasks, the list is full.\n");
+            } else {
+                reader++;
 
-            if (reader != NULL && atoi(reader))
-                new_task.priority = atoi(reader);
-            else
-                printf("Your task had been added, but w/o priority due to invalid parameter.\n");
+                if (reader != NULL && atoi(reader))
+                    new_task.priority = atoi(reader);
+                else
+                    printf("Your task had been added, but w/o priority due to invalid parameter.\n");
 
-            for (int i = 0; i < 10; i++) {
-                if (task_list[i].active != 1) {
-                    task_list[i] = new_task;
-                    break;
+                for (int i = 0; i < 10; i++) {
+                    if (task_list[i].active != 1) {
+                        task_list[i] = new_task;
+                        break;
+                    }
                 }
             }
-        } else
+        } else {
             printf("Invalid instruction. Enclose the task between \"...\".\n");
+        }
     }
 }
