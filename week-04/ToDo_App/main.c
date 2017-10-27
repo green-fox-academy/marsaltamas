@@ -27,16 +27,17 @@
 
 int main()
 {
-    Task test_task1 = {"task 1", 2, "[ ]", 1, TRUE};
+    // dummy tasks for testing
+    Task test_task1 = {"task 1", 0, "[ ]", 1, TRUE};
     Task test_task2 = {"task 2", 5, "[ ]", 1, TRUE};
     Task test_task3 = {"task 3", 5, "[ ]", 1, TRUE};
-    Task test_task4 = {"task 4", 4, "[ ]", 1, TRUE};
+    Task test_task4 = {"task 4", 0, "[ ]", 1, TRUE};
     Task test_task5 = {"task 5", 5, "[ ]", 1, TRUE};
     Task test_task6 = {"task 6", 5, "[ ]", 1, TRUE};
     Task test_task7 = {"task 7", 2, "[ ]", 1, TRUE};
     Task test_task8 = {"task 8", 3, "[ ]", 1, TRUE};
     Task test_task9 = {"task 9", 3, "[ ]", 1, TRUE};
-    Task test_task10 = {"task 10", 5, "[ ]", 1, TRUE};
+    //Task test_task10 = {"task 10", 5, "[ ]", 1, TRUE};
 
     task_list[0] = test_task1;
     task_list[1] = test_task2;
@@ -47,11 +48,7 @@ int main()
     task_list[6] = test_task7;
     task_list[7] = test_task8;
     task_list[8] = test_task9;
-    task_list[9] = test_task10;
-
-    //add_task(task_list);
-    //add_task(task_list);
-    //list_tasks(task_list);
+    //task_list[9] = test_task10;
 
     print_usage();
 

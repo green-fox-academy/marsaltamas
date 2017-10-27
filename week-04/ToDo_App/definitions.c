@@ -94,7 +94,7 @@ void list_by_prior(void)
     Task temp_task;
 
     for (int i = 5; i > 0; i--) {
-        for (int j = 0; j < 10; j++) {
+        for (int j = pos; j < 10; j++) {
             if (task_list[j].priority == i) {
                 temp_task = task_list[pos];
                 task_list[pos] = task_list[j];
@@ -162,6 +162,9 @@ void input_processor(char input[])
         break;
     case C:
         check_task(input);
+        break;
+    case P:
+        add_task_pri(input);
         break;
     case X:
         exit_program();
@@ -282,5 +285,41 @@ void remove_task(char input[])
         task_list[i] = task_list[i + 1];
         if (task_list[i + 1].active == FALSE)
             break;
+    }
+}
+
+
+void add_task_pri(char input[])
+{
+    Task new_task;
+    char *reader = NULL;
+
+    if(input[0] != 34) // 34 == "
+        printf("Invalid instruction. Enclose the task between \"...\".\n");
+    else {
+        input++; // dodge first dbl quot mark
+        reader = strchr(input, 34);
+        if (reader != NULL) {
+            *reader = '\0';
+            strcpy(new_task.description, input);
+            strcpy(new_task.checked_display, "[ ]");
+            new_task.is_checked = 0;
+            new_task.priority = 0;
+            new_task.active = TRUE;
+
+            for (int i = 0; i < 10; i++) {
+                if (task_list[i].active != 1) {
+                    task_list[i] = new_task;
+                    break;
+                }
+            reader = strtok(input, " ");
+
+            if (reader != NULL & atoi(reader))
+                new_task.priority = atoi(reader);
+            else
+                printf("Your task had been added, but w/o priority due to invalid parameter.\n");
+            }
+        } else
+            printf("Invalid instruction. Enclose the task between \"...\".\n");
     }
 }

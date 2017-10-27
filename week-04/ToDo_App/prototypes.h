@@ -34,6 +34,7 @@ void print_usage(void);
 void operation_prompt(void);
 void input_processor(char input[]);
 void add_task(Task *task_list, char input[]);
+void add_task_pri(char input[]);
 void list_tasks(Task *task_list);
 void list_by_prior(void);
 void clear_screen(void);
