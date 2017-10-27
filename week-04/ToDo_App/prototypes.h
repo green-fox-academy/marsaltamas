@@ -16,7 +16,7 @@ typedef enum Commands {
     LPRI,  //8
     X,   //9
     CL   //10
-    } Commands;
+} Commands;
 
 extern char commands_array[COMMANDS][4];
 
@@ -39,11 +39,8 @@ void list_tasks(Task *task_list);
 void list_by_prior(void);
 void clear_screen(void);
 void exit_program(void);
-void write(char target_file[]);
-void read_from_file(char soruce_file[]);
 void check_task(char input[]);
 void empty_list(void);
 void remove_task(char input[]);
-
-
+void is_list_empty(void);
 #endif // PROTOTYPES_H

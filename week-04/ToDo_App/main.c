@@ -11,7 +11,6 @@
  */
 
  /* TODO
-  * add priority
   * error handling:
   *             - add task
   *             - remove task
