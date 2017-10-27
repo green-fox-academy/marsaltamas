@@ -209,10 +209,16 @@ void remove_task(char input[])
 {
     int task_nr = atoi(input);
 
-    for (int i = task_nr - 1; i < 10; i++) {
-        task_list[i] = task_list[i + 1];
-        if (task_list[i + 1].active == FALSE)
-            break;
+    if (task_nr < 1 || task_nr > 10) {
+        printf("Your provided an invalid index.\n");
+    } else if (task_list[task_nr].active == FALSE) {
+        printf("There is no active task at that position.\n");
+    } else {
+        for (int i = task_nr - 1; i < 10; i++) {
+            task_list[i] = task_list[i + 1];
+            if (task_list[i + 1].active == FALSE)
+                break;
+        }
     }
 }
 

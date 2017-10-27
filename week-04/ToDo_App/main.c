@@ -12,8 +12,6 @@
 
  /* TODO
   * error handling:
-  *             - add task
-  *             - remove task
   *             - command
   *             - checked task
   *             - file opening and reading
