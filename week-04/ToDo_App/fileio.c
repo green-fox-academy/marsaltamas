@@ -28,7 +28,9 @@ void write(char target_file[])
         return;
     }
 
-    fprintf(file_p, "\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n=======================================================\n");
+    fprintf(file_p,
+            "\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n"
+            "=======================================================\n");
     for (int i = 0; i < 10; i++) {
             if (task_list[i].active == TRUE) {
                 fprintf(file_p, "%3d ", i + 1);
@@ -61,8 +63,8 @@ void read_from_file(char soruce_file[])
     }
 
     FILE *file_p;
-    char buffer[57]; // holds the line read out
-    int linecounter = 0; // ensures that correct line being read
+    char buffer[57]; // holds the line been read out
+    int linecounter = 0; // ensures that correct lines going to be read
     int i = 0; // to hold position being filled with information read
 
     file_p = fopen(soruce_file, "r");
@@ -74,7 +76,7 @@ void read_from_file(char soruce_file[])
 
     while (fgets(buffer, 57, file_p)) {
         ++linecounter;
-        if (linecounter > 3 && !(linecounter % 2)) {
+        if (linecounter > 3 && !(linecounter % 2)) { // linecounter > 3 -> skipping header, %2 - > skipping separator lines
             task_list[i].active = 1;
             if (buffer[5] == 'x') {
                 task_list[i].is_checked = 1;

@@ -80,7 +80,8 @@ void add_task(Task *task_list, char input[])
 
 void list_tasks(Task *task_list)
 {
-    printf("\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n=======================================================\n");
+    printf("\t\t\t|TASK LIST|\nNum Chk Pri| Task Description\n"
+           "=======================================================\n");
     for (int i = 0; i < 10; i++) {
             if (task_list[i].active == TRUE) {
                 printf("%3d ", i +1);
