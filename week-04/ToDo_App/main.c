@@ -12,7 +12,6 @@
 
  /* TODO
   * error handling:
-  *             - command
   *             - checked task
   *             - file opening and reading
   * exceptions handling: can not add more tasks if task array is full

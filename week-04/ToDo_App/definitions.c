@@ -188,8 +188,14 @@ void check_task(char input[])
 {
     int task_nr = atoi(input);
 
-    strcpy(task_list[task_nr - 1].checked_display, "[x]");
-    task_list[task_nr -1].is_checked = TRUE;
+    if (task_nr < 1 || task_nr > 10) {
+        printf("Your provided an invalid index.\n");
+    } else if (task_list[task_nr].active == FALSE) {
+        printf("There is no active task at that position.\n");
+    } else {
+        strcpy(task_list[task_nr - 1].checked_display, "[x]");
+        task_list[task_nr -1].is_checked = TRUE;
+    }
 }
 
 void empty_list(void)
