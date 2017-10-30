@@ -5,14 +5,14 @@
  * Print it out before and after to be able to check whether it works as supposed.
  */
 
- #include <stdlib.h>
- #include <stdio.h>
- #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
 
 void bubble_sort(int *to_sort, unsigned int size);
 
- int main()
- {
+int main()
+{
     unsigned int size = 0;
     printf("enter the size of the array:  ");
     scanf("%d", &size);
@@ -39,7 +39,7 @@ void bubble_sort(int *to_sort, unsigned int size);
     }
 
     return 0;
- }
+}
 
 void bubble_sort(int *to_sort, unsigned int size)
 {
