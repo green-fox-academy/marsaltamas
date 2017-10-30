@@ -16,7 +16,6 @@
 #include <time.h>
 #include <string.h>
 
-
 int overwrite(char *array1, char *array2, int pos_of_change);
 
 int main()
