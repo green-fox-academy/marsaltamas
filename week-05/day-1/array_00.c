@@ -7,42 +7,40 @@
 
  #include <stdlib.h>
  #include <time.h>
+ #include <stdio.h>
 
  void array_printer(int array[], int size);
 
  int main()
  {
+    int array[5];
+    int temp = 0;
 
-     int array[5];
-     int temp = 0;
+    srand(time(0));
 
-     srand(time(0));
-
-     for (int i = 0; i < 5; i++) {
-
+    for (int i = 0; i < 5; i++) {
         array[i] = rand();
-     }
+    }
 
-     array_printer(array, 5);
+    array_printer(array, 5);
 
-     for (int i = 0; i < 5 / 2; i++) {
+    for (int i = 0; i < 5 / 2; i++) {
         temp = array[i];
         array[i] = array[5 - i - 1];
         array[5 - i - 1] = temp;
-     }
+    }
 
-     printf("\n");
+    printf("\n");
 
-     array_printer(array, 5);
-
+    array_printer(array, 5);
 
     return 0;
  }
 
-  void array_printer(int array[], int size)
-  {
+void array_printer(int array[], int size)
+{
         for (int i = 0; i < size; i++) {
 
         printf("%d | ", array[i]);
     }
-  }
+}

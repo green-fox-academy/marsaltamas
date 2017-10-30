@@ -8,11 +8,12 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
- void array_printer(int array[], int size);
+void array_printer(int array[], int size);
 
- int main()
- {
+int main()
+{
     int array_5[5];
     int array_7[7];
     int temp = 0;
@@ -37,9 +38,9 @@
     array_printer(array_7, 7);
 
     return 0;
- }
+}
 
-  void array_printer(int array[], int size)
+void array_printer(int array[], int size)
 {
         for (int i = 0; i < size; i++) {
         printf("%d | ", array[i]);
