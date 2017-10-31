@@ -30,3 +30,9 @@ nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
 nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
 ---|----------|----------|--------|------|-------
  1|	holiday  |[Pointers](https://github.com/greenfox-academy/marsaltamas/tree/master/week-04/day-2)|[Struc, enum, union](https://github.com/greenfox-academy/marsaltamas/tree/master/week-04/day-3)|  [ToDo App in C](https://github.com/greenfox-academy/marsaltamas/tree/master/week-04/ToDo_App)  | [ToDo App in C](https://github.com/greenfox-academy/marsaltamas/tree/master/week-04/ToDo_App)	
+
+## week-5
+
+nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
+---|----------|----------|--------|------|-------
+1|[C practice](https://github.com/greenfox-academy/marsaltamas/tree/master/week-05/day-1)|[C practice](https://github.com/greenfox-academy/marsaltamas/tree/master/week-05/day-1)|Holiday| |
