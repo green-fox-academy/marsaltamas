@@ -1,12 +1,12 @@
 /*
  * Take this array of characters: "2319834571976548721b1992456t831977451963782"
  * Create a function that takes an array of characters as the input. (Test it with the one above).
- * It should return an array of integers. Each representing a valid birthdate year extracted from
- * the string of characters. (A valid boirthyear is either 19??, 20?? or 21??)
- * The 0th element of the returned array should be the number of valid birthyears found. Then there should be
- * the birthyears in each element.
+ * It should return an array of integers. Each representing a valid birth date year extracted from
+ * the string of characters. (A valid birth year is either 19??, 20?? or 21??)
+ * The 0th element of the returned array should be the number of valid birth years found. Then there should be
+ * the birth years in each element.
  *
- * Create a main function to test this and print out the birthyears in a new line each.
+ * Create a main function to test this and print out the birth years in a new line each.
  */
 
 #include <stdlib.h>
