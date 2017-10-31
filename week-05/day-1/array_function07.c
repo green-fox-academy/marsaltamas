@@ -26,6 +26,13 @@ int* where_is_this_letter(char char_array[], int length, char to_locate)
     }
     int *return_array = (int) malloc(hit * sizeof(int));
 
+    if (!return_array) {
+        perror("Error allocation memory.\n");
+        exit(0);
+    }
+
+    memset(return_array, 0, hit * sizeof(int));
+
     // counting occurrences and saving to array
     hit = 0;
 
