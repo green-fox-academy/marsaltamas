@@ -13,31 +13,45 @@
 #include <stdio.h>
 #include <string.h>
 
-int where_is_this_letter(char char_array[], int length, char to_locate)
+int* where_is_this_letter(char char_array[], int length, char to_locate)
 {
     int position = -1;
+    int hit = 0; // counts how many times to_locate char was found in string
+
+    // setting up array to be returned, and counting the length of it
+    for (int i = 0; i < length; i++) {
+        if (char_array[i] == to_locate) {
+            hit++;
+        }
+    }
+    int *return_array = (int) malloc(hit * sizeof(int));
+
+    // counting occurrences and saving to array
+    hit = 0;
 
     for (int i = 0; i < length; i++) {
         if (char_array[i] == to_locate) {
-            position = i;
-            break;
+            hit++;
+            return_array[hit] = i;
         }
     }
 
-    return position;
+    return_array[0] = hit;
+
+    return return_array;
 }
 
 int main()
 {
-    char char_array[] = "In the year 2525, If man is still alive... In the Year 3535, In the Year 4545";
+    char char_array[] = "eIn the year 2525, If man is still alive... In the Year 3535, In the Year 4545ee";
 
     int size = sizeof(char_array) / sizeof(char);
-    char letter = 'Y';
-    int position = where_is_this_letter(char_array, size, letter);
+    char letter = 'e';
+    int *position = where_is_this_letter(char_array, size, letter);
 
-    if (position > -1)
-        printf("Position of letter \"%c\" is \"%d\".\n", letter, position);
-    else
-        printf("Letter \"%c\" is not in the string.\n", letter);
+    for (int i = 0; i < position[0] + 1; i++) {
+        printf("position[%d]: %d\n", i, position[i]);
+    }
+
     return 0;
 }
