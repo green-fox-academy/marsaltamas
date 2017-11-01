@@ -18,7 +18,12 @@ int main()
     char *binarywriter = NULL;
 
     fp = fopen("vers.txt", "r");
+    if (fp == NULL)
+        return 1;
+
     wp = fopen("copy.txt", "w+");
+       if (wp == NULL)
+        return 1;
 
     char buffer[255];
 
@@ -31,7 +36,13 @@ int main()
     fclose(wp);
 
     rbinary = fopen("vers.txt", "r");
+    if (rbinary == NULL)
+        return 1;
+
     wbinary = fopen("binary.raw", "w+");
+    if (wbinary == NULL)
+        return 1;
+
     binaryreader = rbinary;
     binaryreader = rbinary;
 

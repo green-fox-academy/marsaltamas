@@ -13,6 +13,8 @@
 int main()
 {
     FILE *fp = fopen("vers.txt", "r");
+    if (fp == NULL)
+        return 1;
 
     char buffer[255];
 
@@ -20,13 +22,14 @@ int main()
        printf("%s", buffer);
     }
 
-    printf("\n\n");
+    printf("\n");
 
     fseek(fp, 0, SEEK_SET);
 
     int row_counter = 0;
     while (fgets(buffer, 255, fp)) {
-        row_counter++;
+        if (buffer[0] != '\n')
+            row_counter++;
     }
 
     printf("row_coutner: %d", row_counter);
@@ -35,33 +38,52 @@ int main()
 
     fseek(fp, 0, SEEK_SET);
 
-    int char_count = -1;
+    int char_count = 0;
     int vers_count = 0;
     char actual_char = '\0';
 
-//    do {
-//        actual_char = fgetc(fp);
-//        char_count++;
-//        if (actual_char == '\n')
-//            char_count--;
-//        if (actual_char == ' ')
-//            char_count--;
-//    } while (actual_char != EOF);
-//
-//    printf("char_count: %d", char_count);
-
-     do {
+    do {
         actual_char = fgetc(fp);
         if (actual_char != '\n')
             char_count++;
         else {
             if (char_count == 0)
-            vers_count++;
+                vers_count++;
             char_count = 0;
         }
     } while (actual_char != EOF);
 
-    printf("verse count %d", vers_count);
+    printf("verse count: %d", vers_count);
+
+    printf("\n\n");
+
+    fseek(fp, 0, SEEK_SET);
+
+    char_count = -1;
+    actual_char = '\0';
+
+    do {
+        actual_char = fgetc(fp);
+        if (actual_char != '\n')
+            char_count++;
+    } while (actual_char != EOF);
+
+    printf("char count with spaces: %d", char_count);
+
+    printf("\n\n");
+
+    fseek(fp, 0, SEEK_SET);
+
+    char_count = -1;
+    actual_char = '\0';
+
+    do {
+        actual_char = fgetc(fp);
+        if (actual_char != '\n' && actual_char != ' ')
+            char_count++;
+    } while (actual_char != EOF);
+
+    printf("char count w/o spaces: %d", char_count);
 
     printf("\n\n");
 
