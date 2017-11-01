@@ -52,9 +52,9 @@ void replace_small_array(t_number_bank *bank, int new_array_size, int old_size)
         new_arr[i] = bank->p[i];
     }
 
-    for (int i = 0; i < new_array_size; i++) {
-        bank->p[i] = new_arr[i];
-    }
+    free(bank->p);
+
+    bank->p = new_arr;
 
     bank->in_bank = new_array_size;
 }
@@ -124,18 +124,18 @@ int main()
     printer(new_bank);
 
     int retur_index = 5;
-    printf("i am returning number_bank.p[%d]: %d\n", retur_index, number_bank.p[retur_index]);
+    printf("i am returning number_bank.p[%d]: %d\n", retur_index, new_bank.p[retur_index]);
 
     retur_index = 2;
-    printf("i am returning number_bank.p[%d]: %d\n", retur_index, number_bank.p[retur_index]);
+    printf("i am returning number_bank.p[%d]: %d\n", retur_index, new_bank.p[retur_index]);
 
     printf("replacing a number over the index limit (thus incr. array size):\n");
-    replace_number_at_index_even_if_array_is_too_small(&number_bank, 999, 20);
-    printer(number_bank);
+    replace_number_at_index_even_if_array_is_too_small(&new_bank, 999, 20);
+    printer(new_bank);
 
     printf("sorting elements of number array:\n");
-    bubble_sort(&number_bank);
-    printer(number_bank);
+    bubble_sort(&new_bank);
+    printer(new_bank);
 
     return 0;
 }
