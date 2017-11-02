@@ -13,7 +13,7 @@ int main()
     FILE *rp = NULL;
     FILE *wp = NULL;
 
-    char buffer[255];
+    char buffer[200];
 
     rp = fopen("vers.txt", "r");
     if (rp == NULL)
@@ -23,34 +23,50 @@ int main()
     if (wp == NULL)
         return 2;
 
-    fpos_t position;
-    char temp = 0;
-
-    do {
-        temp = fgetc(rp);
-        fputc('x', wp);
-        fgetpos(wp, &position);
-    } while (temp != EOF);
-
-    fgetpos(wp, &position);
-
-    fseek(rp, 0, SEEK_SET);
-    fseek(wp, 0, SEEK_SET);
-
-    char *verse_buffer = (char*)malloc(200 * sizeof(char));
+    int verse_length = 0;
+    int max_verse_length = 0;
+    int verse_count = 1;
 
     while (fgets(buffer, 200, rp)) {
-        if (buffer[0] != '\n') {
-            strcat(verse_buffer, buffer);
-        } else {
-            strcat(verse_buffer, "\n");
-            position = position - (fpos_t) strlen(verse_buffer);
-            fsetpos(wp, &position);
-            fprintf(wp, "%s", verse_buffer);
-            free(verse_buffer);
-            verse_buffer = (char*)malloc(200 * sizeof(char));
+        verse_length = verse_length + strlen(buffer);
+        if (buffer[0] == '\n') {
+            verse_count++;
+            if (verse_length > max_verse_length)
+                max_verse_length = verse_length;
+            verse_length = 0;
         }
     }
+
+    char **verse_buffer = (char **) malloc(verse_count * sizeof(char*));
+
+    for (int i = 0; i < verse_count; i++) {
+        verse_buffer[i] = (char *) malloc(max_verse_length * sizeof(char));
+        memset(verse_buffer[i], '\0', max_verse_length * sizeof(char));
+    }
+
+    printf("\n\nversecount %d\n", verse_count);
+    printf("maxverse length %d\n", max_verse_length);
+
+
+    fseek(rp, 0, SEEK_SET);
+    verse_count = verse_count - 1;
+
+    int reversed_verse_count = verse_count;
+
+    while (fgets(buffer, 200, rp)) {
+        strcat(verse_buffer[verse_count],  buffer);
+        if (buffer[0] == '\n')
+             verse_count--;
+    }
+
+    strcat(verse_buffer[verse_count], "\n\n");
+
+
+    for (int i = 0; i <= reversed_verse_count; i++)
+        fprintf(wp, "%s", verse_buffer[i]);
+
+    fclose(rp);
+    fclose(wp);
 
     return 0;
 }
