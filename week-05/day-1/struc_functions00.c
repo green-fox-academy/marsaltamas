@@ -27,6 +27,7 @@ typedef struct Book {
     int publication;
 } t_book;
 
+// takes a book and prints its members
 void book_printer(t_book book)
 {
     printf("title: %s\n", book.title);
@@ -35,6 +36,8 @@ void book_printer(t_book book)
     printf("-----------------------\n");
 }
 
+// takes character arrays and an int to upload it to corresponding book members
+// returns a book with the passed in parameters
 t_book create_new_book(char title[], char author[], int publication)
 {
     t_book new_book;
@@ -46,16 +49,19 @@ t_book create_new_book(char title[], char author[], int publication)
     return new_book;
 }
 
+// sets, resets the title of the passed in book
 void title_set(t_book *book, char new_title[])
 {
     strcpy((*book).title, new_title);
 }
 
+// sets, resets the author of the passed in book
 void author_set(t_book *book, char new_author[])
 {
     strcpy(book->author, new_author);
 }
 
+// sets, resets the publication year of the passed in book
 void publication_set(t_book *book, int new_publ_year)
 {
     (*book).publication = new_publ_year;

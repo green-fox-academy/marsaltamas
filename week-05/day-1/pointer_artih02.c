@@ -25,6 +25,8 @@ int main()
 
     p = p - SIZE;
 
+/* ================ printing each element ================ */
+
     printf("printing every element:\n");
     int i = 0;
     while (i < SIZE) {
@@ -33,6 +35,8 @@ int main()
          p++;
     }
 
+
+/* ================ printing ever 2nd element ================ */
 
     p = p - SIZE;
     printf("printing every 2nd element:\n");
@@ -43,6 +47,8 @@ int main()
          p+= 2;
     }
 
+/* ================ printing ever 4th element ================ */
+
     p = p - SIZE;
     printf("printing every 4th element:\n");
     i = 0;
@@ -51,6 +57,8 @@ int main()
          i+= 4;
          p+= 4;
     }
+
+/* ================ printing ever 8th element ================ */
 
     p = p - SIZE;
     printf("printing every 8th element:\n");

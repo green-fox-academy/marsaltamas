@@ -8,10 +8,10 @@
 #include <time.h>
 #include <stdio.h>
 
- void array_printer(int array[], int size);
+void array_printer(int array[], int size);
 
- int main()
- {
+int main()
+{
     int array_12[12];
     int size = 12;
     int temp = 0;

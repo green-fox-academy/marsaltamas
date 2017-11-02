@@ -77,7 +77,7 @@ void replace_number_at_index_even_if_array_is_too_small(t_number_bank *bank, int
     }
     bank->limit = index + 1; // -> actually, there is no limit
 }
-
+// takes a bank, sorts its array in ascending order
 void bubble_sort_asc(t_number_bank *bank)
 {
     int temp = 0;
@@ -101,7 +101,7 @@ void bubble_sort_asc(t_number_bank *bank)
         }
     }
 }
-
+// takes a bank, sorts its array in descending order
 void bubble_sort_desc(t_number_bank *bank)
 {
     int temp = 0;
@@ -116,7 +116,8 @@ void bubble_sort_desc(t_number_bank *bank)
         }
     }
 }
-
+// takes a bank, sorts its array in ascending or descending order
+// order == 1: ASCending order; order == 2: DESCending order
 void sort_in_requested_order(t_number_bank *bank, int order)
 {
     if (order == SORT_ASC)

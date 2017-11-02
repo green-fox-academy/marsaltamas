@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 
+// takes an array of characters to search and its size as parameters
+// returns the valid birthday as an int array
 int *bd_finder(char array[], int size)
 {
     int *return_array;
@@ -23,9 +25,10 @@ int *bd_finder(char array[], int size)
 
     int temp = 0;
 
+    // this loop determines how the size of the return array, based on the nr of hits
     for (int i = 0; i < size - 4; i++) {
-    memcpy(dest, &array[i], 4);
-    temp = strtol(dest, NULL, 10);
+    memcpy(dest, &array[i], 4); // saving ever 4 char to dest string
+    temp = strtol(dest, NULL, 10); // checking if the int value of dest string is a valid birthday
     if ( temp > 1899 && temp < 2020)
         hit++;
     }
@@ -42,6 +45,7 @@ int *bd_finder(char array[], int size)
     return_array[0] = hit;
     hit = 0;
 
+    // loading up return array with valid birth dates
     for (int i = 0; i < size - 4; i++) {
         memcpy(dest, &array[i], 4);
         temp = strtol(dest, NULL, 10);

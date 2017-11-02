@@ -71,6 +71,7 @@ void replace_number_at_index_even_if_array_is_too_small(t_number_bank *bank, int
     bank->limit = index + 1; // -> actually, there is no limit
 }
 
+// takes a bank as a parameter. bubble sorts its array
 void bubble_sort(t_number_bank *bank)
 {
     int temp = 0;

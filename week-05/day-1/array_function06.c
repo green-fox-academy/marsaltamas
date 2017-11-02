@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <string.h>
 
+// takes an array of chars to search for, the length of this array and a character to_locate
+// returns the position where the letter located first. if letter was not found, returns -1.
 int where_is_this_letter(char char_array[], int length, char to_locate)
 {
     int position = -1;

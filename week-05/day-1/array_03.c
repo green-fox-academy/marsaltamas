@@ -14,7 +14,7 @@
 #include <time.h>
 #include <stdio.h>
 
- void array_printer(char array[][9], int size);
+void array_printer(char array[][9], int size);
 
 int main()
 {
@@ -23,9 +23,9 @@ int main()
 
     for (int i = 0; i < size; i++){
         for (int j = 0; j < size; j++) {
-            if (j == 0 && i > 0)
+            if (j == 0 && i > 0)            // marking culomns
                 board[i][j] = i + 64;
-            else if (i == 0 && j > 0)
+            else if (i == 0 && j > 0)       // marking rows
                 board[i][j] = j + 48;
             else if (i % 2 && j % 2)
                 board[i][j] = 'x';
@@ -40,12 +40,12 @@ int main()
     array_printer(board, size);
     printf("\n");
 
-
+    // setting up peasants
     for (int j = 1; j < size; j++) {
         board[2][j] = 'P';
         board[7][j] = 'P';
     }
-
+    // setting up other figures
     board[1][1] = 'T';
     board[1][8] = 'T';
     board[8][1] = 'T';
@@ -66,7 +66,7 @@ int main()
     printf("starting board:\n");
     array_printer(board, size);
     printf("\n");
-
+    // "moving" N
     board[1][2] = ' ';
     board[3][3] = 'N';
 

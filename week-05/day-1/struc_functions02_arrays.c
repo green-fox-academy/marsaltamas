@@ -19,15 +19,19 @@
 
 // for testing structure with flexible array size/static struct
 
+
+// declaring a struct with an array as last member, so it is a flexible array
 typedef struct number_bank {
     int quantity_stored;
-    int stored_numbers[];
+    int stored_numbers[]; // flexible array
 } t_number_bank;
 
-t_number_bank number_banki;
+t_number_bank number_banki; // global struct, to work properly with flexible array
 
+// takes a bank struct to updated and an int to add to the struct
 void add_number_at_end(t_number_bank *bank, int to_add);
 
+// takes a struct, prints its members
 void printer(t_number_bank *bank)
 {
     printf("printing number_bank:\n");
@@ -39,8 +43,6 @@ void printer(t_number_bank *bank)
 
 int main()
 {
-
-
     for (int i = 0; i < 25; i++) {
         add_number_at_end(&number_banki, i);
     }
@@ -49,7 +51,6 @@ int main()
 
     return 0;
 }
-
 
 void add_number_at_end(t_number_bank *bank, int to_add)
 {

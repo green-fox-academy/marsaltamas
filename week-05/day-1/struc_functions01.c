@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
+// additional struct to be used as a nested struct
 typedef struct Author {
     char firstname[20];
     char lastname[20];

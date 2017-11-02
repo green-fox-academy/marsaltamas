@@ -18,11 +18,15 @@ int main()
 
     char buffer[255];
 
+/* ================printing poem================ */
+
     while (fgets(buffer, 255, fp)) {
        printf("%s", buffer);
     }
 
     printf("\n");
+
+/* ================counting rows================ */
 
     fseek(fp, 0, SEEK_SET);
 
@@ -35,6 +39,8 @@ int main()
     printf("row_coutner: %d", row_counter);
 
     printf("\n\n");
+
+/* ================counting verses================ */
 
     fseek(fp, 0, SEEK_SET);
 
@@ -57,6 +63,8 @@ int main()
 
     printf("\n\n");
 
+/* ================counting characters with spaces================ */
+
     fseek(fp, 0, SEEK_SET);
 
     char_count = -1;
@@ -71,6 +79,8 @@ int main()
     printf("char count with spaces: %d", char_count);
 
     printf("\n\n");
+
+/* ================counting characters w/o spaces================ */
 
     fseek(fp, 0, SEEK_SET);
 

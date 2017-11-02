@@ -23,16 +23,19 @@ typedef struct number_bank {
     int limit;
 } t_number_bank;
 
+// prints a bank struct
 void printer(t_number_bank bank)
 {
     for (int i = 0; i < bank.in_bank; i++) {
         printf("bank[%d]: %d\n", i, *bank.p);
         bank.p++;
     }
+
     printf("num in bank: %d\n", bank.in_bank);
     printf("limit: %d\n", bank.limit);
 }
 
+//takes a bank and an int, adds the int to the end of the bank's array
 void add_number_at_end(t_number_bank *bank, int number)
 {
     bank->p = bank->p + bank->in_bank;
@@ -41,11 +44,13 @@ void add_number_at_end(t_number_bank *bank, int number)
     bank->in_bank++;
 }
 
+// takes a bank and an int, returns the position of the int
 int get_number_at_index(t_number_bank bank, int number)
 {
     return bank.p[number];
 }
 
+// replaces the taken bank's int array if that is too small
 void replace_small_array(t_number_bank *bank, int new_array_size, int old_size)
 {
     int *new_arr = (int*)malloc(new_array_size*sizeof(int));
@@ -66,6 +71,8 @@ void replace_small_array(t_number_bank *bank, int new_array_size, int old_size)
     bank->in_bank = new_array_size;
 }
 
+// takes a bank, an int as an index to update, and an int to place as the new value
+// if the original array is too small, it is going to be increased to accomodate the new int at given index
 void replace_number_at_index_even_if_array_is_too_small(t_number_bank *bank, int number, int index)
 {
     if (bank->in_bank > index) {
