@@ -15,7 +15,7 @@ int main()
 
     char buffer[255];
 
-    rp = fopen("verses_to_reverse.txt", "r");
+    rp = fopen("vers.txt", "r");
     if (rp == NULL)
         return 1;
 
@@ -23,26 +23,34 @@ int main()
     if (wp == NULL)
         return 2;
 
-    int rows_count = 0;
+    fpos_t position;
+    char temp = 0;
 
-    while (fgets(buffer, 255, rp)) {
-        rows_count++;
-        fprintf(wp, "\n");
-    }
+    do {
+        temp = fgetc(rp);
+        fputc('x', wp);
+        fgetpos(wp, &position);
+    } while (temp != EOF);
+
+    fgetpos(wp, &position);
 
     fseek(rp, 0, SEEK_SET);
-   // fseek(wp, 0, SEEK_SET);
+    fseek(wp, 0, SEEK_SET);
 
-    int row_position = 0;
+    char *verse_buffer = (char*)malloc(200 * sizeof(char));
 
-    while (fgets(buffer, 1000, rp)) {
-        fseek(wp, rows_count - row_position, SEEK_CUR);
-        fputs(buffer, wp);
-        row_position++;
+    while (fgets(buffer, 200, rp)) {
+        if (buffer[0] != '\n') {
+            strcat(verse_buffer, buffer);
+        } else {
+            strcat(verse_buffer, "\n");
+            position = position - (fpos_t) strlen(verse_buffer);
+            fsetpos(wp, &position);
+            fprintf(wp, "%s", verse_buffer);
+            free(verse_buffer);
+            verse_buffer = (char*)malloc(200 * sizeof(char));
+        }
     }
-
-    fclose(rp);
-    fclose(wp);
 
     return 0;
 }

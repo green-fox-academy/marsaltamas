@@ -21,10 +21,12 @@
 
 typedef struct number_bank {
     int quantity_stored;
-    int stored_numbers[20];
+    int stored_numbers[];
 } t_number_bank;
 
-void add_number_at_end(t_number_bank *bank, int to_add, int new_size);
+t_number_bank number_banki;
+
+void add_number_at_end(t_number_bank *bank, int to_add);
 
 void printer(t_number_bank *bank)
 {
@@ -37,10 +39,10 @@ void printer(t_number_bank *bank)
 
 int main()
 {
-    t_number_bank number_banki = {0, 0};
+
 
     for (int i = 0; i < 25; i++) {
-        add_number_at_end(&number_banki, i, 30);
+        add_number_at_end(&number_banki, i);
     }
 
     printer(&number_banki);
@@ -49,15 +51,8 @@ int main()
 }
 
 
-void add_number_at_end(t_number_bank *bank, int to_add, int new_size)
+void add_number_at_end(t_number_bank *bank, int to_add)
 {
-    static int array[26];
     bank->stored_numbers[bank->quantity_stored] = to_add;
     bank->quantity_stored++;
-
-    for (int i = 0; i < bank->quantity_stored; i++) {
-        array[i] = bank->stored_numbers[i];
-    }
-
-    *(bank)->stored_numbers = array;
 }
