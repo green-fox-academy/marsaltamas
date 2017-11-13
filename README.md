@@ -35,10 +35,10 @@ nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
 
 nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
 ---|----------|----------|--------|------|-------
-1|[C practice](https://github.com/greenfox-academy/marsaltamas/tree/master/week-05/day-1)|[C practice](https://github.com/greenfox-academy/marsaltamas/tree/master/week-05/day-1)|Holiday|[C practice](https://github.com/greenfox-academy/marsaltamas/tree/master/week-05/day-1)|Exam
+1|[C practice](https://github.com/greenfox-academy/marsaltamas/tree/master/week-05)|[C practice](https://github.com/greenfox-academy/marsaltamas/tree/master/week-05)|Holiday|[C practice](https://github.com/greenfox-academy/marsaltamas/tree/master/week-05)|Exam
 
 ## week-6
 
 nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
 ---|----------|----------|--------|------|-------
-1|C vs C++| OOP | OOP | Pracice | ToDo C++
+1|[C vs C++](https://github.com/greenfox-academy/marsaltamas/tree/master/week-06/day-1)| OOP | OOP | Pracice | ToDo C++
