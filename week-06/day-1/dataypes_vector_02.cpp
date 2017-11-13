@@ -4,7 +4,6 @@
 #include <ctime>
 #include <cstdlib>
 
-
 using namespace std;
 
 int main() {
@@ -16,7 +15,7 @@ int main() {
 	vector<int> rand_int_vector(10);
 
 	for (int i = 0; i < rand_int_vector.size(); i++) {
-        rand_int_vector.at(i) = rand() % 100;
+        rand_int_vector.at(i) = rand() % 11;
 	}
 
 	for (int i = 0; i < rand_int_vector.size(); i++) {
