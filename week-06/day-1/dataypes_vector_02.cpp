@@ -12,10 +12,11 @@ int main() {
 
     srand(time(0));
 
-    vector<int> rand_int_vector(10);
+    vector<int> rand_int_vector;
+    rand_int_vector.reserve(10);
 
-    for (int i = 0; i < rand_int_vector.size(); i++) {
-        rand_int_vector.at(i) = rand() % 11;
+    for (int i = 0; i < rand_int_vector.capacity(); i++) {
+        rand_int_vector.push_back(rand() % 11);
     }
 
     for (int i = 0; i < rand_int_vector.size(); i++) {

@@ -1,4 +1,3 @@
-
 namespace person {
 
     string name = "Tamas";

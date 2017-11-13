@@ -13,7 +13,6 @@ using namespace std;
 
 int main()
 {
-
     person :: display();
 
     cout << person :: name;

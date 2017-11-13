@@ -30,10 +30,10 @@ int main()
 
     cout << "-------------\n";
 
-    // remove even numbers
+    // remove even numbers, iterating with iterator
     vector<int>::const_iterator i;
 
-    for (i = rand_int_vector.begin(); i != rand_int_vector.end(); i++) {
+    for (i = rand_int_vector.begin(); i != rand_int_vector.end(); ++i) {
         if (!(*i % 2)) {
             rand_int_vector.erase(i);
             i--;
