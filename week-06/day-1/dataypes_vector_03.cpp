@@ -30,10 +30,6 @@ int main()
 
     cout << "-------------\n";
 
-    rand_int_vector.at(19) = 10;
-
-    cout << "replacing post 19: " << rand_int_vector.at(19) << endl << "-------" << endl;
-
     // remove even numbers
     vector<int>::const_iterator i;
 
@@ -47,6 +43,11 @@ int main()
     for (int i = 0; i < rand_int_vector.size(); ++i) {
         cout << "rand_int_vector[" << i << "]: " << rand_int_vector.at(i) << endl;
     }
+
+    cout << "Printing again with different iteration method: " << endl;
+
+    for (int x : rand_int_vector)
+        cout << x << endl;
 
     return 0;
 }
