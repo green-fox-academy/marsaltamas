@@ -14,7 +14,7 @@ int main()
     int cnt = 0;
     int *p = NULL;
 
-    cout << "Please enter how many numbers your will enter: " << endl;
+    cout << "Please enter how many numbers you will enter: " << endl;
     cin >> cnt;
 
     p = new int[cnt];
