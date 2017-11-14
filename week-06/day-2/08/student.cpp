@@ -50,5 +50,10 @@ float Student::get_average()
     {
         sum+= v_int_grades.at(i);
     }
-    return sum / v_int_grades.size();
+
+    if (!v_int_grades.size())
+        cout << "there were no grades found." << endl;
+        return 0;
+    else
+        return sum / v_int_grades.size();
 }
