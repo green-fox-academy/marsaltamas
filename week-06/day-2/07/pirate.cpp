@@ -19,7 +19,7 @@ void Pirate::drink_rum()
 
 string Pirate::hows_goin_mate()
 {
-    if (rum_drank >5)
+    if (rum_drank >= 4)
         return "-How's goin mate?\n-Arrrrr!\n";
     else
         return "-How's goin mate?\n-Nothing...\n";

@@ -20,8 +20,6 @@ int main()
     cout << pirate.hows_goin_mate();
     pirate.drink_rum();
     cout << pirate.hows_goin_mate();
-    pirate.drink_rum();
-    cout << pirate.hows_goin_mate();
 
     return 0;
 }
