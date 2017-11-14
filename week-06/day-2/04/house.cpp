@@ -6,6 +6,11 @@ House::House(string address, unsigned int area)
     this->area = area;
 }
 
+House::~House()
+{
+    cout << "Houses been abandoned.";
+}
+
 unsigned int House::get_price(unsigned int area)
 {
     return this-> area * 400;

@@ -8,5 +8,5 @@ Student::Student(string name, unsigned int age)
 
 Student::~Student()
 {
-    //dtor
+    cout << "Student left school building.";
 }

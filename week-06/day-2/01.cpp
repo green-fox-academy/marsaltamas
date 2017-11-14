@@ -12,6 +12,10 @@ class Student {
             this->name = name;
             this->age = age;
         }
+        ~Student()
+        {
+            cout << "Student says by.";
+        }
 };
 
 int main()

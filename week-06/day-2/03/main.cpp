@@ -12,6 +12,10 @@ class Student {
       this->age = age;
       this->name = name;
     }
+    ~Student()
+    {
+        cout << "Student left school.";
+    }
     string greet()
     {
         return name;
@@ -25,7 +29,7 @@ int main()
     // like: "Hello my name is: <student name>"
 
     Student student("John", 21);
-    cout << "Hello, my name is " << student.greet() << ".";
+    cout << "Hello, my name is " << student.greet() << "." << endl;
 
     return 0;
 }
