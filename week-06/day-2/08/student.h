@@ -22,7 +22,6 @@ class Student
         void set_name(string name);
         string get_name();
         void add_grade(int grade);
-        int get_grade(int position);
         vector<int> get_grades_vector();
         float get_average();
 };

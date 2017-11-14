@@ -3,17 +3,17 @@
 Student::Student(string name, vector<int> v_int_grades)
 {
     this->name = name;
-    this->v_int_grades;
+    this->v_int_grades = v_int_grades;
 }
 
 Student::~Student()
 {
-        cout << "Student finished studies.";
+    cout << "Student finished studies.";
 }
 
 void Student::set_name(string name)
 {
-
+    this->name = name;
 }
 
 string Student::get_name()
@@ -23,22 +23,32 @@ string Student::get_name()
 
 void Student::add_grade(int grade)
 {
-
-}
-
-int Student::get_grade(int position)
-{
-    return 2;
+    if (grade > 0 && grade < 6)
+        v_int_grades.push_back(grade);
+    else {
+        cout << "You tried to add " << grade << "." << endl;
+        cout << "Please add a grade between 1 and 5." << endl;
+    }
 }
 
 vector<int> Student::get_grades_vector()
 {
-    vector<int> grades;
+    cout << "Printing grades of student: " << endl;
 
-    return grades;
+    for (int i = 0; i < v_int_grades.size(); i++)
+    {
+        cout << "grade[" << i << "]: " << v_int_grades.at(i) << endl;
+    }
+    return v_int_grades;
 }
 
 float Student::get_average()
 {
-    return 2;
+    float sum = 0;
+
+    for (int i = 0; i < v_int_grades.size(); i++)
+    {
+        sum+= v_int_grades.at(i);
+    }
+    return sum / v_int_grades.size();
 }
