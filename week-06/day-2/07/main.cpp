@@ -5,12 +5,23 @@
 // if the drink_rum was called at least 5 times:
 // hows_goin_mate should return "Arrrr!"
 // "Nothin'" otherwise
-#include <iostream>
-
-using namespace std;
+#include "pirate.h"
 
 int main()
 {
-    cout << "Hello world!" << endl;
+    Pirate pirate;
+    pirate.drink_rum();
+    cout << pirate.hows_goin_mate();
+    pirate.drink_rum();
+    cout << pirate.hows_goin_mate();
+    pirate.drink_rum();
+    cout << pirate.hows_goin_mate();
+    pirate.drink_rum();
+    cout << pirate.hows_goin_mate();
+    pirate.drink_rum();
+    cout << pirate.hows_goin_mate();
+    pirate.drink_rum();
+    cout << pirate.hows_goin_mate();
+
     return 0;
 }
