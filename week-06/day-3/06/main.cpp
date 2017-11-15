@@ -4,46 +4,65 @@
 #include <iostream>
 using namespace std;
 
-typedef struct Node {
-    int data;
-    Node *next;
-} Node;
-
 class List {
+
+    typedef struct Node {
+        int value;
+        Node *next;
+    } Node;
 
     public:
         Node *head;
         Node *tail;
+
         List()
         {
             head = NULL;
             tail = NULL;
         }
-        void push_back_node(int data)
+
+        void addNote(int value)
         {
-            Node *new_node = new Node;
-            new_node->next = NULL;
+            Node *temp = new Node;
+            temp->value = value;
+            temp->next = NULL;
+
             if (head == NULL) {
-                head = new_node;
-                new_node->data = data;
-                tail = new_node;
+                head = temp;
+                tail = temp;
+                //delete temp;
             } else {
-                tail = new_node;
-                new_node->data = data;
+                tail->next = temp;
+                tail = tail->next;
+                //delete temp;
             }
         }
+
+        void display_list()
+        {
+            Node *temp = new Node;
+            temp = head;
+
+            while (temp != NULL) {
+                cout << temp->value << endl;
+                temp = temp->next;
+            }
+        }
+
 };
 
 int main()
 {
-    List list;
+    List l;
 
     for (int i = 0; i < 5; ++i) {
-        list.push_back_node(i);
+        l.addNote(i);
     }
 
-    cout << "Head data: " << list.head->data << endl;
-    cout << "Tail data: " << list.tail->data << endl;
+    cout << l.head->value << endl;
+    cout << l.tail->value << endl;
+
+    l.display_list();
 
     return 0;
 }
