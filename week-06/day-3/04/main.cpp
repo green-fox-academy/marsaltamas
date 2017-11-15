@@ -10,8 +10,6 @@
 // Print out the result of both functions if You first cast pointer a to be interpreted as of type ChildClass*
 #include "parentclass.h"
 #include "childclass.h"
-#include <memory>
-
 
 int main()
 {
@@ -20,10 +18,8 @@ int main()
     cout << p->where_am_i();
     cout << p->who_am_i();
 
-    ChildClass *temp = static_cast<ChildClass*>(p);
-
-    cout << temp->where_am_i();
-    cout << temp->who_am_i();
+    cout << ((ChildClass*)p)->where_am_i();
+    cout << ((ChildClass*)p)->who_am_i();
 
     return 0;
 }
