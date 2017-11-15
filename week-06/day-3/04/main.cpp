@@ -10,17 +10,20 @@
 // Print out the result of both functions if You first cast pointer a to be interpreted as of type ChildClass*
 #include "parentclass.h"
 #include "childclass.h"
+#include <memory>
+
 
 int main()
 {
-    ParentClass p;
+    ParentClass *p = new ChildClass();
 
-    cout << p.who_am_i();
-    cout << p.where_am_i();
+    cout << p->where_am_i();
+    cout << p->who_am_i();
 
-    ChildClass c;
+    ChildClass *temp = static_cast<ChildClass*>(p);
 
-    cout << c.who_am_i();
-    cout << c.where_am_i();
+    cout << temp->where_am_i();
+    cout << temp->who_am_i();
+
     return 0;
 }

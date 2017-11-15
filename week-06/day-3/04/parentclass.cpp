@@ -7,5 +7,5 @@ string ParentClass::who_am_i()
 
 string ParentClass::where_am_i()
 {
-    return "I am in parent class.\n";
+    return "I am in father class.\n";
 }
