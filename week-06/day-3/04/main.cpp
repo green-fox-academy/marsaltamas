@@ -6,7 +6,7 @@
 //
 // Create a main() function. In this function, create a ParentClass* pointer and instanciate a ChildClass member for that pointer.
 // Hint: This should look something like this: ParentClass* a = new ChildClass();
-// Print out the result of both functions on this a ponter.
+// Print out the result of both functions on this a pointer.
 // Print out the result of both functions if You first cast pointer a to be interpreted as of type ChildClass*
 #include "parentclass.h"
 #include "childclass.h"
