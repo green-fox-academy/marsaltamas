@@ -20,11 +20,15 @@ class Car
         float kms_run;
         string manufacturer;
         int number_of_seats;
+        int passangers;
 
     public:
-        Car();
-        virtual void kms_run_since_last_time(float kms_to_add) = 0;
-        virtual string add_person() = 0;
+        Car(int age, float kms_run, string manufacturer, int number_of_seats);
+        virtual void kms_run_since_last_time(float kms_to_add);
+        virtual string add_person();
+        virtual int get_seats();
+        virtual float get_kms_run();
+        virtual string get_manufacturer() = 0;
 };
 
 #endif // CAR_H

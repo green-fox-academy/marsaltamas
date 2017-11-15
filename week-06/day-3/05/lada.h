@@ -7,9 +7,9 @@
 class Lada : public Car
 {
     public:
-        Lada(int age, float kms_run, string manufacturer, int number_of_seats);
-        void kms_run_since_last_time(float kms_to_add);
-        string add_person();
+        Lada(int age, float kms_run, string manufacturer, int number_of_seats)
+        :Car(age, kms_run, manufacturer, number_of_seats){};
+        string get_manufacturer();
 };
 
 #endif // LADA_H
