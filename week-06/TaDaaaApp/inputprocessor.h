@@ -5,6 +5,8 @@
 #include <string>
 #include <istream>
 #include <vector>
+#include "commands.h"
+
 
 using namespace std;
 
@@ -12,10 +14,10 @@ class InputProcessor {
 
     private:
         string input;
-        vector<string> string_split;
     public:
         string get_input();
-        vector<string> tokenize_input(string input);
+        void command_selector(string input);
+
 };
 
 #endif // INPUTPROCESSOR_H

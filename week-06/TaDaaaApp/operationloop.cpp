@@ -9,5 +9,5 @@ void OperationLoop::operationPrompt()
     //printing list of tasks
     st.print_foot();
     InputProcessor ip;
-    ip.tokenize_input(ip.get_input()); //getting input as string and passing it to tokenizer
+    ip.command_selector(ip.get_input()); //getting input as string and passing it to tokenizer
 }

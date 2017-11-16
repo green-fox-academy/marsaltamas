@@ -8,9 +8,7 @@ using namespace std;
 
 class OperationLoop {
     public:
-
         void operationPrompt();
-        void inputProcessor();
 };
 
 #endif // OPERATIONLOOP_H
