@@ -5,11 +5,13 @@
 
 void OperationLoop::operationPrompt()
 {
+
+
     //system("cls");
     ScreenTemplate st;
     st.print_header();
-    Tasks t;
-    t.print_tasks();
+    Task t;
+    t.print_Task();
     st.print_foot();
     InputProcessor ip;
     ip.command_selector(ip.get_input()); //getting input as string and passing it to tokenizer

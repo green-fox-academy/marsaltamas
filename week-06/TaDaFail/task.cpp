@@ -1,11 +1,11 @@
-#include "tasks.h"
+#include "task.h"
 
-Tasks::Tasks()
+Task::Task()
 {
 
 }
 
-Tasks::Tasks(string description, bool is_checked, string is_checked_display, int priority)
+Task::Task(string description, bool is_checked, string is_checked_display, int priority)
 {
     this->description = description;
     this->is_checked = is_checked;
@@ -13,27 +13,27 @@ Tasks::Tasks(string description, bool is_checked, string is_checked_display, int
     this->priority = priority;
 }
 
-string Tasks::get_description()
+string Task::get_description()
 {
     return description;
 }
 
-bool Tasks::get_is_checked()
+bool Task::get_is_checked()
 {
     return true;
 }
 
-int Tasks::get_priority()
+int Task::get_priority()
 {
     return 2;
 }
 
-void Tasks::add_task(Tasks task)
+void Task::add_task(Task task)
 {
     //task_vector.push_back(task);
 }
 
-void Tasks::print_tasks()
+void Task::print_Task()
 {
     //cout << "size of task_vector: " << task_vector.size() << endl;
 

@@ -1,12 +1,33 @@
 #include "commands.h"
 
+Commands::Commands()
+{
+    string command_array[] = {
+        "-a",   //0
+        "-wr",  //1
+        "-rd",  //2
+        "-e",   //3
+        "-rm",  //4
+        "-c",   //5
+        "-p",   //6
+        "-lp",  //7
+        "-x",   //8
+        "-cl"   //9
+    };
+
+    for (int i = 0; i < 10; i++) {
+        command_vector.push_back(command_array[i]);
+    }
+
+}
+
 int Commands::find_command_ID(string command)
 {
     command_id = -1;
 
-    for (unsigned int i = 0; i < commands.size(); i++) {
+    for (unsigned int i = 0; i < command_vector.size(); i++) {
 
-         if (!commands.at(i).compare(command)) {
+         if (!command_vector.at(i).compare(command)) {
                 cout << "i found a match";
                 command_id = i;
                 break;
@@ -49,8 +70,8 @@ void Commands::select_command(int command_id, string command_parameters)
 void Commands::command_add_task(string command_parameters)
 {
 
-    Tasks t(command_parameters, false, "[ ]", 0);
-    Tasks *tp = new Tasks();
+    Task t(command_parameters, false, "[ ]", 0);
+    Task *tp = new Task();
     tp = &t;
     OperationLoop ol;
     ol.operationPrompt();
