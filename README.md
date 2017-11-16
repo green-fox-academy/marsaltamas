@@ -41,4 +41,4 @@ nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
 
 nr.|day-1 	  |  day-2   | day-3  |day-4 | day-5
 ---|----------|----------|--------|------|-------
-1|[C vs C++](https://github.com/greenfox-academy/marsaltamas/tree/master/week-06/day-1)| [OOP](https://github.com/greenfox-academy/marsaltamas/tree/master/week-06/day-2) | [OOP2](https://github.com/greenfox-academy/marsaltamas/tree/master/week-06/day-3) | Practice | ToDo C++
+1|[C vs C++](https://github.com/greenfox-academy/marsaltamas/tree/master/week-06/day-1)| [OOP](https://github.com/greenfox-academy/marsaltamas/tree/master/week-06/day-2) | [OOP2](https://github.com/greenfox-academy/marsaltamas/tree/master/week-06/day-3) | [ToDo C++](https://github.com/greenfox-academy/marsaltamas/tree/master/week-06/TaDaaaApp) | [ToDo C++](https://github.com/greenfox-academy/marsaltamas/tree/master/week-06/TaDaaaApp)
