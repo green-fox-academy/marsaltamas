@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "tasks.h"
+#include "operationloop.h"
 using namespace std;
 
 class Commands
@@ -35,10 +37,10 @@ class Commands
         int command_id;
 
     public:
-        void select_command(int command_id);
-        void select_command(string command, string command_parameters);
+        void select_command(int command_id, string command_parameters);
         int find_command_ID(string command);
-        void command_add_task();
+        void command_add_task(string command_parameters);
+        void command_exit();
 };
 
 #endif // COMMANDS_H

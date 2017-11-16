@@ -14,11 +14,16 @@
 
 #include "screentemplate.h"
 #include "operationloop.h"
+#include "taskvector.h"
+
+#include <vector>
+
 
 using namespace std;
 
 int main()
 {
+    TaskVector tv;
     OperationLoop ol;
     ol.operationPrompt();
 

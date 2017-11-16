@@ -21,7 +21,7 @@ class ScreenTemplate
             "--------------------------------------------------------------------------------\n"
             "-a Add new task|-wr Save|-rd Load| -e Empty list| -rm Remove task| -c Check task\n"
             "--------------------------------------------------------------------------------\n"
-            "***************|-p Add task with priority|-lp  Lists by priority|***************\n"
+            "***********|-p Add task with priority|-lp  Lists by priority|-x Exit************\n"
             "--------------------------------------------------------------------------------\n"
             "*****************************|ENTER COMMANDS BELOW|*****************************\n";
     public:
