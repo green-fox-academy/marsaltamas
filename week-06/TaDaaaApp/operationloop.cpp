@@ -6,13 +6,8 @@ void OperationLoop::operationPrompt()
 {
     ScreenTemplate st;
     st.print_header();
+    //printing list of tasks
     st.print_foot();
     InputProcessor ip;
-    ip.get_input();
-
-}
-
-void OperationLoop::inputProcessor()
-{
-
+    ip.tokenize_input(ip.get_input()); //getting input as string and passing it to tokenizer
 }
