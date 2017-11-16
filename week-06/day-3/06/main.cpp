@@ -21,7 +21,7 @@ class List {
             tail = NULL;
         }
 
-        void addNode(int value)
+        void addNode_at_back(int value)
         {
             Node *temp = new Node;
             temp->value = value;
@@ -68,16 +68,24 @@ class List {
         {
             int size = get_size();
 
+            Node *temp = new Node;
+            Node *new_node = new Node;
+
+            temp = head;
+
             if (size == 0) {
-                addNode(value);
+                addNode_at_back(value);
+            } else if (pos > size - 1 || pos < 0) {
+                cout << "This is an invalid position.\n";
+            }else if (pos == 0){
+                new_node->value = value;
+                new_node->next = head;
+                head = new_node;
             } else {
-                Node *temp = new Node;
-                Node *new_node = new Node;
                 new_node->value = value;
                 new_node->next = NULL;
-                temp = head;
 
-                for (int i = 0; i < pos; ++i) {
+                for (int i = 0; i < pos - 1; ++i) {
                     temp = temp->next;
                 }
 
@@ -86,9 +94,29 @@ class List {
             }
         }
 
-        void remove_at_position(int pos)
+        void remove_at_position(int pos) // first element is pos 0th
         {
+            int size = get_size();
 
+            if (size == 0) {
+                cout << "The list is already empty.\n";
+            } else if (pos < 0 || pos > size -1) {
+                cout << "Invalid position.\n";
+            } else if (pos == 0) {
+                head = head->next;
+            } else {
+                Node *to_del = new Node;
+                Node *temp = new Node;
+                to_del = head;
+
+                for (int i = 0; i < pos; ++i) {
+                    if (i == pos -1) {
+                        temp = to_del;
+                    }
+                    to_del = to_del->next;
+                }
+                temp->next = to_del->next;
+            }
         }
 
 };
@@ -98,13 +126,11 @@ int main()
     List l; // init list
 
     for (int i = 1; i <= 5; ++i) { // load list
-        l.addNode(i);
+        l.addNode_at_back(i);
     }
 
-
     l.display_list();
-    l.get_size();
-    l.insert_before(3, 100);
+    l.remove_at_position(4);
     l.display_list();
 
 
