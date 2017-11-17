@@ -9,7 +9,6 @@ void OpeartaionLoop::operation_prompt()
     do {
         InputProcessor ip;
         set_split_input_string(ip.split_input(ip.get_input()));
-        task_vector.push_back(split_input_string.at(1));
         Commands c(split_input_string, task_vector_pointer);
         to_keep_looping = c.call_command(c.get_command_id());
     } while (to_keep_looping);

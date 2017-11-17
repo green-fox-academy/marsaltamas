@@ -28,33 +28,30 @@ class Commands
 //            X,
 //            CL};
         int command_id;
-//        string command_array[] = {
-//        "-a",   //0
-//        "-wr",  //1
-//        "-rd",  //2
-//        "-e",   //3
-//        "-rm",  //4
-//        "-c",   //5
-//        "-p",   //6
-//        "-lp",  //7
-//        "-x",   //8
-//        "-cl"   //9
-//        };
+        vector<string> command_vector = {
+            "-a",   //0
+            "-wr",  //1
+            "-rd",  //2
+            "-e",   //3
+            "-rm",  //4
+            "-c",   //5
+            "-p",   //6
+            "-lp",  //7
+            "-x",   //8
+            "-cl",   //9
+            "-l"    //10
+        };
         vector<string> split_input_string;
         vector<Task> *task_vector_pointer;
 
     public:
-        Commands();
-        Commands(vector<string> split_input_string);
         Commands(vector<string> split_input_string, vector<Task> *task_vector_pointer);
         Commands(vector<Task> *task_vector_pointer);
-        void select_command(int command_id, string command_parameters);
-        void command_add_task(string command_parameters);
-        void command_exit();
-        string get_command_arr_at(int pos);
-        vector<string> command_vector;
         int get_command_id();
         bool call_command(int command_id);
+        void command_add_task(string command_parameters);
+        void command_exit();
+        void command_print_tasks();
 };
 
 #endif // COMMANDS_H
