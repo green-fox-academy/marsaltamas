@@ -104,7 +104,7 @@ void is_list_empty(void)
     }
     if (!flag)
         printf("===================List is empty now.==================\n"
-               "=======Now you have time for worrying about exam!======\n"
+               "==============Thank you for your attention!============\n"
                "=======================================================\n");
 }
 // same as list task, only a sorting alg added at the beginning.
