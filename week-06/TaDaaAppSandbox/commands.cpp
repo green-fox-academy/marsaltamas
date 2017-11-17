@@ -56,6 +56,7 @@ void Commands::command_print_tasks()
     cout << "Printing tasks:" << endl;
 
     for (unsigned int i = 0; i < task_vector_pointer->size(); ++i) {
-        cout << "Task " << i + 1 << ": " << task_vector_pointer->at(i).get_description() << endl;
+        cout << "Task " << i + 1 << ": " << task_vector_pointer->at(i).get_description()
+        << task_vector_pointer->at(i).get_checked_display() << endl;
     }
 }

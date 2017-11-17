@@ -14,19 +14,6 @@ using namespace std;
 class Commands
 {
     private:
-//        int command_array_size;
-//       string command_array[];
-//        enum command_enum  {
-//            A,
-//            WR,
-//            RD,
-//            E,
-//            RM,
-//            C,
-//            P,
-//            LP,
-//            X,
-//            CL};
         int command_id;
         vector<string> command_vector = {
             "-a",   //0

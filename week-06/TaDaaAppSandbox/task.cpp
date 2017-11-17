@@ -7,7 +7,8 @@ Task::Task(string description)
 
 Task::Task()
 {
-
+    this->is_checked = false;
+    this->checked_display = not_checked;
 }
 
 string Task::get_description()
@@ -18,4 +19,9 @@ string Task::get_description()
  void Task::set_description(string description)
  {
      this->description = description;
+ }
+
+ string Task::get_checked_display()
+ {
+     return checked_display;
  }

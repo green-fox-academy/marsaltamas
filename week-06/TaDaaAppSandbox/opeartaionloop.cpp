@@ -12,7 +12,6 @@ void OpeartaionLoop::operation_prompt()
         Commands c(split_input_string, task_vector_pointer);
         to_keep_looping = c.call_command(c.get_command_id());
     } while (to_keep_looping);
-        cout << "printing task tesy from ol: " << task_vector.at(0).get_description();
 }
 
  Task OpeartaionLoop::get_task(int pos)
