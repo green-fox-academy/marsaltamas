@@ -2,8 +2,8 @@
 
 InputProcessor::InputProcessor()
 {
-    this->input = get_input();
-    call_command(split_input(input));
+    //this->input = get_input();
+    //call_command(split_input(input));
 }
 
 string InputProcessor::get_input()
@@ -42,11 +42,3 @@ vector<string> InputProcessor::split_input(string input)
     return split_intup_vector;
 }
 
-void InputProcessor::call_command(vector<string> split_intup_vector)
-{
-    cout << "call_command was called\n";
-    int command_id;
-    Commands c;
-    c.find_command_id(split_intup_vector.at(0));
-
-}

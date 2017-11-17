@@ -13,13 +13,13 @@ class InputProcessor
 {
     public:
         InputProcessor();
+        void command_add_task(string command_parameters);
+        string get_input();
+        vector<string> split_input(string input);
 
     private:
         string input;
         vector<string> split_intup_vector;
-        string get_input();
-        vector<string> split_input(string input);
-        void call_command(vector<string> split_intup_vector);
 
 };
 
