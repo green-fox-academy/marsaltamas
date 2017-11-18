@@ -39,6 +39,8 @@ class Commands
         void command_add_task(string command_parameters);
         void command_exit();
         void command_print_tasks();
+        void command_wtf();
+        void command_rff();
 };
 
 #endif // COMMANDS_H

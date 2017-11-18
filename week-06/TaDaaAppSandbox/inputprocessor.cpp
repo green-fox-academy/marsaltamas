@@ -8,7 +8,7 @@ InputProcessor::InputProcessor()
 
 string InputProcessor::get_input()
 {
-    cout << "Get input called: Please enter instructions: " << endl;
+    cout << "Please enter instructions: " << endl;
     getline(cin, input, '\n');
 
     return input;

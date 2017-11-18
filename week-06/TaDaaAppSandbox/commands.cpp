@@ -1,5 +1,6 @@
 #include "commands.h"
 #include "task.h"
+#include <iomanip>
 
 Commands::Commands(vector<string> split_input_string, vector<Task> *task_vector_pointer)
 {
@@ -9,9 +10,10 @@ Commands::Commands(vector<string> split_input_string, vector<Task> *task_vector_
 
 void Commands::command_add_task(string command_parameters)
 {
-    cout << "command_add_task was called " << endl;
-    Task *task_pointer = new Task;
+    Task *task_pointer = new Task(command_parameters, 0, false);
     task_pointer->set_description(command_parameters);
+    task_pointer->set_is_checked(false);
+    task_pointer->set_priority(0);
     task_vector_pointer->push_back(*task_pointer);
 }
 
@@ -36,7 +38,10 @@ bool Commands::call_command(int command_id)
             command_add_task(split_input_string.at(1));
             break;
          case 1:
-            command_add_task(split_input_string.at(0));
+            command_wtf();
+            break;
+         case 2:
+            command_rff();
             break;
          case 8:
             cout << "Program quits.\n";
@@ -53,10 +58,32 @@ bool Commands::call_command(int command_id)
 
 void Commands::command_print_tasks()
 {
-    cout << "Printing tasks:" << endl;
+
+    string header =
+                    "--------------------------------------------------\n"
+                    "              Printing tasks\n"
+                    "--------------------------------------------------\n"
+                    "nr.|done?|pr.|        Task descripion\n"
+                    "--------------------------------------------------\n";
+
+    string footer = "--------------------------------------------------\n";
+
+    cout << header;
 
     for (unsigned int i = 0; i < task_vector_pointer->size(); ++i) {
-        cout << "Task " << i + 1 << ": " << task_vector_pointer->at(i).get_description()
-        << task_vector_pointer->at(i).get_checked_display() << endl;
+        cout << setw(2) << i + 1 << " |" << task_vector_pointer->at(i).get_checked_display() << "| " << task_vector_pointer->at(i).get_priority()
+         << " | " << task_vector_pointer->at(i).get_description() << endl;
     }
+
+    cout << footer << endl;
+}
+
+void Commands::command_wtf()
+{
+    cout << "wtf was called" << endl;
+}
+
+void Commands::command_rff()
+{
+    cout << "rff was called" << endl;
 }
