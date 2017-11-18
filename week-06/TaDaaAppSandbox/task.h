@@ -16,6 +16,7 @@ class Task
         void set_priority(int priority);
         string get_checked_display();
         int get_priority();
+        void set_checked_display(string checked_display);
 
     private:
         string description;

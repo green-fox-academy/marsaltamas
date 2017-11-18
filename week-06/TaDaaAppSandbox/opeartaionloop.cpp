@@ -7,7 +7,7 @@ void OpeartaionLoop::operation_prompt()
 
     // dummy tasks for testing
     task_vector_pointer = &task_vector;
-    task_vector.push_back(Task("task1", 1, false));
+    task_vector.push_back(Task("task1", 1, true));
     task_vector.push_back(Task("task2", 1, false));
     task_vector.push_back(Task("task3", 1, false));
     task_vector.push_back(Task("task4", 1, false));
@@ -16,7 +16,7 @@ void OpeartaionLoop::operation_prompt()
     task_vector.push_back(Task("task7", 1, false));
     task_vector.push_back(Task("task8", 1, false));
     task_vector.push_back(Task("task9", 1, false));
-    task_vector.push_back(Task("task10", 1, false));
+    task_vector.push_back(Task("task10", 1, true));
 
     //task_vector.add(Task())
 

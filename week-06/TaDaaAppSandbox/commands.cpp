@@ -1,6 +1,8 @@
 #include "commands.h"
 #include "task.h"
 #include <iomanip>
+#include "fileio.h"
+
 
 Commands::Commands(vector<string> split_input_string, vector<Task> *task_vector_pointer)
 {
@@ -80,10 +82,12 @@ void Commands::command_print_tasks()
 
 void Commands::command_wtf()
 {
-    cout << "wtf was called" << endl;
+    FileIO f;
+    f.write_to_file(task_vector_pointer);
 }
 
 void Commands::command_rff()
 {
-    cout << "rff was called" << endl;
+    FileIO f;
+    f.read_from_file(task_vector_pointer);
 }

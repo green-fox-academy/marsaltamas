@@ -37,10 +37,11 @@ bool Task::get_is_checked()
 
  string Task::get_checked_display()
  {
-     if (get_is_checked())
-        return checked;
-     else
-        return not_checked;
+//     if (get_is_checked())
+//        return checked;
+//     else
+//        return not_checked;
+    return checked_display;
  }
 
 void Task::set_is_checked(bool status)
@@ -56,4 +57,9 @@ void Task::set_priority(int priority)
 int Task::get_priority()
 {
     return priority;
+}
+
+void Task::set_checked_display(string checked_display)
+{
+    this->checked_display = checked_display;
 }
