@@ -30,11 +30,10 @@ int main()
 
     if (answer != 4)
         cout << "Incorrect answer.\n";
+    else if (answer == 4 && out_timed)
+        cout << "Correct answer, but your are out of time.\n";
     else
         cout << "Correct answer.\n";
-
-    if (out_timed)
-        cout << "Answer was out of time.";
 
     return 0;
 }
