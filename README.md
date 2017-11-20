@@ -5,7 +5,7 @@
 
 :octocat:|.......day-1.......|.......day-2.......|.......day-3.......|.......day-4.......|.......day-5.......       
 ---|----------|----------|--------|------|-------
-:open_file_folder:|[day-1]()|[day-2]()|[day-3]()|[day-4]()|[day-5]()|
+:open_file_folder:|[Exceptions Cpp](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/day-1)|[day-2]()|[day-3]()|[day-4]()|[day-5]()|
 
 ## week-6
 
@@ -47,7 +47,7 @@
 
 :octocat:|.......day-1.......|.......day-2.......|.......day-3.......|.......day-4.......|.......day-5.......       
 ---|----------|----------|--------|------|-------
-:open_file_folder:|[Exceptions Cpp](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/day-1)|[day-2]()|[day-3]()|[day-4]()|[day-5]()|
+:open_file_folder:|[day-1]()|[day-2]()|[day-3]()|[day-4]()|[day-5]()|
 
 <p align="center"><b>week-9</b></p>
 
