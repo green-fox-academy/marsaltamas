@@ -24,14 +24,15 @@ int get_fibonacci_number(int n_th_fib);
 int main()
 {
     for (int i = 0; i < 7; ++i) {
-        cout << "Fib @: " << i << " = " << get_fibonacci_number(i) << endl;
+
+        try {
+            cout << "Fib @: " << i << " = " << get_fibonacci_number(i) << endl;
+        } catch (runtime_error &err) {
+            cout << err.what();
+        }
+
     }
 
-    for (int i = 0; i < 7; ++i) {
-        cout << get_fibonacci_number(i) << endl;
-    }
-
-    cout << get_fibonacci_number(-1);
 
 	return 0;
 }
@@ -48,7 +49,7 @@ int get_fibonacci_number(int n_th_fib)
     int b = 1;
     int temp = 0;
 
-    try {
+        is_parameter_valid(n_th_fib);
 
         if (n_th_fib == 1) {
             return 0;
@@ -63,8 +64,4 @@ int get_fibonacci_number(int n_th_fib)
             }
             return b;
         }
-
-    } catch (runtime_error &err) {
-        cout << err.what();
-    }
 }
