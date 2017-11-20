@@ -30,7 +30,6 @@ int main()
         } catch (runtime_error &err) {
             cout << err.what();
         }
-
     }
 
 

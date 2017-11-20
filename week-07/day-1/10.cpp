@@ -38,14 +38,14 @@ void print_odd_numbers(int how_many)
 
     is_parameter_valid(how_many);
 
-    for (int i = 1;;++i) {
-        if (i % 2) {
-            cout << i << " ";
-            counter++;
-                if (counter == how_many)
-                    break;
+        for (int i = 1;;++i) {
+            if (i % 2) {
+                cout << i << " ";
+                counter++;
+                    if (counter == how_many)
+                        break;
+            }
         }
-    }
 
     } catch (runtime_error &err) {
         cout << err.what();
