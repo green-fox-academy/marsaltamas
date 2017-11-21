@@ -26,26 +26,6 @@ class Integer {
         {
             return mNum;
         };
-        int add(Integer& _integer1)
-        {
-            return mNum + _integer1.get_mnum();
-        };
-        int add(Integer& _integer1, Integer& _integer2)
-        {
-            return mNum + _integer1.get_mnum() + _integer2.get_mnum();
-        };
-        int add(Integer& _integer1, Integer& _integer2, Integer& _integer3)
-        {
-        return mNum + _integer1.get_mnum() + _integer2.get_mnum() + _integer3.get_mnum();
-        };
-        int add(Integer& _integer1, Integer& _integer2, Integer& _integer3, Integer& _integer4)
-        {
-            return mNum + _integer1.get_mnum() + _integer2.get_mnum() + _integer3.get_mnum() + _integer4.get_mnum();
-        };
-        int add(Integer& _integer1, Integer& _integer2, Integer& _integer3, Integer& _integer4, Integer& _integer5)
-        {
-            return mNum + _integer1.get_mnum() + _integer2.get_mnum() + _integer3.get_mnum() + _integer4.get_mnum() + _integer5.get_mnum();
-        };
         void add_permanently(Integer& _integer1)
         {
             mNum+= _integer1.get_mnum();
