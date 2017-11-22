@@ -17,10 +17,13 @@ class ATMMachine
         ~ATMMachine();
         void boot();
         void print_customer_menu();
+        void print_admin_menu();
         int login();
         void run();
         void operation_prompt(int mode);
         void quit_routine();
+        void customer_mode();
+        void admin_mode();
 
     private:
         DataBase *db;
