@@ -1,6 +1,4 @@
-#include <iostream>
-
-using namespace std;
+#include "atmmachine.h"
 
 int main()
 {
