@@ -2,6 +2,6 @@
 
 int main()
 {
-    cout << "Hello world!" << endl;
+    ATMMachine am;
     return 0;
 }

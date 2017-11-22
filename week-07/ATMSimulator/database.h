@@ -3,15 +3,18 @@
 
 #include <vector>
 #include "user.h"
+#include "database.h"
 
 class DataBase
 {
     public:
-        /** Default constructor */
         DataBase();
+        int get_amount_of_cash_in_atm();
+        void set_amount_of_cash_in_atm();
     private:
-        std::vector<User> users;
+        std::vector<User> users_vector;
         int amount_of_cash_in_atm;
+
 };
 
 #endif // DATABASE_H

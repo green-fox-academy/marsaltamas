@@ -11,6 +11,7 @@ class User
         std::string name;
         int pin_code;
         int login_tries;
+        int prevelage;
 };
 
 #endif // USER_H
