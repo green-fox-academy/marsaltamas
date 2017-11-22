@@ -1,5 +1,5 @@
 #include "customer.h"
-
+#include <iostream>
 
 Customer::Customer(string name, int pin_code, int balance)
 {
@@ -9,3 +9,13 @@ Customer::Customer(string name, int pin_code, int balance)
     this->balance = balance;
     this->prevelage = CUSTOMER;
 };
+
+void Customer::set_balance(int change)
+{
+    balance+= change;
+}
+
+int Customer::get_balance()
+{
+    return balance;
+}

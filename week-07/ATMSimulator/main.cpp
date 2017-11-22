@@ -1,3 +1,9 @@
+/*
+ * TODO:
+ * - check delete created users with seting up db destructor
+ * - file I
+ * - implement change username function 
+
 #include "atmmachine.h"
 
 int main()

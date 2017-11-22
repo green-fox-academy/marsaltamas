@@ -15,6 +15,8 @@ class User
         int get_login_tries();
         void decr_login_tries(int num);
         int get_pin_code();
+        virtual void set_balance(int change){};
+        virtual int get_balance(){return 0;}; // set up for customer only
 
     protected:
         std::string name;

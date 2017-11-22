@@ -24,6 +24,9 @@ class ATMMachine
         void quit_routine();
         void customer_mode();
         void admin_mode();
+        void withdraw();
+        void check_balance();
+        void who_is_the_richest();
 
     private:
         DataBase *db;
