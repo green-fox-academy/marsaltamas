@@ -21,6 +21,7 @@ class ATMMachine
         void quit_routine();
     private:
         DataBase db;
+        User ative_user;
 
 };
 

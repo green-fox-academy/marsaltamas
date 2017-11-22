@@ -4,6 +4,9 @@
 #include <vector>
 #include "user.h"
 #include "database.h"
+#include "user.h"
+#include "customer.h"
+#include "admin.h"
 
 class DataBase
 {

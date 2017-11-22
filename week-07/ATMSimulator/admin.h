@@ -6,7 +6,8 @@
 
 class Admin : public User
 {
-
+    public:
+        Admin(std::string name, int pin_code);
 };
 
 #endif // ADMIN_H

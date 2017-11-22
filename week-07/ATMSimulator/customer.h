@@ -6,6 +6,8 @@
 
 class Customer : public User
 {
+    public:
+        Customer(string name, int pin_code, int balance);
     private:
         int balance;
 };
