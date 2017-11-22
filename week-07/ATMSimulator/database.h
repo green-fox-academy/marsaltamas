@@ -14,6 +14,8 @@ class DataBase
         DataBase();
         int get_amount_of_cash_in_atm();
         void set_amount_of_cash_in_atm();
+        User& get_user(int i);
+        vector<User> get_user_vector();
     private:
         std::vector<User> users_vector;
         int amount_of_cash_in_atm;

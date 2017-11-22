@@ -14,14 +14,17 @@ class ATMMachine
 {
     public:
         ATMMachine();
+        ~ATMMachine();
         void boot();
-        void print_menu();
+        void print_customer_menu();
         int login();
-        bool operation_prompt(int mode);
+        void run();
+        void operation_prompt(int mode);
         void quit_routine();
+
     private:
-        DataBase db;
-        User ative_user;
+        DataBase *db;
+        User *active_user;
 
 };
 
