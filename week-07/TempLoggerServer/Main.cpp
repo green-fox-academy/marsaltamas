@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <conio.h>
 #include <windows.h>
+#include <regex>
+#include <cstring>
 
 #include "SerialPortWrapper.h"
-
 
 using namespace std;
 
@@ -51,11 +52,11 @@ void print_menu()
 //
 //    SerialPortWrapper *serial = new SerialPortWrapper("COM3", 115200);
 //    serial->openPort();
-//    string line;
+//    string entry;
 //    while(1){
-//    serial->readLineFromPort(&line);
-//    if (line.length() > 0){
-//        cout << line << endl;
+//    serial->readentryFromPort(&entry);
+//    if (entry.length() > 0){
+//        cout << entry << endl;
 //        }
 //    }
 //    serial->closePort();
@@ -90,6 +91,82 @@ bool open_port(SerialPortWrapper *serial)
     return true;
 }
 
+int value_of_entry_segment(string *entry, size_t position1, size_t position2, string to_find)
+{
+    size_t lenght = 0;
+
+    position2 = entry->find(to_find);
+    lenght = position2 - position1;
+    int value = atoi((entry->substr(position1, lenght)).c_str());
+    entry->erase(position1, lenght + 1);
+
+    return value;
+}
+
+/*
+ * checks if the input string is a valid format
+ * valid format is: "y.m.d h:m:s x"
+ * where sequence is segmented by definite number of '.', ":" and " "
+ * where each value must be within the specified range
+ */
+bool is_entry_valid(string entry)
+{
+    bool is_valid = false;
+
+
+    // checking if format is correct
+    regex reg("[0-9]{4}\\.[0-9]{1,2}\\.[0-9]{1,2} [0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2} [-]{0,1}[0-9]{1,3}");
+
+    if (regex_match(entry, reg)) { // if regex ok, checking the string sequentially by segment characters
+            string point = ".";
+            string double_point = ":";
+            string space = " ";
+
+            size_t position1 = 0;
+            size_t position2 = entry.find(point);
+            size_t lenght = position2 - position1;
+            int year = atoi((entry.substr(position1, lenght)).c_str());
+            entry.erase(position1, lenght + 1);
+
+            if (year < 2018 && year > 1950) {
+
+                int month = value_of_entry_segment(&entry, position1, position2, point);
+                    // check day (disregarding if month is 28, 30 or 31 days long
+                    if(month > 0 && month < 13) {
+
+                        int day = value_of_entry_segment(&entry, position1, position2, space);
+
+                         if(day > 0 && day < 32) {
+
+                            int hour = value_of_entry_segment(&entry, position1, position2, double_point);
+
+                            if (hour > -1 && hour < 24) {
+
+                                int minute = value_of_entry_segment(&entry, position1, position2, double_point);
+
+                                if (minute > -1 && minute < 60) {
+
+                                    int second = value_of_entry_segment(&entry, position1, position2, space);
+
+                                    if (second > -1 && second < 60) {
+
+                                         int temperature = atoi(entry.c_str());
+
+                                         if (temperature > -40 && temperature < 100) {
+                                            cout << "valid entry" << endl;
+                                            is_valid = true;
+                                         }
+                                    }
+                                }
+                            }
+                         }
+                    }
+            }
+    }
+
+    return is_valid;
+}
+
 void start_stop_loggin(SerialPortWrapper *serial, bool port_open, vector<string> *log_vector)
 {
     if (!port_open) {
@@ -97,20 +174,21 @@ void start_stop_loggin(SerialPortWrapper *serial, bool port_open, vector<string>
         return;
     }
 
-    string line;
+    string entry;
 
     cout << "Logging had been started. Press \"s\" to stop logging." << endl;
 
     // clear port's log
     do {
-        serial->readLineFromPort(&line);
-    } while (line.length() > 0);
+        serial->readLineFromPort(&entry);
+    } while (entry.length() > 0);
 
     for (;;) {
-        serial->readLineFromPort(&line);
-        if (line.length() > 0){
-            cout << line << endl;
-            log_vector->push_back(line);
+        serial->readLineFromPort(&entry);
+        if (entry.length() > 0){
+            cout << entry << endl;
+            if (is_entry_valid(entry))
+                log_vector->push_back(entry);
         }
 
         if(kbhit()) {
