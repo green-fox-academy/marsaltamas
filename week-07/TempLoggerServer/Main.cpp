@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdio.h>
+#include <conio.h>
 
 #include "SerialPortWrapper.h"
 
@@ -42,21 +44,21 @@ void print_menu()
                 "=====================================\n";
 }
 
-void log_temp()
-{
-    // connection
-
-    SerialPortWrapper *serial = new SerialPortWrapper("COM3", 115200);
-    serial->openPort();
-    string line;
-    while(1){
-    serial->readLineFromPort(&line);
-    if (line.length() > 0){
-        cout << line << endl;
-        }
-    }
-    serial->closePort();
-}
+//void log_temp()
+//{
+//    // connection
+//
+//    SerialPortWrapper *serial = new SerialPortWrapper("COM3", 115200);
+//    serial->openPort();
+//    string line;
+//    while(1){
+//    serial->readLineFromPort(&line);
+//    if (line.length() > 0){
+//        cout << line << endl;
+//        }
+//    }
+//    serial->closePort();
+//}
 
 int get_command(vector<string> command_vector)
 {
@@ -66,8 +68,6 @@ int get_command(vector<string> command_vector)
     cout << "Please enter command: ";
     cin >> user_command;
 
-    cout << "Command was: " << user_command << endl;
-
     for (unsigned int i = 0; i < command_vector.size(); ++i) {
         if (command_vector.at(i) == user_command)
             commdand_id = i;
@@ -76,25 +76,62 @@ int get_command(vector<string> command_vector)
     return commdand_id;
 }
 
+bool exit()
+{
+    cout << "Program quits." << endl;
+    return false;
+}
+
+void open_port(SerialPortWrapper *serial)
+{
+    serial->openPort();
+    cout << "Port had been opened." << endl;
+}
+
+void start_stop_loggin(SerialPortWrapper *serial)
+{
+    string line;
+
+    cout << "Logging had been started. Press any key to stop logging." << endl;
+
+    for (;;) {
+        serial->readLineFromPort(&line);
+        if (line.length() > 0){
+            cout << line << endl;
+        }
+
+        if(kbhit()) {
+            char stop = getch();
+            break;
+        }
+    }
+}
+
+void close_port(SerialPortWrapper *serial)
+{
+    serial->closePort();
+    cout << "Port been closed." << endl;
+}
 
 void run(vector<string> command_vector)
 {
     bool keep_running = true;
+    SerialPortWrapper *serial = new SerialPortWrapper("COM3", 115200);
 
     while (keep_running) {
 
         switch (get_command(command_vector)) {
             case 0:
-                cout << "case 0" << endl;
+                print_menu();
                 break;
             case 1:
-                cout << "case 1" << endl;
+                open_port(serial);
                 break;
             case 2:
-                cout << "case 2" << endl;
+                start_stop_loggin(serial);
                 break;
             case 3:
-                cout << "case 3" << endl;
+                close_port(serial);
                 break;
             case 4:
                 cout << "case 4" << endl;
@@ -103,8 +140,7 @@ void run(vector<string> command_vector)
                 cout << "case 5" << endl;
                 break;
             case 6:
-                cout << "Program quits." << endl;
-                keep_running = false;
+                keep_running = exit();
                 break;
             default:
                 cout << "default" << endl;
@@ -127,6 +163,7 @@ vector<string> init_command_vector()
 
     return command_vector;
 }
+
 
 int main()
 {
