@@ -3,6 +3,7 @@
 #include <vector>
 #include <stdio.h>
 #include <conio.h>
+#include <windows.h>
 
 #include "SerialPortWrapper.h"
 
@@ -82,17 +83,28 @@ bool exit()
     return false;
 }
 
-void open_port(SerialPortWrapper *serial)
+bool open_port(SerialPortWrapper *serial)
 {
     serial->openPort();
     cout << "Port had been opened." << endl;
+    return true;
 }
 
-void start_stop_loggin(SerialPortWrapper *serial)
+void start_stop_loggin(SerialPortWrapper *serial, bool port_open)
 {
+    if (!port_open) {
+        cout << "Please open port before starting to log." << endl;
+        return;
+    }
+
     string line;
 
-    cout << "Logging had been started. Press any key to stop logging." << endl;
+    cout << "Logging had been started. Press \"s\" to stop logging." << endl;
+
+    // clear port's log
+    do {
+        serial->readLineFromPort(&line);
+    } while (line.length() > 0);
 
     for (;;) {
         serial->readLineFromPort(&line);
@@ -101,21 +113,24 @@ void start_stop_loggin(SerialPortWrapper *serial)
         }
 
         if(kbhit()) {
-            char stop = getch();
-            break;
+            if (char stop = getch() == 's') // quits loop if 's' pressed
+                break;
         }
     }
 }
 
-void close_port(SerialPortWrapper *serial)
+bool close_port(SerialPortWrapper *serial)
 {
     serial->closePort();
     cout << "Port been closed." << endl;
+
+    return false;
 }
 
 void run(vector<string> command_vector)
 {
     bool keep_running = true;
+    bool is_port_opened = false;
     SerialPortWrapper *serial = new SerialPortWrapper("COM3", 115200);
 
     while (keep_running) {
@@ -125,19 +140,19 @@ void run(vector<string> command_vector)
                 print_menu();
                 break;
             case 1:
-                open_port(serial);
+                is_port_opened = open_port(serial);
                 break;
             case 2:
-                start_stop_loggin(serial);
+                start_stop_loggin(serial, is_port_opened);
                 break;
             case 3:
-                close_port(serial);
+                is_port_opened = close_port(serial);
                 break;
             case 4:
                 cout << "case 4" << endl;
                 break;
             case 5:
-                cout << "case 5" << endl;
+                system("cls");
                 break;
             case 6:
                 keep_running = exit();
