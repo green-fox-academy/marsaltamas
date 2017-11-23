@@ -46,22 +46,6 @@ void print_menu()
                 "=====================================\n";
 }
 
-//void log_temp()
-//{
-//    // connection
-//
-//    SerialPortWrapper *serial = new SerialPortWrapper("COM3", 115200);
-//    serial->openPort();
-//    string entry;
-//    while(1){
-//    serial->readentryFromPort(&entry);
-//    if (entry.length() > 0){
-//        cout << entry << endl;
-//        }
-//    }
-//    serial->closePort();
-//}
-
 int get_command(vector<string> command_vector)
 {
     string user_command;
@@ -113,9 +97,8 @@ bool is_entry_valid(string entry)
 {
     bool is_valid = false;
 
-
     // checking if format is correct
-    regex reg("[0-9]{4}\\.[0-9]{1,2}\\.[0-9]{1,2} [0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2} [-]{0,1}[0-9]{1,3}");
+    regex reg("[0-9]{4}\\.[0-9]{1,2}\\.[0-9]{1,2} [0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2} [-]{0,1}[0-9]{1,2}");
 
     if (regex_match(entry, reg)) { // if regex ok, checking the string sequentially by segment characters
             string point = ".";
@@ -131,12 +114,12 @@ bool is_entry_valid(string entry)
             if (year < 2018 && year > 1950) {
 
                 int month = value_of_entry_segment(&entry, position1, position2, point);
-                    // check day (disregarding if month is 28, 30 or 31 days long
+
                     if(month > 0 && month < 13) {
 
                         int day = value_of_entry_segment(&entry, position1, position2, space);
-
-                         if(day > 0 && day < 32) {
+                         // check day (disregarding if month is 28, 30 or 31 days long
+                        if(day > 0 && day < 32) {
 
                             int hour = value_of_entry_segment(&entry, position1, position2, double_point);
 
