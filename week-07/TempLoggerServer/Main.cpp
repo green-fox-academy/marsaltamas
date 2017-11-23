@@ -90,7 +90,7 @@ bool open_port(SerialPortWrapper *serial)
     return true;
 }
 
-void start_stop_loggin(SerialPortWrapper *serial, bool port_open)
+void start_stop_loggin(SerialPortWrapper *serial, bool port_open, vector<string> *log_vector)
 {
     if (!port_open) {
         cout << "Please open port before starting to log." << endl;
@@ -110,10 +110,11 @@ void start_stop_loggin(SerialPortWrapper *serial, bool port_open)
         serial->readLineFromPort(&line);
         if (line.length() > 0){
             cout << line << endl;
+            log_vector->push_back(line);
         }
 
         if(kbhit()) {
-            if (char stop = getch() == 's') // quits loop if 's' pressed
+            if (getch() == 's') // quits loop if 's' pressed
                 break;
         }
     }
@@ -127,39 +128,48 @@ bool close_port(SerialPortWrapper *serial)
     return false;
 }
 
+void print_list_handled_vector(vector<string> log_vector)
+{
+    cout << "Listing contents of the log on screen: " << endl;
+
+    for (unsigned int i = 0; i < log_vector.size(); ++i) {
+        cout << "Record " << i << ": " << log_vector.at(i) << endl;
+    }
+}
+
 void run(vector<string> command_vector)
 {
     bool keep_running = true;
     bool is_port_opened = false;
     SerialPortWrapper *serial = new SerialPortWrapper("COM3", 115200);
+    vector<string> log_vector;
 
     while (keep_running) {
 
         switch (get_command(command_vector)) {
-            case 0:
+            case PRINT_MENU:
                 print_menu();
                 break;
-            case 1:
+            case OPEN_PORT:
                 is_port_opened = open_port(serial);
                 break;
-            case 2:
-                start_stop_loggin(serial, is_port_opened);
+            case START_STOP_LOGGIN:
+                start_stop_loggin(serial, is_port_opened, &log_vector);
                 break;
-            case 3:
+            case CLOSE_PORT:
                 is_port_opened = close_port(serial);
                 break;
-            case 4:
-                cout << "case 4" << endl;
+            case LIST_HANDLED_VECTOR:
+                print_list_handled_vector(log_vector);
                 break;
-            case 5:
+            case CLEAR_SCREEN:
                 system("cls");
                 break;
-            case 6:
+            case EXIT:
                 keep_running = exit();
                 break;
             default:
                 cout << "default" << endl;
-
         };
     }
 }
@@ -178,7 +188,6 @@ vector<string> init_command_vector()
 
     return command_vector;
 }
-
 
 int main()
 {
