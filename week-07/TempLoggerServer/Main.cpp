@@ -42,7 +42,6 @@ void print_menu()
                 "=====================================\n";
 }
 
-
 void log_temp()
 {
     // connection
@@ -104,7 +103,8 @@ void run(vector<string> command_vector)
                 cout << "case 5" << endl;
                 break;
             case 6:
-                cout << "case 6" << endl;
+                cout << "Program quits." << endl;
+                keep_running = false;
                 break;
             default:
                 cout << "default" << endl;
