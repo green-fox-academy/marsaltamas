@@ -5,7 +5,7 @@
 
 :octocat:|.......day-1.......|.......day-2.......|.......day-3.......|.......day-4.......|.......day-5.......       
 ---|----------|----------|--------|------|-------
-:open_file_folder:|[Exceptions C++](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/day-1)|[Overloading C++](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/day-2)|[ATMSimulator](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/ATMSimulator)|[TempLoggerServer](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/ATMSimulator)|[day-5]()|
+:open_file_folder:|[Exceptions C++](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/day-1)|[Overloading C++](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/day-2)|[ATMSimulator](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/ATMSimulator)|[TempLoggerServer](https://github.com/greenfox-academy/marsaltamas/tree/master/week-07/TempLoggerServer)|[day-5]()|
 
 ## week-6
 
