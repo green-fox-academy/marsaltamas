@@ -75,11 +75,20 @@ bool open_port(SerialPortWrapper *serial)
     return true;
 }
 
-int value_of_entry_segment(string *entry, size_t position1, size_t position2, string to_find)
+bool is_between(int value, int min, int max)
+{
+    if (value > min && value < max)
+        return true;
+    else
+        return false;
+}
+
+int value_of_entry_segment(string *entry, string to_find)
 {
     size_t lenght = 0;
+    size_t position1 = 0;
 
-    position2 = entry->find(to_find);
+    size_t position2 = entry->find(to_find);
     lenght = position2 - position1;
     int value = atoi((entry->substr(position1, lenght)).c_str());
     entry->erase(position1, lenght + 1);
@@ -98,52 +107,42 @@ bool is_entry_valid(string entry)
     bool is_valid = false;
 
     // checking if format is correct
-    regex reg("[0-9]{4}\\.[0-9]{1,2}\\.[0-9]{1,2} [0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2} [-]{0,1}[0-9]{1,2}");
+    regex reg("[0-9]{4}\\.[0-9]{1,2}\\.[0-9]{1,2} [0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2} [-]{0,1}[0-9]{1,3}");
 
     if (regex_match(entry, reg)) { // if regex ok, checking the string sequentially by segment characters
             string point = ".";
             string double_point = ":";
             string space = " ";
+            int year;
+            int month;
+            int day;
+            int hour;
+            int minute;
+            int second;
+            int temperature;
 
-            size_t position1 = 0;
-            size_t position2 = entry.find(point);
-            size_t lenght = position2 - position1;
-            int year = atoi((entry.substr(position1, lenght)).c_str());
-            entry.erase(position1, lenght + 1);
+            if (is_between((year = value_of_entry_segment(&entry, point)), 1950, 2018)) {
 
-            if (year < 2018 && year > 1950) {
+                if (is_between((month = value_of_entry_segment(&entry, point)), 0, 13))  {
 
-                int month = value_of_entry_segment(&entry, position1, position2, point);
+                     // check day (disregarding if month is 28, 30 or 31 days long
+                    if (is_between((day = value_of_entry_segment(&entry, space)), 0, 32))  {
 
-                    if(month > 0 && month < 13) {
+                        if (is_between((hour = value_of_entry_segment(&entry, double_point)), -1, 24))  {
 
-                        int day = value_of_entry_segment(&entry, position1, position2, space);
-                         // check day (disregarding if month is 28, 30 or 31 days long
-                        if(day > 0 && day < 32) {
+                            if (is_between((minute = value_of_entry_segment(&entry, double_point)), -1, 60))  {
 
-                            int hour = value_of_entry_segment(&entry, position1, position2, double_point);
+                                if (is_between((second = value_of_entry_segment(&entry, space)), -1, 60))  {
 
-                            if (hour > -1 && hour < 24) {
-
-                                int minute = value_of_entry_segment(&entry, position1, position2, double_point);
-
-                                if (minute > -1 && minute < 60) {
-
-                                    int second = value_of_entry_segment(&entry, position1, position2, space);
-
-                                    if (second > -1 && second < 60) {
-
-                                         int temperature = atoi(entry.c_str());
-
-                                         if (temperature > -40 && temperature < 100) {
-                                            cout << "valid entry" << endl;
-                                            is_valid = true;
-                                         }
-                                    }
+                                     if (is_between((temperature = atoi(entry.c_str())), -50, 200))  {
+                                        cout << "valid entry" << endl;
+                                        is_valid = true;
+                                     }
                                 }
                             }
-                         }
-                    }
+                        }
+                     }
+                }
             }
     }
 
