@@ -8,6 +8,7 @@
 #include <cstring>
 
 #include "SerialPortWrapper.h"
+#include "temperaturedatabase.h"
 
 using namespace std;
 
@@ -116,11 +117,11 @@ bool is_day_valid(int year, int month, int day)
     bool is_valid = true;
 
     // 30 day months
-    if (month == APR ||
-        month == JUN ||
-        month == SEP ||
-        month == NOV &&
-        day > 30) is_valid = false;
+    if ((month == APR ||
+         month == JUN ||
+         month == SEP ||
+         month == NOV) &&
+         day > 30) is_valid = false;
 
      if (month == FEB) {
         if (!year % 4 && day > 29) // running years
@@ -163,21 +164,21 @@ bool is_entry_valid(string entry)
 
                     if (is_between((day = value_of_entry_segment(&entry, space)), 0, 32))  {
 
-                            if (is_day_valid(year, month, day)) {
+                        if (is_day_valid(year, month, day)) {
 
-                                if (is_between((hour = value_of_entry_segment(&entry, double_point)), -1, 24))  {
+                            if (is_between((hour = value_of_entry_segment(&entry, double_point)), -1, 24))  {
 
-                                    if (is_between((minute = value_of_entry_segment(&entry, double_point)), -1, 60))  {
+                                if (is_between((minute = value_of_entry_segment(&entry, double_point)), -1, 60))  {
 
-                                        if (is_between((second = value_of_entry_segment(&entry, space)), -1, 60))  {
+                                    if (is_between((second = value_of_entry_segment(&entry, space)), -1, 60))  {
 
-                                             if (is_between((temperature = atoi(entry.c_str())), -50, 200))  {
-                                                cout << "valid entry" << endl;
-                                                is_valid = true;
-                                             }
-                                        }
+                                         if (is_between((temperature = atoi(entry.c_str())), -50, 200))  {
+                                            cout << "valid entry" << endl;
+                                            is_valid = true;
+                                         }
                                     }
                                 }
+                            }
                          }
                     }
                 }
