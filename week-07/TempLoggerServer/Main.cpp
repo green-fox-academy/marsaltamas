@@ -21,6 +21,21 @@ typedef enum Commands_enum {
     EXIT                    //6
     } e_commands;
 
+typedef enum Months_enum {
+    JAN =1,     //1
+    FEB,        //2
+    MAR,        //3
+    APR,        //4
+    MAY,        //5
+    JUN,        //6
+    JUL,        //7
+    AUG,        //8
+    SEP,        //9
+    OCT,        //10
+    NOV,        //11
+    DEC         //12
+    } e_months;
+
 void print_port_info()
 {
     vector<string> ports = SerialPortWrapper::listAvailablePorts();
@@ -96,6 +111,27 @@ int value_of_entry_segment(string *entry, string to_find)
     return value;
 }
 
+bool is_day_valid(int year, int month, int day)
+{
+    bool is_valid = true;
+
+    // 30 day months
+    if (month == APR ||
+        month == JUN ||
+        month == SEP ||
+        month == NOV &&
+        day > 30) is_valid = false;
+
+     if (month == FEB) {
+        if (!year % 4 && day > 29) // running years
+            is_valid = false;
+        else if (day > 28)         // normal years, if febr is over 28 days in input data
+            is_valid = false;      // input considered invalid
+     }
+
+    return is_valid;
+}
+
 /*
  * checks if the input string is a valid format
  * valid format is: "y.m.d h:m:s x"
@@ -121,27 +157,29 @@ bool is_entry_valid(string entry)
             int second;
             int temperature;
 
-            if (is_between((year = value_of_entry_segment(&entry, point)), 1950, 2018)) {
+            if (is_between((year = value_of_entry_segment(&entry, point)), 1900, 2018)) {
 
                 if (is_between((month = value_of_entry_segment(&entry, point)), 0, 13))  {
 
-                     // check day (disregarding if month is 28, 30 or 31 days long
                     if (is_between((day = value_of_entry_segment(&entry, space)), 0, 32))  {
 
-                        if (is_between((hour = value_of_entry_segment(&entry, double_point)), -1, 24))  {
+                            if (is_day_valid(year, month, day)) {
 
-                            if (is_between((minute = value_of_entry_segment(&entry, double_point)), -1, 60))  {
+                                if (is_between((hour = value_of_entry_segment(&entry, double_point)), -1, 24))  {
 
-                                if (is_between((second = value_of_entry_segment(&entry, space)), -1, 60))  {
+                                    if (is_between((minute = value_of_entry_segment(&entry, double_point)), -1, 60))  {
 
-                                     if (is_between((temperature = atoi(entry.c_str())), -50, 200))  {
-                                        cout << "valid entry" << endl;
-                                        is_valid = true;
-                                     }
+                                        if (is_between((second = value_of_entry_segment(&entry, space)), -1, 60))  {
+
+                                             if (is_between((temperature = atoi(entry.c_str())), -50, 200))  {
+                                                cout << "valid entry" << endl;
+                                                is_valid = true;
+                                             }
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                     }
+                         }
+                    }
                 }
             }
     }
