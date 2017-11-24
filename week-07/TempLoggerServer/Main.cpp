@@ -138,6 +138,14 @@ bool is_day_valid(int year, int month, int day)
  * valid format is: "y.m.d h:m:s x"
  * where sequence is segmented by definite number of '.', ":" and " "
  * where each value must be within the specified range
+ *
+ * this function is turned out to be deprecated code
+ * but i leave it here for memory, and as it also checks how many days a month can contain
+ * also an implementation / refactor can be done to covert int values to tm type
+ *
+ * a compact solution for the same problem is implemented in the TemperatureDataBase class
+ * and uses the stringstream and inbuilt time functions
+ * this means that work flow contains unnecessary steps
  */
 bool is_entry_valid(string entry)
 {
@@ -158,12 +166,17 @@ bool is_entry_valid(string entry)
             int second;
             int temperature;
 
+            /*
+             * sequence checks each segment of the text (which is already in correct format)
+             * 'if' steps are passed only if the value of given segment of the text
+             * is between the specified boundaries
+             */
             if (is_between((year = value_of_entry_segment(&entry, point)), 1900, 2018)) {
 
                 if (is_between((month = value_of_entry_segment(&entry, point)), 0, 13))  {
 
                     if (is_between((day = value_of_entry_segment(&entry, space)), 0, 32))  {
-
+                        // checks if there are no more days in a month than allowed, eg. no 29 days in febr in non running years
                         if (is_day_valid(year, month, day)) {
 
                             if (is_between((hour = value_of_entry_segment(&entry, double_point)), -1, 24))  {
@@ -188,7 +201,7 @@ bool is_entry_valid(string entry)
     return is_valid;
 }
 
-void start_stop_loggin(SerialPortWrapper *serial, bool port_open, vector<string> *log_vector)
+void start_stop_loggin(SerialPortWrapper *serial, bool port_open, vector<string> *log_vector, TemperatureDatabase *tdb)
 {
     if (!port_open) {
         cout << "Please open port before starting to log." << endl;
@@ -236,7 +249,7 @@ void print_list_handled_vector(vector<string> log_vector)
     }
 }
 
-void run(vector<string> command_vector)
+void run(vector<string> command_vector, TemperatureDatabase *tdb)
 {
     bool keep_running = true;
     bool is_port_opened = false;
@@ -253,7 +266,7 @@ void run(vector<string> command_vector)
                 is_port_opened = open_port(serial);
                 break;
             case START_STOP_LOGGIN:
-                start_stop_loggin(serial, is_port_opened, &log_vector);
+                start_stop_loggin(serial, is_port_opened, &log_vector, tdb);
                 break;
             case CLOSE_PORT:
                 is_port_opened = close_port(serial);
@@ -291,10 +304,13 @@ vector<string> init_command_vector()
 int main()
 {
     vector<string> command_vector = init_command_vector();
+    TemperatureDatabase *tdb = new TemperatureDatabase();
 
     print_port_info();
     print_menu();
-    run(command_vector);
+    run(command_vector, tdb);
+
+    delete tdb;
 
     return 0;
 }

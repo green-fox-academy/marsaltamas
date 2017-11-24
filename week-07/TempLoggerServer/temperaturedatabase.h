@@ -3,21 +3,27 @@
 
 #include <string>
 #include <vector>
+#include <iomanip>
+#include <sstream>
+#include <ctime>
+#include <time.h>
+
 using namespace std;
 
 
 class TemperatureDatabase
 {
     public:
-        TemperatureDatabase(vector<string> log_vector);
+        TemperatureDatabase();
         ~TemperatureDatabase();
+        void process_string_log(string entry);
 
     private:
         typedef struct valid_log_entry {
             long timestamp;
             int temperature;
             } valid_log_entry_t;
-        vector<valid_log_entry_t> log;
+        vector<valid_log_entry_t> validated_data_log;
 };
 
 #endif // TEMPERATUREDATABASE_H
