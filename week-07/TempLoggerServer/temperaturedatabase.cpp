@@ -10,23 +10,18 @@ TemperatureDatabase::~TemperatureDatabase()
     // will save the data to file
 }
 
-void TemperatureDatabase::process_string_log(string entry)
+void TemperatureDatabase::print_data_log()
 {
-    istringstream i_stream(entry);
-    tm time_data_sequence;
-    int temperature;
 
-    i_stream << strptime(entry.c_str(), "%Y.%m.%d %H:%M:%S", &time_data_sequence)
-             << temperature;
+    for (unsigned int i = 0; i < validated_data_log_vector.size(); ++i) {
 
-    if (i_stream.fail())
-        throw "Error transforming string to data log entry.\n";
-
-    // no need to check temp and other ranges as already been validated
-
-    valid_log_entry_t vlet;
-    vlet.timestamp = mktime(&time_data_sequence);
-    vlet.temperature = temperature;
-
-    validated_data_log.push_back(vlet);
+        cout << "Record nr." << i + 1 << ": ";
+        cout << validated_data_log_vector.at(i)->year << ".";
+        cout << validated_data_log_vector.at(i)->month << ".";
+        cout << validated_data_log_vector.at(i)->day << " ";
+        cout << validated_data_log_vector.at(i)->hour << ":";
+        cout << validated_data_log_vector.at(i)->minute << ":";
+        cout << validated_data_log_vector.at(i)->second << " ";
+        cout << validated_data_log_vector.at(i)->temperature << endl;
+    }
 }
