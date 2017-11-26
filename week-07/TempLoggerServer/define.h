@@ -23,7 +23,16 @@ typedef enum Commands_enum {
     CLOSE_PORT,             //3
     LIST_HANDLED_VECTOR,    //4
     CLEAR_SCREEN,           //5
-    EXIT                    //6
+    SET_PORT_NAME,          //6
+    SAVE_TO_FILE,           //7
+    READ_FROM_FILE,         //8
+    AVG_TH_BY_DAYS,         //9
+    MAX_TH_BY_DAYS,         //10
+    MIN_TH_BY_DAYS,         //11
+    AVG_TH_BY_TEMPERATURES, //12
+    MAX_TH_BY_TEMPERATURES, //13
+    MIN_TH_BY_TEMPERATURES, //14
+    EXIT                    //15
     } e_commands;
 
 typedef struct {

@@ -25,7 +25,6 @@ bool is_day_valid(int year, int month, int day);
 void validate_and_push_to_tdb(string entry, TemperatureDatabase *tdb);
 void start_stop_loggin(SerialPortWrapper *serial, bool port_open, vector<string> *log_vector, TemperatureDatabase *tdb);
 bool close_port(SerialPortWrapper *serial);
-void print_list_handled_vector(vector<string> log_vector);
 void run(vector<string> command_vector, TemperatureDatabase *tdb);
 vector<string> init_command_vector();
 

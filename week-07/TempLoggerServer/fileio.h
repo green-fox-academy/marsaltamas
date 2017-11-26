@@ -4,7 +4,9 @@
 
 class FileIO
 {
-
+    public:
+        void load_data_from_file();
+        void read_data_from_flie();
 
 };
 

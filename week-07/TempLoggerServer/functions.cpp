@@ -21,6 +21,15 @@ void print_menu()
                 "c        Close port\n"
                 "l        List after error handling\n"
                 "cls      Clear screen\n"
+                "p        Set port name\n"
+                "f        Store datas in a file\n"
+                "r        Read datas from a file\n"
+                "a        Avarage temperature handling by days\n"
+                "max      Maximum temperature handling by days\n"
+                "min      Minimum temperature handling by days\n"
+                "at       Avarage temperature handling by temperatures\n"
+                "maxt     Maximum temperature handling by temperatures\n"
+                "mint     Minimum temperature handling by temperatures\n"
                 "e        Exit from the program\n"
                 "=====================================\n";
 }
@@ -168,7 +177,7 @@ void validate_and_push_to_tdb(string entry, TemperatureDatabase *tdb)
     }
 }
 
-void start_stop_loggin(SerialPortWrapper *serial, bool port_open, vector<string> *log_vector, TemperatureDatabase *tdb)
+void start_stop_loggin(SerialPortWrapper *serial, bool port_open, TemperatureDatabase *tdb)
 {
     if (!port_open) {
         cout << "Please open port before starting to log." << endl;
@@ -206,15 +215,6 @@ bool close_port(SerialPortWrapper *serial)
     return false;
 }
 
-void print_list_handled_vector(vector<string> log_vector)
-{
-    cout << "Listing contents of the log on screen: " << endl;
-
-    for (unsigned int i = 0; i < log_vector.size(); ++i) {
-        cout << "Record " << i << ": " << log_vector.at(i) << endl;
-    }
-}
-
 void run(vector<string> command_vector, TemperatureDatabase *tdb)
 {
     bool keep_running = true;
@@ -232,7 +232,7 @@ void run(vector<string> command_vector, TemperatureDatabase *tdb)
                 is_port_opened = open_port(serial);
                 break;
             case START_STOP_LOGGIN:
-                start_stop_loggin(serial, is_port_opened, &log_vector, tdb);
+                start_stop_loggin(serial, is_port_opened, tdb);
                 break;
             case CLOSE_PORT:
                 is_port_opened = close_port(serial);
@@ -243,11 +243,38 @@ void run(vector<string> command_vector, TemperatureDatabase *tdb)
             case CLEAR_SCREEN:
                 system("cls");
                 break;
+            case SET_PORT_NAME:
+                cout << "set port name was called." << endl;
+                break;
+            case SAVE_TO_FILE:
+                cout << "save to file was called." << endl;
+                break;
+            case READ_FROM_FILE:
+                cout << "read from file was called." << endl;
+                break;
+            case AVG_TH_BY_DAYS:
+                cout << "avg th by days was called." << endl;
+                break;
+            case MAX_TH_BY_DAYS:
+                cout << "max th by days was called." << endl;
+                break;
+            case MIN_TH_BY_DAYS:
+                cout << "min th by days was called." << endl;
+                break;
+            case AVG_TH_BY_TEMPERATURES:
+                cout << "avg th by temp was called." << endl;
+                break;
+            case MAX_TH_BY_TEMPERATURES:
+                cout << "max th by temp was called." << endl;
+                break;
+            case MIN_TH_BY_TEMPERATURES:
+                cout << "min th by temp was called." << endl;
+                break;
             case EXIT:
                 keep_running = exit();
                 break;
             default:
-                cout << "default" << endl;
+                cout << "Invalid command." << endl;
         };
     }
 }
@@ -262,8 +289,16 @@ vector<string> init_command_vector()
     command_vector.push_back("c");
     command_vector.push_back("l");
     command_vector.push_back("cls");
+    command_vector.push_back("p");
+    command_vector.push_back("f");
+    command_vector.push_back("r");
+    command_vector.push_back("a");
+    command_vector.push_back("max");
+    command_vector.push_back("min");
+    command_vector.push_back("at");
+    command_vector.push_back("maxt");
+    command_vector.push_back("mint");
     command_vector.push_back("e");
 
     return command_vector;
 }
-
