@@ -28,11 +28,13 @@ void TemperatureDatabase::print_data_log()
 
 void TemperatureDatabase::print_data_log_timestamp()
 {
+    struct tm *time_format;
+    char to_print[50];
 
     for (unsigned int i = 0; i < packed_data_line_vector.size(); ++i) {
 
-        cout << "Record nr." << i + 1 << ": ";
-        cout << "Temperature: " << packed_data_line_vector.at(i)->temperature;
-        cout << " Times stamp: " << packed_data_line_vector.at(i)->time_stamp << endl;
+        time_format = localtime(&(packed_data_line_vector.at(i)->time_stamp));
+        strftime(to_print, 50, "%Y:%m:%d %H:%M:%S ", time_format);
+        cout << "converted ts formatted: " << to_print << packed_data_line_vector.at(i)->temperature << endl;
     }
 }
