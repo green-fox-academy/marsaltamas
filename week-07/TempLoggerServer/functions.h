@@ -13,6 +13,7 @@
 #include "SerialPortWrapper.h"
 #include "temperaturedatabase.h"
 #include "define.h"
+#include "fileio.h"
 
 void print_port_info();
 void print_menu();
@@ -26,7 +27,11 @@ void validate_and_push_to_tdb(string entry, TemperatureDatabase *tdb);
 void start_stop_loggin(SerialPortWrapper *serial, bool port_open, vector<string> *log_vector, TemperatureDatabase *tdb);
 bool close_port(SerialPortWrapper *serial);
 void run(vector<string> command_vector, TemperatureDatabase *tdb);
+void save_to_file(string file_path, TemperatureDatabase *tdb);
+void read_from_file(string file_path, TemperatureDatabase *tdb);
+
 vector<string> init_command_vector();
+
 
 
 #endif // FUNCTIONS_H

@@ -13,7 +13,7 @@ void print_menu()
 {
     cout <<
                 "     Temperature Logger Application\n"
-                "======================================\n"
+                "======================================================\n"
                 "Commands:\n"
                 "h        Show command list\n"
                 "o        Open port\n"
@@ -22,16 +22,16 @@ void print_menu()
                 "l        List after error handling\n"
                 "cls      Clear screen\n"
                 "p        Set port name\n"
-                "f        Store datas in a file\n"
-                "r        Read datas from a file\n"
-                "a        Avarage temperature handling by days\n"
+                "f        Save data in a file\n"
+                "r        Read data from a file\n"
+                "a        Average temperature handling by days\n"
                 "max      Maximum temperature handling by days\n"
                 "min      Minimum temperature handling by days\n"
-                "at       Avarage temperature handling by temperatures\n"
+                "at       Average temperature handling by temperatures\n"
                 "maxt     Maximum temperature handling by temperatures\n"
                 "mint     Minimum temperature handling by temperatures\n"
                 "e        Exit from the program\n"
-                "=====================================\n";
+                "======================================================\n";
 }
 
 int get_command(vector<string> command_vector)
@@ -248,9 +248,10 @@ void run(vector<string> command_vector, TemperatureDatabase *tdb)
                 break;
             case SAVE_TO_FILE:
                 cout << "save to file was called." << endl;
+                save_to_file("TemprDataFile.txt", tdb);
                 break;
             case READ_FROM_FILE:
-                cout << "read from file was called." << endl;
+                read_from_file("LoadDbFile.txt", tdb);
                 break;
             case AVG_TH_BY_DAYS:
                 cout << "avg th by days was called." << endl;
@@ -301,4 +302,16 @@ vector<string> init_command_vector()
     command_vector.push_back("e");
 
     return command_vector;
+}
+
+void save_to_file(string file_path, TemperatureDatabase *tdb)
+{
+    FileIO fio(file_path, tdb);
+    fio.save_data_to_file();
+}
+
+void read_from_file(string file_path, TemperatureDatabase *tdb)
+{
+    FileIO fio(file_path, tdb);
+    fio.read_data_from_file(file_path, tdb);
 }
