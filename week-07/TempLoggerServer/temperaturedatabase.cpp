@@ -25,3 +25,14 @@ void TemperatureDatabase::print_data_log()
         cout << validated_data_log_vector.at(i)->temperature << endl;
     }
 }
+
+void TemperatureDatabase::print_data_log_timestamp()
+{
+
+    for (unsigned int i = 0; i < packed_data_line_vector.size(); ++i) {
+
+        cout << "Record nr." << i + 1 << ": ";
+        cout << "Temperature: " << packed_data_line_vector.at(i)->temperature;
+        cout << " Times stamp: " << packed_data_line_vector.at(i)->time_stamp << endl;
+    }
+}

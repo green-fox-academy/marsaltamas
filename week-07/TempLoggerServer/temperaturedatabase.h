@@ -19,6 +19,8 @@ class TemperatureDatabase
         ~TemperatureDatabase();
         void print_data_log();
         vector<valid_log_entry_t*> validated_data_log_vector;
+        vector<packed_data_line_t*> packed_data_line_vector;
+        void print_data_log_timestamp();
 
     private:
 

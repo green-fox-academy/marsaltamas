@@ -45,4 +45,10 @@ typedef struct {
     int temperature;
 } valid_log_entry_t;
 
+typedef struct {
+    int temperature;
+    time_t time_stamp;
+
+} packed_data_line_t;
+
 #endif // DEFINE_H

@@ -29,6 +29,7 @@ bool close_port(SerialPortWrapper *serial);
 void run(vector<string> command_vector, TemperatureDatabase *tdb);
 void save_to_file(string file_path, TemperatureDatabase *tdb);
 void read_from_file(string file_path, TemperatureDatabase *tdb);
+packed_data_line_t* packed_data_builder(valid_log_entry_t vdle);
 
 vector<string> init_command_vector();
 

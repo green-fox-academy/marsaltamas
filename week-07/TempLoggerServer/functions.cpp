@@ -166,6 +166,10 @@ void validate_and_push_to_tdb(string entry, TemperatureDatabase *tdb)
                                             vle_pointer->second = second;
                                             vle_pointer->temperature = temperature;
                                             tdb->validated_data_log_vector.push_back(vle_pointer);
+
+                                            packed_data_line_t *pdl_pointer = new packed_data_line_t;
+                                            pdl_pointer = packed_data_builder(*vle_pointer);
+                                            tdb->packed_data_line_vector.push_back(pdl_pointer);
                                          }
                                     }
                                 }
@@ -239,6 +243,7 @@ void run(vector<string> command_vector, TemperatureDatabase *tdb)
                 break;
             case LIST_HANDLED_VECTOR:
                 tdb->print_data_log();
+                tdb->print_data_log_timestamp();
                 break;
             case CLEAR_SCREEN:
                 system("cls");
@@ -314,4 +319,21 @@ void read_from_file(string file_path, TemperatureDatabase *tdb)
 {
     FileIO fio(file_path, tdb);
     fio.read_data_from_file(file_path, tdb);
+}
+
+packed_data_line_t* packed_data_builder(valid_log_entry_t vle)
+{
+    packed_data_line_t *pdl = new packed_data_line_t;
+    tm t;
+    t.tm_sec = vle.second;
+    t.tm_min = vle.minute;
+    t.tm_hour = vle.hour;
+    t.tm_mday = vle.day;
+    t.tm_mon = vle.month-1;
+    t.tm_year = vle.year-1900;
+
+    pdl->temperature = vle.temperature;
+    pdl->time_stamp = mktime(&t);
+
+    return pdl;
 }
