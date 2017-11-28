@@ -164,6 +164,8 @@ int main(void)
   GPIO_InitTypeDef *pin_A_1 = create_and_init_pin(GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
   GPIO_InitTypeDef *pin_A_2 = create_and_init_pin(GPIO_PIN_9, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
   GPIO_InitTypeDef *pin_A_3 = create_and_init_pin(GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
+  // init pin_A_4 to be alle to operate led through a push button
+  GPIO_InitTypeDef *pin_A_4 = create_and_init_pin(GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
 
   /* Add your application code here     */
   BSP_LED_Init(LED_GREEN);
@@ -171,7 +173,7 @@ int main(void)
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 
 
-
+  // creating pon_at_portx_t structs
   pin_at_portx_t a0_t;
   a0_t.pin = &pin_A_0;
   a0_t.port = GPIOA;
@@ -187,11 +189,31 @@ int main(void)
 
   pin_at_portx_t pin_at_portx_arr[4] = {a0_t, a1_t, a2_t, a3_t};
 
+  int state = 0;
+
   /* Infinite loop */
   while (1)
   {
+	  if (BSP_PB_GetState(BUTTON_KEY))
+		  state++;
 
-	  blink_led_array_at_rate(pin_at_portx_arr, 4, 400);
+	  if (state == 0) {
+	  		flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_10, 300);
+	  } else if (state == 1) {
+		  blink_led_array_at_rate(pin_at_portx_arr, 4, 300);
+	  } else if (state == 2) {
+		  blink_led_array_at_rate(pin_at_portx_arr, 4, 200);
+	  } else if (state == 3) {
+		  blink_led_array_at_rate(pin_at_portx_arr, 4, 100);
+	 } else if (state == 4){
+		 state = 0;
+		 HAL_Delay(200);
+	 }
+
+//	  if (BSP_PB_GetState(BUTTON_KEY))
+//		  blink_led_array_at_rate(pin_at_portx_arr, 4, 400);
+
+	  GPIOF->ODR = GPIOF->ODR | GPIO_PIN_7;
 
 //	  	bit_shift_blinker(GPIOF, 3, GPIO_PIN_10);
 
