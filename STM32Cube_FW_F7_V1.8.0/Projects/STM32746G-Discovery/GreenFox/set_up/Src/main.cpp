@@ -60,7 +60,7 @@ static void CPU_CACHE_Enable(void);
 
 /*
  *Function creates and initializes a pin at given port*
- * Return a GPIO_Init strudt pointer
+ * Return a GPIO_Init struct pointer
  * And initializes that to given parameters
  */
 GPIO_InitTypeDef* create_and_init_pin(uint16_t pin_num, uint32_t mode, uint32_t pull_mode, uint32_t speed, GPIO_TypeDef *port){
@@ -78,13 +78,25 @@ GPIO_InitTypeDef* create_and_init_pin(uint16_t pin_num, uint32_t mode, uint32_t 
 
 typedef struct {
 
-	GPIO_InitTypeDef pin;
-	GPIO_TypeDef port;
+	GPIO_InitTypeDef *pin;
+	GPIO_TypeDef *port;
 
 } pin_at_portx_t;
 
 /*
- * flashes different pins connecting the same port
+ * Flahes the members of the param array, with param size, and for param ms long each
+ */
+void blink_led_array_at_rate(pin_at_portx_t pin_port_t_arr[], int size, int ms) {
+
+	for (int i = 0; i < size;  ++i) {
+		pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR | pin_port_t_arr[i].pin->Pin;
+		HAL_Delay(ms);
+		pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR & ~pin_port_t_arr[i].pin->Pin;
+	}
+}
+
+/*
+ * flashes different adjacent pins connecting the same param port
  */
 void bit_shift_blinker(GPIO_TypeDef *port, int range, uint16_t start_pin){
 
@@ -159,10 +171,29 @@ int main(void)
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 
 
+
+  pin_at_portx_t a0_t;
+  a0_t.pin = &pin_A_0;
+  a0_t.port = GPIOA;
+  pin_at_portx_t a1_t;
+  a1_t.pin = pin_A_1;
+  a1_t.port = GPIOF;
+  pin_at_portx_t a2_t;
+  a2_t.pin = pin_A_2;
+  a2_t.port = GPIOF;
+  pin_at_portx_t a3_t;
+  a3_t.pin = pin_A_3;
+  a3_t.port = GPIOF;
+
+  pin_at_portx_t pin_at_portx_arr[4] = {a0_t, a1_t, a2_t, a3_t};
+
   /* Infinite loop */
   while (1)
   {
-	  	bit_shift_blinker(GPIOF, 3, GPIO_PIN_10);
+
+	  blink_led_array_at_rate(pin_at_portx_arr, 4, 400);
+
+//	  	bit_shift_blinker(GPIOF, 3, GPIO_PIN_10);
 
 //	  	if (BSP_PB_GetState(BUTTON_KEY)) {
 //	  		flash_led_at_pin_in_given_ms(GPIOA, GPIO_PIN_0, 1000);
