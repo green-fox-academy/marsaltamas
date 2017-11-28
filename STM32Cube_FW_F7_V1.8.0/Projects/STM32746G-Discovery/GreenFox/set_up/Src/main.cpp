@@ -59,7 +59,6 @@ static void CPU_CACHE_Enable(void);
 /* Private functions ---------------------------------------------------------*/
 
 /*
- *
  *Function creates and initializes a pin at given port*
  * Return a GPIO_Init strudt pointer
  * And initializes that to given parameters
@@ -77,6 +76,25 @@ GPIO_InitTypeDef* create_and_init_pin(uint16_t pin_num, uint32_t mode, uint32_t 
 	return pin;
 }
 
+typedef struct {
+
+	GPIO_InitTypeDef pin;
+	GPIO_TypeDef port;
+
+} pin_at_portx_t;
+
+/*
+ * flashes different pins connecting the same port
+ */
+void bit_shift_blinker(GPIO_TypeDef *port, int range, uint16_t start_pin){
+
+	for (int i = 0; i < range; ++i) {
+		port->ODR = port->ODR | (start_pin >> i);
+		HAL_Delay(300);
+		port->ODR = port->ODR & ~(start_pin >> i);
+	}
+}
+
 /*
  * This function flashes led from given port/pin at given rate
  */
@@ -86,7 +104,6 @@ void flash_led_at_pin_in_given_ms(GPIO_TypeDef *port, uint16_t pin_num, int ms){
 	HAL_Delay(ms);                                      // wait a second
 	HAL_GPIO_WritePin(port, pin_num, GPIO_PIN_RESET); // setting the pin to 0
 }
-
 
 /**
   * @brief  Main program
@@ -139,20 +156,37 @@ int main(void)
   /* Add your application code here     */
   BSP_LED_Init(LED_GREEN);
   BSP_LED_On(LED_GREEN);
+  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+
 
   /* Infinite loop */
   while (1)
   {
-	  //TODO:
-	  //Flash the ledwith 200 ms period time
+	  	bit_shift_blinker(GPIOF, 3, GPIO_PIN_10);
 
-	  	HAL_Delay(500);
-	  	BSP_LED_Toggle(LED_GREEN);
+//	  	if (BSP_PB_GetState(BUTTON_KEY)) {
+//	  		flash_led_at_pin_in_given_ms(GPIOA, GPIO_PIN_0, 1000);
+//	  		flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_8, 1000);
+//
+//	  	}
+//
+//	  	flash_led_at_pin_in_given_ms(GPIOA, GPIO_PIN_0, 600);
+//	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_10, 500);
+//	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_9, 200);
+//	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_8, 500);
+//
+//	  	GPIOF->ODR = GPIOF->ODR | 0X0400U;
+//	  	HAL_Delay(400);
+//	  	GPIOF->ODR = GPIOF->ODR & ~0X0400U;
+//
+//	  	GPIOF->ODR = GPIOF->ODR | 0b1000000000U;
+//	  	HAL_Delay(500);
+//	  	GPIOF->ODR = GPIOF->ODR & ~0b1000000000U;
+//
+//	  	GPIOF->ODR = GPIOF->ODR | (1 << 8);
+//	  	HAL_Delay(300);
+//	  	GPIOF->ODR = GPIOF->ODR & ~(1 << 8);
 
-	  	flash_led_at_pin_in_given_ms(GPIOA, GPIO_PIN_0, 200);
-	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_10, 500);
-	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_9, 200);
-	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_8, 500);
   }
 }
 
