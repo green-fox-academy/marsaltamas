@@ -37,6 +37,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <string>
+using namespace std;
 
 /** @addtogroup STM32F7xx_HAL_Examples
   * @{
@@ -56,80 +58,43 @@ static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
+typedef struct {
+	GPIO_InitTypeDef pin;
+	GPIO_TypeDef *port;
+} pin_w_port_t;
+
 /* Private functions ---------------------------------------------------------*/
 
-/*
- *Function creates and initializes a pin at given port*
- * Return a GPIO_Init struct pointer
- * And initializes that to given parameters
- */
-	GPIO_InitTypeDef* create_and_init_pin(uint16_t pin_num, uint32_t mode, uint32_t pull_mode, uint32_t speed, GPIO_TypeDef *port) {
+pin_w_port_t create_init_pin_w_port(uint16_t pin_nr, uint32_t mode, uint32_t resistor, uint32_t speed, GPIO_TypeDef *port)
+{
+	pin_w_port_t *new_pin_w_port = new pin_w_port_t;
+	GPIO_InitTypeDef *new_pin = new GPIO_InitTypeDef;    		// create a config structure
+	new_pin->Pin = pin_nr;            	  						// this is about PIN 0
+	new_pin->Mode = mode;  								    // Configure as output with push-up-down enabled
+	new_pin->Pull = resistor;     								// the push-up-down should work as pulldown
+	new_pin->Speed = speed;    								// we need a high-speed output
+	new_pin_w_port->pin = *new_pin;
+	new_pin_w_port->port = port;
 
-	  GPIO_InitTypeDef *pin = new GPIO_InitTypeDef;          // create a config structure
-	  pin->Pin = pin_num;            	// this is about PIN x
-	  pin->Mode = mode;  				// Configure as output with push-up-down enabled
-	  pin->Pull = pull_mode;     	    // the push-up-down should work as pulldown
-	  pin->Speed = speed;    			// we need a high-speed output
+	HAL_GPIO_Init(port, new_pin);     						// initialize the pin on GPIOA port with HAL
 
-	  HAL_GPIO_Init(port, pin);     // initialize the pin on GPIOx port with HAL
+	return *new_pin_w_port;
+}
 
-	  return pin;
+void turn_on_leds(pin_w_port_t arr[], int size) {
+	for (int i = 0; i < size; ++i) {
+		HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_SET);
 	}
+}
 
-	typedef struct {
-
-	  GPIO_InitTypeDef *pin;
-	  GPIO_TypeDef *port;
-
-	} pin_at_portx_t;
-
-	/*
-	 * Flahes the members of the param array, with param size, and for param ms long each
-	 */
-	void blink_led_array_at_rate(pin_at_portx_t pin_port_t_arr[], int size, int ms) {
-
-	  for (int i = 0; i < size;  ++i) {
-		  pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR | pin_port_t_arr[i].pin->Pin;
-		  HAL_Delay(ms);
-		  pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR & ~pin_port_t_arr[i].pin->Pin;
-	  }
+void turn_off_leds(pin_w_port_t arr[], int size) {
+	for (int i = 0; i < size; ++i) {
+		HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_RESET);
 	}
+}
 
-	/*
-	 * flashes different adjacent pins connecting the same param port
-	 */
-	void bit_shift_blinker(GPIO_TypeDef *port, int range, uint16_t start_pin) {
-
-	  for (int i = 0; i < range; ++i) {
-		  port->ODR = port->ODR | (start_pin >> i);
-		  HAL_Delay(300);
-		  port->ODR = port->ODR & ~(start_pin >> i);
-	  }
-	}
-
-	/*
-	 * This function flashes led from given port/pin at given rate
-	 */
-
-	void flash_led_at_pin_in_given_ms(GPIO_TypeDef *port, uint16_t pin_num, int ms) {
-	  HAL_GPIO_WritePin(port, pin_num, GPIO_PIN_SET);   // setting the pin to 1
-	  HAL_Delay(ms);                                      // wait a second
-	  HAL_GPIO_WritePin(port, pin_num, GPIO_PIN_RESET); // setting the pin to 0
-	}
-
-/**
-  * @brief  Main program
-  * @param  None
-  * @retval None
-  */
 int main(void)
 {
-
-  /* This project template calls firstly two functions in order to configure MPU feature 
-     and to enable the CPU Cache, respectively MPU_Config() and CPU_CACHE_Enable().
-     These functions are provided as template implementation that User may integrate 
-     in his application, to enhance the performance in case of use of AXI interface 
-     with several masters. */ 
   
   /* Configure the MPU attributes as Write Through */
   MPU_Config();
@@ -137,122 +102,43 @@ int main(void)
   /* Enable the CPU Cache */
   CPU_CACHE_Enable();
 
-  /* STM32F7xx HAL library initialization:
-       - Configure the Flash ART accelerator on ITCM interface
-       - Configure the Systick to generate an interrupt each 1 msec
-       - Set NVIC Group Priority to 4
-       - Low Level Initialization
-     */
+  /* STM32F7xx HAL library initialization
   HAL_Init();
 
   /* Configure the System clock to have a frequency of 216 MHz */
   SystemClock_Config();
 
-  __HAL_RCC_GPIOA_CLK_ENABLE();   	   // we need to enable the GPIOA port's clock first
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
 
-  GPIO_InitTypeDef pin_A_0;            // create a config structure
-  pin_A_0.Pin = GPIO_PIN_0;            // this is about PIN 0
-  pin_A_0.Mode = GPIO_MODE_OUTPUT_PP;  // Configure as output with push-up-down enabled
-  pin_A_0.Pull = GPIO_PULLDOWN;        // the push-up-down should work as pulldown
-  pin_A_0.Speed = GPIO_SPEED_HIGH;     // we need a high-speed output
+  pin_w_port_t led_a0 = create_init_pin_w_port(GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOA);
+  pin_w_port_t led_a1 = create_init_pin_w_port(GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
+  pin_w_port_t led_a2 = create_init_pin_w_port(GPIO_PIN_9, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
+  pin_w_port_t led_a3 = create_init_pin_w_port(GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
+  pin_w_port_t led_a4 = create_init_pin_w_port(GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
+  pin_w_port_t led_arr[] = {led_a0, led_a1, led_a2, led_a3, led_a4};
 
-  HAL_GPIO_Init(GPIOA, &pin_A_0);      // initialize the pin on GPIOA port with HAL
+//  GPIO_InitTypeDef pin_D_0;			   // connected to an external button
+//  pin_D_0.Pin = GPIO_PIN_7;            // this is about PIN 7
+//  pin_D_0.Mode = GPIO_MODE_INPUT;  	   // Configure as input with push-up-down enabled
+//  pin_D_0.Pull = GPIO_PULLUP;          // the push-up-down should work as pullup
+//  pin_D_0.Speed = GPIO_SPEED_HIGH;     // we need a high-speed input
 
-  __HAL_RCC_GPIOF_CLK_ENABLE();        // we need to enable the GPIOA port's clock first
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-
-  GPIO_InitTypeDef pin_D_0;			   // connected to an external button
-  pin_D_0.Pin = GPIO_PIN_7;            // this is about PIN 7
-  pin_D_0.Mode = GPIO_MODE_INPUT;  	   // Configure as input with push-up-down enabled
-  pin_D_0.Pull = GPIO_PULLUP;          // the push-up-down should work as pullup
-  pin_D_0.Speed = GPIO_SPEED_HIGH;     // we need a high-speed input
-
-
-  HAL_GPIO_Init(GPIOC, &pin_D_0);
-
-  // init from pin_A_1 to pint_A_3
-  GPIO_InitTypeDef *pin_A_1 = create_and_init_pin(GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
-  GPIO_InitTypeDef *pin_A_2 = create_and_init_pin(GPIO_PIN_9, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
-  GPIO_InitTypeDef *pin_A_3 = create_and_init_pin(GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
-  // init pin_A_4 to be alle to operate led through a push button
-  GPIO_InitTypeDef *pin_A_4 = create_and_init_pin(GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
-
-  /* Add your application code here     */
-  BSP_LED_Init(LED_GREEN);
-  BSP_LED_On(LED_GREEN);
-  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
-
-  // creating pin_at_portx_t structs
-  pin_at_portx_t a0_t;
-  a0_t.pin = &pin_A_0;
-  a0_t.port = GPIOA;
-  pin_at_portx_t a1_t;
-  a1_t.pin = pin_A_1;
-  a1_t.port = GPIOF;
-  pin_at_portx_t a2_t;
-  a2_t.pin = pin_A_2;
-  a2_t.port = GPIOF;
-  pin_at_portx_t a3_t;
-  a3_t.pin = pin_A_3;
-  a3_t.port = GPIOF;
-
-  pin_at_portx_t pin_at_portx_arr[4] = {a0_t, a1_t, a2_t, a3_t};
-
-  int state = 0;
 
   /* Infinite loop */
   while (1)
   {
 
-	if (HAL_GPIO_ReadPin(GPIOC, pin_D_0.Pin) == 0) {
-		 blink_led_array_at_rate(pin_at_portx_arr, 4, 50);
-	}
+	  turn_on_leds(led_arr, 5);
+	  HAL_Delay(300);
+	  turn_off_leds(led_arr, 5);
+	  HAL_Delay(300);
 
-    if (BSP_PB_GetState(BUTTON_KEY))
-	    state++;
 
-    if (state == 0) {
-	    flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_10, 300);
-    } else if (state == 1) {
-	    blink_led_array_at_rate(pin_at_portx_arr, 4, 300);
-    } else if (state == 2) {
-	    blink_led_array_at_rate(pin_at_portx_arr, 4, 200);
-    } else if (state == 3) {
-	    blink_led_array_at_rate(pin_at_portx_arr, 4, 100);
-    } else if (state == 4) {
-	   state = 0;
-	   HAL_Delay(200);
-    }
-
-//	  if (BSP_PB_GetState(BUTTON_KEY))
-//		  blink_led_array_at_rate(pin_at_portx_arr, 4, 400);
-
-    GPIOF->ODR = GPIOF->ODR | GPIO_PIN_7;
-
-//	  	bit_shift_blinker(GPIOF, 3, GPIO_PIN_10);
-
-//	  	if (BSP_PB_GetState(BUTTON_KEY)) {
-//	  		flash_led_at_pin_in_given_ms(GPIOA, GPIO_PIN_0, 1000);
-//	  		flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_8, 1000);
-//
-//	  	}
-//
-//	  	flash_led_at_pin_in_given_ms(GPIOA, GPIO_PIN_0, 600);
-//	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_10, 500);
-//	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_9, 200);
-//	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_8, 500);
 //
 //	  	GPIOF->ODR = GPIOF->ODR | 0X0400U;
 //	  	HAL_Delay(400);
 //	  	GPIOF->ODR = GPIOF->ODR & ~0X0400U;
-//
-//	  	GPIOF->ODR = GPIOF->ODR | 0b1000000000U;
-//	  	HAL_Delay(500);
-//	  	GPIOF->ODR = GPIOF->ODR & ~0b1000000000U;
-//
-//	  	GPIOF->ODR = GPIOF->ODR | (1 << 8);
-//	  	HAL_Delay(300);
-//	  	GPIOF->ODR = GPIOF->ODR & ~(1 << 8);
 
   }
 }
