@@ -93,6 +93,14 @@ void turn_off_leds(pin_w_port_t arr[], int size) {
 	}
 }
 
+void flash_leds_at_rate(pin_w_port_t arr[], int size, int ms)
+{
+	turn_on_leds(arr, size);
+	HAL_Delay(ms);
+	turn_off_leds(arr, size);
+	HAL_Delay(ms);
+}
+
 int main(void)
 {
   
@@ -111,6 +119,7 @@ int main(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
 
+  // init leds
   pin_w_port_t led_a0 = create_init_pin_w_port(GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOA);
   pin_w_port_t led_a1 = create_init_pin_w_port(GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
   pin_w_port_t led_a2 = create_init_pin_w_port(GPIO_PIN_9, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
@@ -118,28 +127,34 @@ int main(void)
   pin_w_port_t led_a4 = create_init_pin_w_port(GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
   pin_w_port_t led_arr[] = {led_a0, led_a1, led_a2, led_a3, led_a4};
 
-//  GPIO_InitTypeDef pin_D_0;			   // connected to an external button
-//  pin_D_0.Pin = GPIO_PIN_7;            // this is about PIN 7
-//  pin_D_0.Mode = GPIO_MODE_INPUT;  	   // Configure as input with push-up-down enabled
-//  pin_D_0.Pull = GPIO_PULLUP;          // the push-up-down should work as pullup
-//  pin_D_0.Speed = GPIO_SPEED_HIGH;     // we need a high-speed input
+  // init extern button
+  pin_w_port_t button_a5 = create_init_pin_w_port(GPIO_PIN_6, GPIO_MODE_INPUT, GPIO_PULLUP, GPIO_SPEED_HIGH, GPIOF);
 
+  int state = 0;
 
   /* Infinite loop */
   while (1)
   {
+	 if (!HAL_GPIO_ReadPin(button_a5.port, button_a5.pin.Pin))
+		 state++;
 
-	  turn_on_leds(led_arr, 5);
-	  HAL_Delay(300);
-	  turn_off_leds(led_arr, 5);
-	  HAL_Delay(300);
+	  if (state == 1) {
+		  turn_on_leds(led_arr, 5);
+		  HAL_Delay(150);
+	  } else if (state == 2) {
+		  turn_off_leds(led_arr, 5);
+		  HAL_Delay(150);
+	  } else {
+		  flash_leds_at_rate(led_arr, 5, 300);
+		  state = 0;
+		  HAL_Delay(150);
+	  }
 
 
 //
 //	  	GPIOF->ODR = GPIOF->ODR | 0X0400U;
 //	  	HAL_Delay(400);
 //	  	GPIOF->ODR = GPIOF->ODR & ~0X0400U;
-
   }
 }
 
