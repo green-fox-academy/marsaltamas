@@ -101,6 +101,44 @@ void flash_leds_at_rate(pin_w_port_t arr[], int size, int ms)
 	HAL_Delay(ms);
 }
 
+void chain_flash_one_dir(pin_w_port_t arr[], int size, int speed_in_ms)
+{
+	while (1) {
+		for (int i = 0; i < size; ++i) {
+			HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_SET);
+			HAL_Delay(speed_in_ms);
+			HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_RESET);
+			HAL_Delay(speed_in_ms);
+		}
+	}
+}
+
+void chain_flash_bi_dir(pin_w_port_t arr[], int size, int speed_in_ms, pin_w_port_t button)
+{
+	int original_speed = speed_in_ms;
+
+	while (1) {
+		if (!HAL_GPIO_ReadPin(button.port, button.pin.Pin)) {
+			speed_in_ms -= 10;
+		}
+
+		for (int i = 0; i < size; ++i) {
+			HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_SET);
+			HAL_Delay(speed_in_ms);
+			HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_RESET);
+			HAL_Delay(speed_in_ms);
+		}
+		for (int i = size - 2; i > 0; --i) {
+			HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_SET);
+			HAL_Delay(speed_in_ms);
+			HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_RESET);
+			HAL_Delay(speed_in_ms);
+		}
+		if (speed_in_ms == 0)
+			speed_in_ms = original_speed;
+	}
+}
+
 int main(void)
 {
   
@@ -135,8 +173,12 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-	 if (!HAL_GPIO_ReadPin(button_a5.port, button_a5.pin.Pin))
+
+	 chain_flash_bi_dir(led_arr, 5, 100, button_a5);
+
+	 if (!HAL_GPIO_ReadPin(button_a5.port, button_a5.pin.Pin)) {
 		 state++;
+	 }
 
 	  if (state == 1) {
 		  turn_on_leds(led_arr, 5);
