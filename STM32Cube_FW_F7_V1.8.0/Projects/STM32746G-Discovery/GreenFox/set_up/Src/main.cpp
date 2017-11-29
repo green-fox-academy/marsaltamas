@@ -65,21 +65,21 @@ static void CPU_CACHE_Enable(void);
  */
 	GPIO_InitTypeDef* create_and_init_pin(uint16_t pin_num, uint32_t mode, uint32_t pull_mode, uint32_t speed, GPIO_TypeDef *port) {
 
-		GPIO_InitTypeDef *pin = new GPIO_InitTypeDef;          // create a config structure
-		pin->Pin = pin_num;            	// this is about PIN x
-		pin->Mode = mode;  				// Configure as output with push-up-down enabled
-		pin->Pull = pull_mode;     	    // the push-up-down should work as pulldown
-		pin->Speed = speed;    			// we need a high-speed output
+	  GPIO_InitTypeDef *pin = new GPIO_InitTypeDef;          // create a config structure
+	  pin->Pin = pin_num;            	// this is about PIN x
+	  pin->Mode = mode;  				// Configure as output with push-up-down enabled
+	  pin->Pull = pull_mode;     	    // the push-up-down should work as pulldown
+	  pin->Speed = speed;    			// we need a high-speed output
 
-		HAL_GPIO_Init(port, pin);     // initialize the pin on GPIOx port with HAL
+	  HAL_GPIO_Init(port, pin);     // initialize the pin on GPIOx port with HAL
 
-		return pin;
+	  return pin;
 	}
 
 	typedef struct {
 
-		GPIO_InitTypeDef *pin;
-		GPIO_TypeDef *port;
+	  GPIO_InitTypeDef *pin;
+	  GPIO_TypeDef *port;
 
 	} pin_at_portx_t;
 
@@ -88,11 +88,11 @@ static void CPU_CACHE_Enable(void);
 	 */
 	void blink_led_array_at_rate(pin_at_portx_t pin_port_t_arr[], int size, int ms) {
 
-		for (int i = 0; i < size;  ++i) {
-			pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR | pin_port_t_arr[i].pin->Pin;
-			HAL_Delay(ms);
-			pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR & ~pin_port_t_arr[i].pin->Pin;
-		}
+	  for (int i = 0; i < size;  ++i) {
+		  pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR | pin_port_t_arr[i].pin->Pin;
+		  HAL_Delay(ms);
+		  pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR & ~pin_port_t_arr[i].pin->Pin;
+	  }
 	}
 
 	/*
@@ -100,11 +100,11 @@ static void CPU_CACHE_Enable(void);
 	 */
 	void bit_shift_blinker(GPIO_TypeDef *port, int range, uint16_t start_pin) {
 
-		for (int i = 0; i < range; ++i) {
-			port->ODR = port->ODR | (start_pin >> i);
-			HAL_Delay(300);
-			port->ODR = port->ODR & ~(start_pin >> i);
-		}
+	  for (int i = 0; i < range; ++i) {
+		  port->ODR = port->ODR | (start_pin >> i);
+		  HAL_Delay(300);
+		  port->ODR = port->ODR & ~(start_pin >> i);
+	  }
 	}
 
 	/*
@@ -112,9 +112,9 @@ static void CPU_CACHE_Enable(void);
 	 */
 
 	void flash_led_at_pin_in_given_ms(GPIO_TypeDef *port, uint16_t pin_num, int ms) {
-		HAL_GPIO_WritePin(port, pin_num, GPIO_PIN_SET);   // setting the pin to 1
-		HAL_Delay(ms);                                      // wait a second
-		HAL_GPIO_WritePin(port, pin_num, GPIO_PIN_RESET); // setting the pin to 0
+	  HAL_GPIO_WritePin(port, pin_num, GPIO_PIN_SET);   // setting the pin to 1
+	  HAL_Delay(ms);                                      // wait a second
+	  HAL_GPIO_WritePin(port, pin_num, GPIO_PIN_RESET); // setting the pin to 0
 	}
 
 /**
@@ -193,26 +193,26 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-	  if (BSP_PB_GetState(BUTTON_KEY))
-		  state++;
+    if (BSP_PB_GetState(BUTTON_KEY))
+	    state++;
 
-	  if (state == 0) {
-		  flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_10, 300);
-	  } else if (state == 1) {
-		  blink_led_array_at_rate(pin_at_portx_arr, 4, 300);
-	  } else if (state == 2) {
-		  blink_led_array_at_rate(pin_at_portx_arr, 4, 200);
-	  } else if (state == 3) {
-		  blink_led_array_at_rate(pin_at_portx_arr, 4, 100);
-	  } else if (state == 4) {
-		 state = 0;
-		 HAL_Delay(200);
-	  }
+    if (state == 0) {
+	    flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_10, 300);
+    } else if (state == 1) {
+	    blink_led_array_at_rate(pin_at_portx_arr, 4, 300);
+    } else if (state == 2) {
+	    blink_led_array_at_rate(pin_at_portx_arr, 4, 200);
+    } else if (state == 3) {
+	    blink_led_array_at_rate(pin_at_portx_arr, 4, 100);
+    } else if (state == 4) {
+	   state = 0;
+	   HAL_Delay(200);
+    }
 
 //	  if (BSP_PB_GetState(BUTTON_KEY))
 //		  blink_led_array_at_rate(pin_at_portx_arr, 4, 400);
 
-	  GPIOF->ODR = GPIOF->ODR | GPIO_PIN_7;
+    GPIOF->ODR = GPIOF->ODR | GPIO_PIN_7;
 
 //	  	bit_shift_blinker(GPIOF, 3, GPIO_PIN_10);
 
