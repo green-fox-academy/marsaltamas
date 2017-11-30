@@ -69,13 +69,16 @@ static void CPU_CACHE_Enable(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-void game_delay(uint32_t Delay)
-{
-  uint32_t tickstart = 0;
-  tickstart = HAL_GetTick();
-  while((HAL_GetTick() - tickstart) < Delay)
-  {
-  }
+void game_delay(uint32_t Delay, GPIO_InitTypeDef button, GPIO_TypeDef *port) {
+	uint32_t tickstart = 0;
+	tickstart = HAL_GetTick();
+	while ((HAL_GetTick() - tickstart) < Delay) {
+
+		if (HAL_GPIO_ReadPin(port, button.Pin) == 0) {
+			printf("Your have to wait for start.\n");
+			break;
+		}
+	}
 }
 
 int main(void) {
@@ -93,7 +96,8 @@ int main(void) {
 
 	/* Add your application code here*/
 
-	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE()
+	;
 
 	GPIO_InitTypeDef led_a0;
 	led_a0.Pin = GPIO_PIN_0;
@@ -103,7 +107,8 @@ int main(void) {
 
 	HAL_GPIO_Init(GPIOA, &led_a0);
 
-	__HAL_RCC_GPIOF_CLK_ENABLE();
+	__HAL_RCC_GPIOF_CLK_ENABLE()
+	;
 
 	GPIO_InitTypeDef button_a5;
 	button_a5.Pin = GPIO_PIN_6;
@@ -122,7 +127,8 @@ int main(void) {
 
 	BSP_COM_Init(COM1, &uart_handle);
 
-	__HAL_RCC_RNG_CLK_ENABLE();
+	__HAL_RCC_RNG_CLK_ENABLE()
+	;
 
 	RNG_HandleTypeDef rndCfg;
 	rndCfg.Instance = RNG;
@@ -134,7 +140,6 @@ int main(void) {
 	printf("**********in STATIC reaction game**********\r\n\n");
 	printf("Let's play a game! Are you ready?\r\n\n");
 
-
 	for (int i = 0; i < 10; ++i) {
 		printf("random num %d: ", i);
 		rnd_num = HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1;
@@ -143,7 +148,6 @@ int main(void) {
 
 	printf("Press the button to start! Press after the led is lit!\n");
 
-
 	uint32_t start = 0;
 	uint32_t finish = 0;
 	int state = 0;
@@ -151,16 +155,16 @@ int main(void) {
 	while (1) {
 
 		if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !state) {
-			game_delay((HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1) * 1000);
+			HAL_Delay(500);
+			game_delay((HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1) * 1000 - 500, button_a5, GPIOF);
 			GPIOA->ODR |= 1;
 			state = 1;
 			start = HAL_GetTick();
 		}
 
-
 		if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && state) {
 			finish = HAL_GetTick();
-			game_delay(200);
+			HAL_Delay(200);
 			printf("Start time: %ld\n", start);
 			printf("Finish time: %ld\n", finish);
 			printf("Reaction time: %ld\n", finish - start);
@@ -168,7 +172,6 @@ int main(void) {
 			GPIOA->ODR &= 0;
 			printf("Hit button to start new game!\n");
 		}
-
 
 	}
 }
