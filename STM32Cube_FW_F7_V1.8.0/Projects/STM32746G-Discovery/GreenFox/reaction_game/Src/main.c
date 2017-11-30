@@ -71,17 +71,21 @@ static void CPU_CACHE_Enable(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-void game_delay(uint32_t Delay, GPIO_InitTypeDef button, GPIO_TypeDef *port) {
+int game_delay(uint32_t Delay, GPIO_InitTypeDef button, GPIO_TypeDef *port) {
 	uint32_t tickstart = 0;
 	tickstart = HAL_GetTick();
 	while ((HAL_GetTick() - tickstart) < Delay) {
 
 		if (HAL_GPIO_ReadPin(port, button.Pin) == 0) {
-			printf("Your have to wait for start.\n");
-			break;
+			printf("Your have to wait for start.\n"
+					"You received 1 second of penalty.\n");
+			return 1;
 		}
 	}
+	return 0;
 }
+
+
 
 int main(void) {
 	/* Configure the MPU attributes as Write Through */
@@ -156,12 +160,13 @@ int main(void) {
 	int counter = 0;
 	uint32_t result_arr[3] = {3, 3, 4};
 	uint32_t result;
+	int skip;
 
 	while (1) {
 
 		if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !state) {
 			HAL_Delay(500);
-			game_delay(/*(HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1) * 1000 - 500*/ 500, button_a5, GPIOF);
+			skip = game_delay(/*(HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1) * 1000 - 500*/ 500, button_a5, GPIOF);
 			GPIOA->ODR |= 1;
 			state = 1;
 			start = HAL_GetTick();
@@ -172,7 +177,10 @@ int main(void) {
 			HAL_Delay(200);
 			printf("Start time: %ld\n", start);
 			printf("Finish time: %ld\n", finish);
-			result = finish - start;
+			if (skip)
+				result = 1000;
+			else
+				result = finish - start;
 			result_arr[counter] = result;
 			counter++;
 			if (counter == 3) {
