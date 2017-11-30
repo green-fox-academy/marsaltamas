@@ -38,6 +38,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /** @addtogroup STM32F7xx_HAL_Examples
  * @{
@@ -151,12 +153,15 @@ int main(void) {
 	uint32_t start = 0;
 	uint32_t finish = 0;
 	int state = 0;
+	int counter = 0;
+	uint32_t result_arr[3] = {3, 3, 4};
+	uint32_t result;
 
 	while (1) {
 
 		if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !state) {
 			HAL_Delay(500);
-			game_delay((HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1) * 1000 - 500, button_a5, GPIOF);
+			game_delay(/*(HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1) * 1000 - 500*/ 500, button_a5, GPIOF);
 			GPIOA->ODR |= 1;
 			state = 1;
 			start = HAL_GetTick();
@@ -167,13 +172,36 @@ int main(void) {
 			HAL_Delay(200);
 			printf("Start time: %ld\n", start);
 			printf("Finish time: %ld\n", finish);
-			printf("Reaction time: %ld\n", finish - start);
+			result = finish - start;
+			result_arr[counter] = result;
+			counter++;
+			if (counter == 3) {
+				break;
+			}
+			printf("Reaction time: %ld\n", result);
 			state = 0;
 			GPIOA->ODR &= 0;
 			printf("Hit button to start new game!\n");
 		}
 
 	}
+
+	printf("This is the end of the game.\n");
+	printf("Results: \n");
+	uint32_t sum = 0;
+	for (int i = 0; i < 3; ++i) {
+		printf("Results: %d: %u\n", i, (unsigned int) result_arr[i]);
+		sum += result_arr[i];
+	}
+
+
+	double avg = (double) sum / 3;
+	int rest = (int) avg / 1;
+	int float_part_of_avg = (int) ((avg - rest) * 1000);
+
+	printf("Avg: %d.%d\n", rest, float_part_of_avg);
+
+
 }
 /**
  * @brief  Retargets the C library printf function to the USART.
