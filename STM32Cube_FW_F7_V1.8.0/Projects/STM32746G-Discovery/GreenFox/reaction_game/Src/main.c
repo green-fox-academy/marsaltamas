@@ -122,6 +122,8 @@ int main(void) {
 
 	BSP_COM_Init(COM1, &uart_handle);
 
+	__HAL_RCC_RNG_CLK_ENABLE();
+
 	RNG_HandleTypeDef rndCfg;
 	rndCfg.Instance = RNG;
 	HAL_RNG_Init(&rndCfg);
@@ -135,25 +137,38 @@ int main(void) {
 
 	for (int i = 0; i < 10; ++i) {
 		printf("random num %d: ", i);
-		printf("%ld\n", HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1);
+		rnd_num = HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1;
+		printf("%ld\n", rnd_num);
 	}
 
-	printf("Press the button to start!\n");
-			GPIOA->ODR |= 1;
+	printf("Press the button to start! Press after the led is lit!\n");
+
+
+	uint32_t start = 0;
+	uint32_t finish = 0;
+	int state = 0;
 
 	while (1) {
 
-//		if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0) {
-//			GPIOA->ODR &= 0;
-//			printf("Game over.\n");
-//			break;
-//		}
+		if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !state) {
+			game_delay((HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1) * 1000);
+			GPIOA->ODR |= 1;
+			state = 1;
+			start = HAL_GetTick();
+		}
 
-//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-		printf("systick %ld\n", (HAL_GetTick()));
-		game_delay(999);
-//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
-//		game_delay(1000);
+
+		if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && state) {
+			finish = HAL_GetTick();
+			game_delay(200);
+			printf("Start time: %ld\n", start);
+			printf("Finish time: %ld\n", finish);
+			printf("Reaction time: %ld\n", finish - start);
+			state = 0;
+			GPIOA->ODR &= 0;
+			printf("Hit button to start new game!\n");
+		}
+
 
 	}
 }
