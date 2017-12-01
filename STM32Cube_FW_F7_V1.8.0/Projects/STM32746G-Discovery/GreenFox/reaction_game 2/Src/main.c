@@ -220,6 +220,17 @@ void disp_number(int num, pin_w_port_t pin_w_port_arr[], int size)
 		case 9:
 			disp_set_up(0, A, TRUE, B, TRUE, C, TRUE, D, TRUE, E, FALSE, F, TRUE, G, TRUE, pin_w_port_arr, size);
 			break;
+		case 'h':
+			disp_set_up(0, A, FALSE, B, TRUE, C, TRUE, D, FALSE, E, TRUE, F, TRUE, G, TRUE, pin_w_port_arr, size);
+			break;
+		case 'e':
+			disp_set_up(0, A, TRUE, B, FALSE, C, FALSE, D, TRUE, E, TRUE, F, TRUE, G, TRUE, pin_w_port_arr, size);
+			break;
+		case 'l':
+			disp_set_up(0, A, FALSE, B, FALSE, C, FALSE, D, TRUE, E, TRUE, F, TRUE, G, FALSE, pin_w_port_arr, size);
+			break;
+		default:
+			disp_set_up(0, A, FALSE, B, FALSE, C, FALSE, D, FALSE, E, FALSE, F, FALSE, G, FALSE, pin_w_port_arr, size);
 	}
 }
 
@@ -288,6 +299,22 @@ int main(void) {
 
 	pin_w_port_t disp_arr[] = {disp_ad0, disp_bd1, disp_cd4, disp_dd6, disp_ed7, disp_fd8, disp_gd10, disp_dotd5};
 
+	disp_number('h', disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	disp_number('e', disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	disp_number('l', disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	turn_off_display(disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(300);
+	disp_number('l', disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	disp_number(0, disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	turn_off_display(disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	disp_number(0, disp_arr, DISP_ARR_SIZE);
+
 	/* Output a message using printf function */
 	printf("\n------------------WELCOME------------------\r\n");
 	printf("**********in STATIC reaction game**********\r\n\n");
@@ -309,6 +336,8 @@ int main(void) {
 
 		GPIOA->ODR |= 1;
 		printf("Smash the button to start round!\n");
+		if (!counter)
+			disp_number(1, disp_arr, DISP_ARR_SIZE);
 //		for (int i = 0; i < 10; ++i) {
 //			HAL_RNG_GenerateRandomNumber(&rndCfg, &rnd_delay_skalar);
 //			rnd_delay_skalar = rnd_delay_skalar % 10 + 1;
@@ -331,8 +360,14 @@ int main(void) {
 		else
 			result = finish - start;
 		result_arr[counter++] = result;
-		if (counter == 3)
+		if (counter == 1)
+			disp_number(2, disp_arr, DISP_ARR_SIZE);
+		else if (counter == 2)
+			disp_number(3, disp_arr, DISP_ARR_SIZE);
+		else if (counter == 3) {
+			disp_number(0, disp_arr, DISP_ARR_SIZE);
 			break;
+		}
 		printf("Reaction time: %ld\n", result);
 		GPIOA->ODR &= 0;
 
