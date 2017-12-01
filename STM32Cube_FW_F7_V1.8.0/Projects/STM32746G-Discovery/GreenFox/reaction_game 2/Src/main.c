@@ -107,7 +107,6 @@ int game_delay(uint32_t Delay, GPIO_InitTypeDef button, GPIO_TypeDef *port)
 			stopable = TRUE;
 		}
 
-
 		if (HAL_GPIO_ReadPin(port, button.Pin) == 0 && stopable) {
 			printf("Your have to wait for start.\n");
 			stopable = TRUE;
@@ -313,7 +312,7 @@ int main(void) {
 	HAL_Delay(400);
 	turn_off_display(disp_arr, DISP_ARR_SIZE);
 	HAL_Delay(400);
-	disp_number(0, disp_arr, DISP_ARR_SIZE);
+	disp_number(1, disp_arr, DISP_ARR_SIZE);
 
 	/* Output a message using printf function */
 	printf("\n------------------WELCOME------------------\r\n");
@@ -323,8 +322,8 @@ int main(void) {
 	uint32_t start = 0;
 	uint32_t finish = 0;
 	int counter = 0;
-	uint32_t result_arr[3] = {3, 3, 4};
-	uint32_t result;
+	uint32_t result_arr[3];
+	uint32_t result = 0;
 	uint32_t rnd_delay_skalar = 0;
 	int skip = 0;
 
@@ -336,16 +335,10 @@ int main(void) {
 
 		GPIOA->ODR |= 1;
 		printf("Smash the button to start round!\n");
-		if (!counter)
-			disp_number(1, disp_arr, DISP_ARR_SIZE);
-//		for (int i = 0; i < 10; ++i) {
-//			HAL_RNG_GenerateRandomNumber(&rndCfg, &rnd_delay_skalar);
-//			rnd_delay_skalar = rnd_delay_skalar % 10 + 1;
-//			printf("rnd skalar: %d\n", rnd_delay_skalar);
-//		}
-//		printf("rnd skalar: %d\n", rnd_delay_skalar);
+		HAL_RNG_GenerateRandomNumber(&rndCfg, &rnd_delay_skalar);
+		rnd_delay_skalar = (rnd_delay_skalar % 10 / 3) + 1;
 		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)) {};
-		skip = game_delay(1000 /** rnd_delay_skalar*/, button_a5, GPIOF);
+		skip = game_delay(1000 * rnd_delay_skalar, button_a5, GPIOF);
 		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !stopable) {};
 		stopable = FALSE;
 		GPIOA->ODR |= 1;
