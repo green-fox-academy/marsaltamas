@@ -155,13 +155,13 @@ void disp_number(int num, pin_w_port_t pin_w_port_arr[], int size);
 
 int main(void)
 {
-	uint32_t start = 0;					// marks clock tick when user started to measure reaction
-	uint32_t finish = 0;				// marks clock tick when user finished to measure reaction
-	int counter = 0;					// marks round nr.
-	uint32_t result_arr[3];				// holds results for each round
-	uint32_t result = 0;				// holds the result the actual round
-	uint32_t rnd_delay_skalar = 0;		// holds random number
-	int skip = 0;						// flag if user stops reaction timer prematurely
+	uint32_t start = 0;             // marks clock tick when user started to measure reaction
+	uint32_t finish = 0;            // marks clock tick when user finished to measure reaction
+	int counter = 0;                // marks round nr.
+	uint32_t result_arr[3];         // holds results for each round
+	uint32_t result = 0;            // holds the result the actual round
+	uint32_t rnd_delay_skalar = 0;  // holds random number
+	int skip = 0;                   // flag if user stops reaction timer prematurely
 
 	/* Configure the MPU attributes as Write Through */
 	MPU_Config();
@@ -242,15 +242,15 @@ int main(void)
 
 	while (1) {
 
-		GPIOA->ODR |= 1;															// lits indicator led
+		GPIOA->ODR |= 1;                                                    // lits indicator led
 		printf("Smash the button to start round!\n");
 		HAL_RNG_GenerateRandomNumber(&rndCfg, &rnd_delay_skalar);
 		rnd_delay_skalar = (rnd_delay_skalar % 10 / 3) + 1;
-		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)) {};								// waits for button press
-		skip = game_delay(1000 * rnd_delay_skalar, button_a5);						// starts delay time with random length
-		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !stopable) {};			// prevents user to cheat with kept button on 0
+		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)) {};                     // waits for button press
+		skip = game_delay(1000 * rnd_delay_skalar, button_a5);              // starts delay time with random length
+		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !stopable) {};   // prevents user to cheat with kept button on 0
 		stopable = FALSE;
-		GPIOA->ODR |= 1;															// indicates for user to push button
+		GPIOA->ODR |= 1;                                                    // indicates for user to push button
 		start = HAL_GetTick();
 		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)) {};
 		finish = HAL_GetTick();
@@ -313,16 +313,16 @@ int game_delay(uint32_t delay, pin_w_port_t button)
 
 pin_w_port_t create_init_pin_w_port(uint16_t pin_nr, uint32_t mode, uint32_t resistor, uint32_t speed, GPIO_TypeDef *port)
 {
-	pin_w_port_t *new_pin_w_port = (pin_w_port_t*)  malloc(sizeof(pin_w_port_t));		// set up return struct pointer
-	GPIO_InitTypeDef *new_pin = (GPIO_InitTypeDef*) malloc(sizeof(GPIO_InitTypeDef));    	// create a config structure
-	new_pin->Pin = pin_nr;            	  					// this is about PIN x
-	new_pin->Mode = mode;  								    // Configure as output as required
-	new_pin->Pull = resistor;     							// the push-up-down should work as required
-	new_pin->Speed = speed;    								// we need a high-speed output
+	pin_w_port_t *new_pin_w_port = (pin_w_port_t*)  malloc(sizeof(pin_w_port_t));
+	GPIO_InitTypeDef *new_pin = (GPIO_InitTypeDef*) malloc(sizeof(GPIO_InitTypeDef));
+	new_pin->Pin = pin_nr;
+	new_pin->Mode = mode;
+	new_pin->Pull = resistor;
+	new_pin->Speed = speed;
 	new_pin_w_port->pin = *new_pin;
 	new_pin_w_port->port = port;
 
-	HAL_GPIO_Init(port, new_pin);     						// initialize the pin on GPIOx port with HAL
+	HAL_GPIO_Init(port, new_pin);
 
 	return *new_pin_w_port;
 }
