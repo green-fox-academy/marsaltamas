@@ -50,11 +50,13 @@
  */
 /* Private typedef -----------------------------------------------------------*/
 
+// stores a defined pin and the corresponding pin
 typedef struct {
 	GPIO_InitTypeDef pin;
 	GPIO_TypeDef *port;
 } pin_w_port_t;
 
+// enum used for the array of 7seg display
 typedef enum  {
 	A,
 	B,
@@ -70,16 +72,13 @@ typedef enum  {
 
 #define TRUE 1
 #define FALSE 0
-#define DISP_ARR_SIZE 8
+#define DISP_ARR_SIZE 8 // size of the array string the elements for 7seg disp
 
-/* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
 UART_HandleTypeDef uart_handle;
-int stopable = FALSE;
+int stopable = FALSE; // monitors button state
 uint32_t tickstart = 0;
-
-/* Private function prototypes -----------------------------------------------*/
 
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
@@ -96,26 +95,221 @@ static void CPU_CACHE_Enable(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-int game_delay(uint32_t Delay, GPIO_InitTypeDef button, GPIO_TypeDef *port)
+/*
+ * monitors button state change and deals penalty if user reacted before due time
+ * takes delay as ms, button to monitor, and button's port
+ * returns 1 if button was hit prematurely
+ * returns 0 if signal can be turned on to start measuring user reaction
+ */
+int game_delay(uint32_t delay, pin_w_port_t button);
+
+/*
+ * function configures and initializes a pin
+ * takes initializers as args
+ * returns the pin packed with its port
+ */
+pin_w_port_t create_init_pin_w_port(uint16_t pin_nr, uint32_t mode, uint32_t resistor, uint32_t speed, GPIO_TypeDef *port);
+
+/*
+ * sets all pins of the passed array
+ * takes the array and its size as params
+ */
+void turn_on_display(pin_w_port_t arr[], int size);
+
+/*
+ * resets all pins of the passed array
+ * takes the array and its size as params
+ */
+void turn_off_display(pin_w_port_t arr[], int size);
+
+/*
+ * sets up display structure for the 7 seg disp
+ * takes the desired display figure
+ * enumerates all array elements and sets if are desired to display (ture - to disp, false - to hide)
+ * this fucntion is used in the disp_number() function for configuration
+ */
+void disp_set_up(
+		int num_to_display,
+		disp_element A,
+		int state_a,
+		disp_element B,
+		int state_b,
+		disp_element C,
+		int state_c,
+		disp_element D,
+		int state_d,
+		disp_element E,
+		int state_e,
+		disp_element F,
+		int state_f,
+		disp_element G,
+		int state_g,
+		pin_w_port_t pin_w_port_arr[],
+		int size);
+
+/*
+ * displays the requested character
+ * takes the char to display as int, the 7seg display's array, and its size
+ */
+void disp_number(int num, pin_w_port_t pin_w_port_arr[], int size);
+
+int main(void)
+{
+	uint32_t start = 0;					// marks clock tick when user started to measure reaction
+	uint32_t finish = 0;				// marks clock tick when user finished to measure reaction
+	int counter = 0;					// marks round nr.
+	uint32_t result_arr[3];				// holds results for each round
+	uint32_t result = 0;				// holds the result the actual round
+	uint32_t rnd_delay_skalar = 0;		// holds random number
+	int skip = 0;						// flag if user stops reaction timer prematurely
+
+	/* Configure the MPU attributes as Write Through */
+	MPU_Config();
+
+	/* Enable the CPU Cache */
+	CPU_CACHE_Enable();
+
+	/* STM32F7xx HAL library initialization*/
+	HAL_Init();
+
+	/* Configure the System clock to have a frequency of 216 MHz */
+	SystemClock_Config();
+
+	// init port clock and rnd clock
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOF_CLK_ENABLE();
+	__HAL_RCC_GPIOG_CLK_ENABLE();
+	__HAL_RCC_GPIOH_CLK_ENABLE();
+	__HAL_RCC_GPIOI_CLK_ENABLE();
+	__HAL_RCC_RNG_CLK_ENABLE();
+
+	// init indicator led and external button
+	pin_w_port_t led_a0 = create_init_pin_w_port(GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOA);
+	pin_w_port_t button_a5 = create_init_pin_w_port(GPIO_PIN_6, GPIO_MODE_INPUT, GPIO_PULLUP, GPIO_SPEED_HIGH, GPIOF);
+
+	// init 7seg display pins and array
+	pin_w_port_t disp_ad0 = create_init_pin_w_port(GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOC);
+	pin_w_port_t disp_bd1 = create_init_pin_w_port(GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOC);
+	pin_w_port_t disp_cd4 = create_init_pin_w_port(GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOI);
+	pin_w_port_t disp_dd6 = create_init_pin_w_port(GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOH);
+	pin_w_port_t disp_ed7 = create_init_pin_w_port(GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOI);
+	pin_w_port_t disp_fd8 = create_init_pin_w_port(GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOA);
+	pin_w_port_t disp_gd10 = create_init_pin_w_port(GPIO_PIN_2, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOI);
+	pin_w_port_t disp_dotd5 = create_init_pin_w_port(GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOG);
+
+	pin_w_port_t disp_arr[] = {disp_ad0, disp_bd1, disp_cd4, disp_dd6, disp_ed7, disp_fd8, disp_gd10, disp_dotd5};
+
+	// conf and init uart handler
+	uart_handle.Init.BaudRate = 115200;
+	uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
+	uart_handle.Init.StopBits = UART_STOPBITS_1;
+	uart_handle.Init.Parity = UART_PARITY_NONE;
+	uart_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	uart_handle.Init.Mode = UART_MODE_TX_RX;
+
+	BSP_COM_Init(COM1, &uart_handle);
+
+	// conf and init rng
+	RNG_HandleTypeDef rndCfg;
+	rndCfg.Instance = RNG;
+	HAL_RNG_Init(&rndCfg);
+
+	// displays "hello" on 7seg disp
+	disp_number('h', disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	disp_number('e', disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	disp_number('l', disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	turn_off_display(disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(300);
+	disp_number('l', disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	disp_number(0, disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	turn_off_display(disp_arr, DISP_ARR_SIZE);
+	HAL_Delay(400);
+	disp_number(1, disp_arr, DISP_ARR_SIZE);
+
+	//Output a message using printf function
+	printf("\n------------------WELCOME------------------\r\n"
+		   "**********in STATIC reaction game**********\r\n\n"
+		   "Let's play a game! Are you ready?\r\n\n"
+		   "Your will have three rounds.\n"
+		   "Press the button again after the led is lit to see your reaction speed!\n"
+		   "If your press before due time, your will get a penalty...\n");
+
+	while (1) {
+
+		GPIOA->ODR |= 1;															// lits indicator led
+		printf("Smash the button to start round!\n");
+		HAL_RNG_GenerateRandomNumber(&rndCfg, &rnd_delay_skalar);
+		rnd_delay_skalar = (rnd_delay_skalar % 10 / 3) + 1;
+		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)) {};								// waits for button press
+		skip = game_delay(1000 * rnd_delay_skalar, button_a5);						// starts delay time with random length
+		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !stopable) {};			// prevents user to cheat with kept button on 0
+		stopable = FALSE;
+		GPIOA->ODR |= 1;															// indicates for user to push button
+		start = HAL_GetTick();
+		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)) {};
+		finish = HAL_GetTick();
+		while (!HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)){};
+		printf("Start time: %ld\n", start);
+		printf("Finish time: %ld\n", finish);
+		if (skip)
+			result = 1000;
+		else
+			result = finish - start;
+		result_arr[counter++] = result;
+		if (counter == 1)
+			disp_number(2, disp_arr, DISP_ARR_SIZE);
+		else if (counter == 2)
+			disp_number(3, disp_arr, DISP_ARR_SIZE);
+		else if (counter == 3) {
+			disp_number(0, disp_arr, DISP_ARR_SIZE);
+			break;
+		}
+		printf("Reaction time: %ld\n", result);
+		GPIOA->ODR &= 0;
+	}
+
+	printf("This is the end of the game.\n");
+	printf("Results: \n");
+	uint32_t sum = 0;
+	for (int i = 0; i < 3; ++i) {
+		printf("Results: %d: %u\n", i, (unsigned int) result_arr[i]);
+		sum += result_arr[i];
+	}
+
+	// converting float to a printable format
+	double avg = (double) sum / 3;
+	int int_part_of_avg = (int) avg / 1;
+	int float_part_of_avg = (int) ((avg - int_part_of_avg) * 1000);
+
+	printf("Avg: %d.%d\n", int_part_of_avg, float_part_of_avg);
+	printf("Hit reset to start a new game.\n");
+}
+
+int game_delay(uint32_t delay, pin_w_port_t button)
 {
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 	tickstart = HAL_GetTick();
 
-	for (int i = Delay; i > 0; --i) {
+	for (int i = delay; i > 0; --i) { 	// clocks away regardless of how user handles button
 		HAL_Delay(1);
-		if (HAL_GPIO_ReadPin(port, button.Pin) == 1) {
-			stopable = TRUE;
+		if (HAL_GPIO_ReadPin(button.port, button.pin.Pin) == 1) {
+			stopable = TRUE; 			// detect state change of button
 		}
 
-		if (HAL_GPIO_ReadPin(port, button.Pin) == 0 && stopable) {
+		if (HAL_GPIO_ReadPin(button.port, button.pin.Pin) == 0 && stopable) {
 			printf("Your have to wait for start.\n");
 			stopable = TRUE;
-			return 1;
+			return 1;					// if user stops action before led signal, he got penalized
 		}
 	}
-	return 0;
+	return 0;							// quit if delay timer clocked away w/o problems
 }
-
 
 pin_w_port_t create_init_pin_w_port(uint16_t pin_nr, uint32_t mode, uint32_t resistor, uint32_t speed, GPIO_TypeDef *port)
 {
@@ -132,6 +326,7 @@ pin_w_port_t create_init_pin_w_port(uint16_t pin_nr, uint32_t mode, uint32_t res
 
 	return *new_pin_w_port;
 }
+
 
 void turn_on_display(pin_w_port_t arr[], int size) {
 	for (int i = 0; i < size; ++i) {
@@ -189,19 +384,19 @@ void disp_set_up(
 void disp_number(int num, pin_w_port_t pin_w_port_arr[], int size)
 {
 	switch (num) {
-		case 0:
+		case 0:	// 0, "O"
 			disp_set_up(0, A, TRUE, B, TRUE, C, TRUE, D, TRUE, E, TRUE, F, TRUE, G, FALSE, pin_w_port_arr, size);
 			break;
-		case 1:
+		case 1: // 1
 			disp_set_up(0, A, FALSE, B, TRUE, C, TRUE, D, FALSE, E, FALSE, F, FALSE, G, FALSE, pin_w_port_arr, size);
 			break;
-		case 2:
+		case 2:	// 2
 			disp_set_up(0, A, TRUE, B, TRUE, C, FALSE, D, TRUE, E, TRUE, F, FALSE, G, TRUE, pin_w_port_arr, size);
 			break;
-		case 3:
+		case 3:	// 3
 			disp_set_up(0, A, TRUE, B, TRUE, C, TRUE, D, TRUE, E, FALSE, F, FALSE, G, TRUE, pin_w_port_arr, size);
 			break;
-		case 4:
+		/*case 4:
 			disp_set_up(0, A, FALSE, B, TRUE, C, TRUE, D, FALSE, E, FALSE, F, TRUE, G, TRUE, pin_w_port_arr, size);
 			break;
 		case 5:
@@ -218,171 +413,21 @@ void disp_number(int num, pin_w_port_t pin_w_port_arr[], int size)
 			break;
 		case 9:
 			disp_set_up(0, A, TRUE, B, TRUE, C, TRUE, D, TRUE, E, FALSE, F, TRUE, G, TRUE, pin_w_port_arr, size);
-			break;
-		case 'h':
+			break;*/
+		case 'h': // "H"
 			disp_set_up(0, A, FALSE, B, TRUE, C, TRUE, D, FALSE, E, TRUE, F, TRUE, G, TRUE, pin_w_port_arr, size);
 			break;
-		case 'e':
+		case 'e': // "E"
 			disp_set_up(0, A, TRUE, B, FALSE, C, FALSE, D, TRUE, E, TRUE, F, TRUE, G, TRUE, pin_w_port_arr, size);
 			break;
-		case 'l':
+		case 'l': // "L"
 			disp_set_up(0, A, FALSE, B, FALSE, C, FALSE, D, TRUE, E, TRUE, F, TRUE, G, FALSE, pin_w_port_arr, size);
 			break;
-		default:
+		default: // 0, "0"
 			disp_set_up(0, A, FALSE, B, FALSE, C, FALSE, D, FALSE, E, FALSE, F, FALSE, G, FALSE, pin_w_port_arr, size);
 	}
 }
 
-int main(void) {
-	/* Configure the MPU attributes as Write Through */
-	MPU_Config();
-
-	/* Enable the CPU Cache */
-	CPU_CACHE_Enable();
-
-	/* STM32F7xx HAL library initialization*/
-	HAL_Init();
-
-	/* Configure the System clock to have a frequency of 216 MHz */
-	SystemClock_Config();
-
-	/* Add your application code here*/
-
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-
-	GPIO_InitTypeDef led_a0;
-	led_a0.Pin = GPIO_PIN_0;
-	led_a0.Mode = GPIO_MODE_OUTPUT_PP;
-	led_a0.Pull = GPIO_PULLDOWN;
-	led_a0.Speed = GPIO_SPEED_HIGH;
-
-	HAL_GPIO_Init(GPIOA, &led_a0);
-
-	__HAL_RCC_GPIOF_CLK_ENABLE();
-
-	GPIO_InitTypeDef button_a5;
-	button_a5.Pin = GPIO_PIN_6;
-	button_a5.Mode = GPIO_MODE_INPUT;
-	button_a5.Pull = GPIO_PULLUP;
-	button_a5.Speed = GPIO_SPEED_HIGH;
-
-	HAL_GPIO_Init(GPIOF, &button_a5);
-
-	uart_handle.Init.BaudRate = 115200;
-	uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
-	uart_handle.Init.StopBits = UART_STOPBITS_1;
-	uart_handle.Init.Parity = UART_PARITY_NONE;
-	uart_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	uart_handle.Init.Mode = UART_MODE_TX_RX;
-
-	BSP_COM_Init(COM1, &uart_handle);
-
-	__HAL_RCC_RNG_CLK_ENABLE();
-
-	RNG_HandleTypeDef rndCfg;
-	rndCfg.Instance = RNG;
-	HAL_RNG_Init(&rndCfg);
-
-	__HAL_RCC_GPIOC_CLK_ENABLE();
-	__HAL_RCC_GPIOG_CLK_ENABLE();
-	__HAL_RCC_GPIOI_CLK_ENABLE();
-	__HAL_RCC_GPIOH_CLK_ENABLE();
-	pin_w_port_t disp_ad0 = create_init_pin_w_port(GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOC);
-	pin_w_port_t disp_bd1 = create_init_pin_w_port(GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOC);
-	pin_w_port_t disp_cd4 = create_init_pin_w_port(GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOI);
-	pin_w_port_t disp_dd6 = create_init_pin_w_port(GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOH);
-	pin_w_port_t disp_ed7 = create_init_pin_w_port(GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOI);
-	pin_w_port_t disp_fd8 = create_init_pin_w_port(GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOA);
-	pin_w_port_t disp_gd10 = create_init_pin_w_port(GPIO_PIN_2, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOI);
-	pin_w_port_t disp_dotd5 = create_init_pin_w_port(GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOG);
-
-	pin_w_port_t disp_arr[] = {disp_ad0, disp_bd1, disp_cd4, disp_dd6, disp_ed7, disp_fd8, disp_gd10, disp_dotd5};
-
-	disp_number('h', disp_arr, DISP_ARR_SIZE);
-	HAL_Delay(400);
-	disp_number('e', disp_arr, DISP_ARR_SIZE);
-	HAL_Delay(400);
-	disp_number('l', disp_arr, DISP_ARR_SIZE);
-	HAL_Delay(400);
-	turn_off_display(disp_arr, DISP_ARR_SIZE);
-	HAL_Delay(300);
-	disp_number('l', disp_arr, DISP_ARR_SIZE);
-	HAL_Delay(400);
-	disp_number(0, disp_arr, DISP_ARR_SIZE);
-	HAL_Delay(400);
-	turn_off_display(disp_arr, DISP_ARR_SIZE);
-	HAL_Delay(400);
-	disp_number(1, disp_arr, DISP_ARR_SIZE);
-
-	/* Output a message using printf function */
-	printf("\n------------------WELCOME------------------\r\n");
-	printf("**********in STATIC reaction game**********\r\n\n");
-	printf("Let's play a game! Are you ready?\r\n\n");
-
-	uint32_t start = 0;
-	uint32_t finish = 0;
-	int counter = 0;
-	uint32_t result_arr[3];
-	uint32_t result = 0;
-	uint32_t rnd_delay_skalar = 0;
-	int skip = 0;
-
-	printf("Your will have three rounds.\n"
-		   "Press the button again after the led is lit to see your reaction speed!\n"
-		   "If your press before due time, your will get a penalty...\n");
-
-	while (1) {
-
-		GPIOA->ODR |= 1;
-		printf("Smash the button to start round!\n");
-		HAL_RNG_GenerateRandomNumber(&rndCfg, &rnd_delay_skalar);
-		rnd_delay_skalar = (rnd_delay_skalar % 10 / 3) + 1;
-		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)) {};
-		skip = game_delay(1000 * rnd_delay_skalar, button_a5, GPIOF);
-		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !stopable) {};
-		stopable = FALSE;
-		GPIOA->ODR |= 1;
-		start = HAL_GetTick();
-		while (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)) {};
-		finish = HAL_GetTick();
-		while (!HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6)){};
-		printf("Start time: %ld\n", start);
-		printf("Finish time: %ld\n", finish);
-		if (skip)
-			result = 1000;
-		else
-			result = finish - start;
-		result_arr[counter++] = result;
-		if (counter == 1)
-			disp_number(2, disp_arr, DISP_ARR_SIZE);
-		else if (counter == 2)
-			disp_number(3, disp_arr, DISP_ARR_SIZE);
-		else if (counter == 3) {
-			disp_number(0, disp_arr, DISP_ARR_SIZE);
-			break;
-		}
-		printf("Reaction time: %ld\n", result);
-		GPIOA->ODR &= 0;
-
-	}
-
-	printf("This is the end of the game.\n");
-	printf("Results: \n");
-	uint32_t sum = 0;
-	for (int i = 0; i < 3; ++i) {
-		printf("Results: %d: %u\n", i, (unsigned int) result_arr[i]);
-		sum += result_arr[i];
-	}
-
-	double avg = (double) sum / 3;
-	int int_part_of_avg = (int) avg / 1;
-	int float_part_of_avg = (int) ((avg - int_part_of_avg) * 1000);
-
-	printf("Avg: %d.%d\n", int_part_of_avg, float_part_of_avg);
-	printf("Hit reset to start a new game.\n");
-
-
-}
 /**
  * @brief  Retargets the C library printf function to the USART.
  * @param  None
