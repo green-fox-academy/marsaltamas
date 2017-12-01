@@ -46,17 +46,11 @@
   * @{
   */ 
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
+/* Private functions -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
-
-/* Private functions ---------------------------------------------------------*/
 
 /**
   * @brief  Main program
@@ -89,19 +83,12 @@ int main(void)
   SystemClock_Config();
 
   //TODO:
-  //Initialization the push button and the led with using BSP
+  //Initialize the push button and the led using BSP
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
   BSP_LED_Init(LED_GREEN);
   
-  //Turn the led on to validate the initialization is occured.
-  
-
-
-  /* Add your application code here     */
-  /* Infinite loop */
   while (1)
   {
-
 	  //TODO:
 	  //Write a simple program witch flashes(toggle) the led when the button is pressed
 	  while (BSP_PB_GetState(BUTTON_KEY)) {

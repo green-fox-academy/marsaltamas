@@ -46,17 +46,11 @@
  * @{
  */
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
+/* Private functions -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
-
-/* Private functions ---------------------------------------------------------*/
 
 int main(void) {
 
@@ -72,30 +66,26 @@ int main(void) {
 	/* Configure the System clock to have a frequency of 216 MHz */
 	SystemClock_Config();
 
-	__HAL_RCC_GPIOF_CLK_ENABLE()
-	;   	   // we need to enable the GPIOA port's clock first
+	__HAL_RCC_GPIOF_CLK_ENABLE();
 
-	GPIO_InitTypeDef bin_counter;            // create a config structure
-	bin_counter.Pin = GPIO_PIN_10 | GPIO_PIN_9 | GPIO_PIN_8 | GPIO_PIN_7; // this is about PIN 0
-	bin_counter.Mode = GPIO_MODE_OUTPUT_PP; // Configure as output with push-up-down enabled
-	bin_counter.Pull = GPIO_PULLDOWN; // the push-up-down should work as pulldown
-	bin_counter.Speed = GPIO_SPEED_HIGH;     // we need a high-speed output
+	GPIO_InitTypeDef bin_counter;
+	bin_counter.Pin = GPIO_PIN_10 | GPIO_PIN_9 | GPIO_PIN_8 | GPIO_PIN_7;
+	bin_counter.Mode = GPIO_MODE_OUTPUT_PP;
+	bin_counter.Pull = GPIO_PULLDOWN;
+	bin_counter.Speed = GPIO_SPEED_HIGH;
 
-	HAL_GPIO_Init(GPIOA, &bin_counter); // initialize the pin on GPIOA port with HAL
-
-	HAL_GPIO_Init(GPIOF, &bin_counter);
-	uint16_t mask;
-	uint16_t to_write;
+	HAL_GPIO_Init(GPIOF, &bin_counter); // initialize the pin on GPIOA port with HA
+	uint16_t to_write;                  // sets the pins
 
 	/* Infinite loop */
 	while (1) {
 
 		for (int i = 0; i < 16; ++i) {
-			to_write = i << 7;
+			to_write = i << 7;			// picks number in decimal and shift to proper register place
 			HAL_GPIO_WritePin(GPIOF, to_write, GPIO_PIN_SET);
 			HAL_Delay(1200);
 			HAL_GPIO_WritePin(GPIOF, to_write, GPIO_PIN_RESET);
-			to_write = 0;
+			to_write = 0;				// resets mask
 		}
 	}
 }

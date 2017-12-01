@@ -5,7 +5,7 @@
 
 :octocat:|.......day-1.......|.......day-2.......|.......day-3.......|.......day-4.......|.......day-5.......       
 ---|----------|----------|--------|------|-------
-:open_file_folder:|[led blink, pd](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[GPIO](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Practice](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Reaction tester](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/reaction_game)|[Reaction tester](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/reaction_game_2)|
+:open_file_folder:|[led blink, pd](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[GPIO](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Practice](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Reaction game](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/reaction_game)|[Reaction game 2](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/reaction_game_2)|
 
 ## week-7
 

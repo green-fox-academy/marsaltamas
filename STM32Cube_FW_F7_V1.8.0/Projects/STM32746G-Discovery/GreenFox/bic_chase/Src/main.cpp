@@ -48,11 +48,7 @@ using namespace std;
   * @{
   */ 
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
+/* Private functions -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void MPU_Config(void);
@@ -63,31 +59,31 @@ typedef struct {
 	GPIO_TypeDef *port;
 } pin_w_port_t;
 
-/* Private functions ---------------------------------------------------------*/
-
 pin_w_port_t create_init_pin_w_port(uint16_t pin_nr, uint32_t mode, uint32_t resistor, uint32_t speed, GPIO_TypeDef *port)
 {
 	pin_w_port_t *new_pin_w_port = new pin_w_port_t;
-	GPIO_InitTypeDef *new_pin = new GPIO_InitTypeDef;    		// create a config structure
-	new_pin->Pin = pin_nr;            	  						// this is about PIN 0
-	new_pin->Mode = mode;  								    // Configure as output with push-up-down enabled
-	new_pin->Pull = resistor;     								// the push-up-down should work as pulldown
-	new_pin->Speed = speed;    								// we need a high-speed output
+	GPIO_InitTypeDef *new_pin = new GPIO_InitTypeDef;  // create a config structure
+	new_pin->Pin = pin_nr;                             // this is about PIN 0
+	new_pin->Mode = mode;                              // Configure as output with push-up-down enabled
+	new_pin->Pull = resistor;                          // the push-up-down should work as pulldown
+	new_pin->Speed = speed;                            // we need a high-speed output
 	new_pin_w_port->pin = *new_pin;
 	new_pin_w_port->port = port;
 
-	HAL_GPIO_Init(port, new_pin);     						// initialize the pin on GPIOA port with HAL
+	HAL_GPIO_Init(port, new_pin);                      // initialize the pin on GPIOA port with HAL
 
 	return *new_pin_w_port;
 }
 
-void turn_on_leds(pin_w_port_t arr[], int size) {
+void turn_on_leds(pin_w_port_t arr[], int size)
+{
 	for (int i = 0; i < size; ++i) {
 		HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_SET);
 	}
 }
 
-void turn_off_leds(pin_w_port_t arr[], int size) {
+void turn_off_leds(pin_w_port_t arr[], int size)
+{
 	for (int i = 0; i < size; ++i) {
 		HAL_GPIO_WritePin(arr[i].port, arr[i].pin.Pin, GPIO_PIN_RESET);
 	}
@@ -168,12 +164,10 @@ int main(void)
   // init extern button
   pin_w_port_t button_a5 = create_init_pin_w_port(GPIO_PIN_6, GPIO_MODE_INPUT, GPIO_PULLUP, GPIO_SPEED_HIGH, GPIOF);
 
-  int state = 0;
+  int state = 0; // to monitor state of opreration
 
-  /* Infinite loop */
   while (1)
   {
-
 	 chain_flash_bi_dir(led_arr, 5, 100, button_a5);
 
 	 if (!HAL_GPIO_ReadPin(button_a5.port, button_a5.pin.Pin)) {
@@ -191,12 +185,6 @@ int main(void)
 		  state = 0;
 		  HAL_Delay(150);
 	  }
-
-
-//
-//	  	GPIOF->ODR = GPIOF->ODR | 0X0400U;
-//	  	HAL_Delay(400);
-//	  	GPIOF->ODR = GPIOF->ODR & ~0X0400U;
   }
 }
 

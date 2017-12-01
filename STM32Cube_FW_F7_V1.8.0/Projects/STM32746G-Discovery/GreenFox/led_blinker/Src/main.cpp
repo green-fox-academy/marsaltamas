@@ -46,18 +46,11 @@
   * @{
   */ 
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
+/* Private functions -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
-
-/* Private functions ---------------------------------------------------------*/
-
 /**
   * @brief  Main program
   * @param  None
@@ -89,12 +82,10 @@ int main(void)
   /* Configure the System clock to have a frequency of 216 MHz */
   SystemClock_Config();
 
-
   /* Add your application code here     */
   BSP_LED_Init(LED_GREEN);
   BSP_LED_On(LED_GREEN);
 
-  /* Infinite loop */
   while (1)
   {
 	  //TODO:
@@ -102,7 +93,6 @@ int main(void)
 
 	  	 HAL_Delay(200);
 	  	 BSP_LED_Toggle(LED_GREEN );
-
   }
 }
 

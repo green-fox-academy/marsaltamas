@@ -97,7 +97,7 @@ static void CPU_CACHE_Enable(void);
 
 /*
  * monitors button state change and deals penalty if user reacted before due time
- * takes delay as ms, button to monitor, and button's port
+ * takes delay as ms, button to monitor
  * returns 1 if button was hit prematurely
  * returns 0 if signal can be turned on to start measuring user reaction
  */
@@ -296,19 +296,19 @@ int game_delay(uint32_t delay, pin_w_port_t button)
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 	tickstart = HAL_GetTick();
 
-	for (int i = delay; i > 0; --i) { 	// clocks away regardless of how user handles button
+	for (int i = delay; i > 0; --i) {  // clocks away regardless of how user handles button
 		HAL_Delay(1);
 		if (HAL_GPIO_ReadPin(button.port, button.pin.Pin) == 1) {
-			stopable = TRUE; 			// detect state change of button
+			stopable = TRUE;           // detect state change of button
 		}
 
 		if (HAL_GPIO_ReadPin(button.port, button.pin.Pin) == 0 && stopable) {
 			printf("Your have to wait for start.\n");
 			stopable = TRUE;
-			return 1;					// if user stops action before led signal, he got penalized
+			return 1;                  // if user stops action before led signal, he got penalized
 		}
 	}
-	return 0;							// quit if delay timer clocked away w/o problems
+	return 0;                          // quit if delay timer clocked away w/o problems
 }
 
 pin_w_port_t create_init_pin_w_port(uint16_t pin_nr, uint32_t mode, uint32_t resistor, uint32_t speed, GPIO_TypeDef *port)

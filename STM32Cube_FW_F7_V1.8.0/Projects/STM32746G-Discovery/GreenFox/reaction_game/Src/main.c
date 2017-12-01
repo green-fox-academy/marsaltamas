@@ -1,3 +1,9 @@
+/*
+ * DEPRACATED VERSOIN OF THE REACTION GAME
+ * FOR CURRENT VERSION PLEASE VISIT REACTION TESTER 2
+ * 01/12/2017
+ */
+
 /**
  ******************************************************************************
  * @file    Templates/Src/main.c
@@ -48,9 +54,7 @@
 /** @addtogroup Templates
  * @{
  */
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
+
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
 
@@ -71,19 +75,23 @@ static void CPU_CACHE_Enable(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-void game_delay(uint32_t Delay, GPIO_InitTypeDef button, GPIO_TypeDef *port) {
-	uint32_t tickstart = 0;
-	tickstart = HAL_GetTick();
-	while ((HAL_GetTick() - tickstart) < Delay) {
+/*
+ * monitors button state change and deals penalty if user reacted before due time
+ * takes delay as ms, button to monitor, and button's port
+ * returns 1 if button was hit prematurely
+ * returns 0 if signal can be turned on to start measuring user reaction
+ */
+void game_delay(uint32_t delay, GPIO_InitTypeDef button, GPIO_TypeDef *port);
 
-		if (HAL_GPIO_ReadPin(port, button.Pin) == 0) {
-			printf("Your have to wait for start.\n");
-			break;
-		}
-	}
-}
+int main(void)
+{
+	uint32_t start = 0;   // holds start time of reaction testing
+	uint32_t finish = 0;  // holds finish time of reaction testing
+	int state = 0;        // holds state of the button
+	int counter = 0;      // counts rounds
+	uint32_t result_arr[3] = {3, 3, 4};
+	uint32_t result;      // holding individual results
 
-int main(void) {
 	/* Configure the MPU attributes as Write Through */
 	MPU_Config();
 
@@ -96,11 +104,12 @@ int main(void) {
 	/* Configure the System clock to have a frequency of 216 MHz */
 	SystemClock_Config();
 
-	/* Add your application code here*/
+	// init ports
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOF_CLK_ENABLE();
+	__HAL_RCC_RNG_CLK_ENABLE();
 
-	__HAL_RCC_GPIOA_CLK_ENABLE()
-	;
-
+	// config and init indicator led
 	GPIO_InitTypeDef led_a0;
 	led_a0.Pin = GPIO_PIN_0;
 	led_a0.Mode = GPIO_MODE_OUTPUT_PP;
@@ -109,9 +118,7 @@ int main(void) {
 
 	HAL_GPIO_Init(GPIOA, &led_a0);
 
-	__HAL_RCC_GPIOF_CLK_ENABLE()
-	;
-
+	// conf and init extern button
 	GPIO_InitTypeDef button_a5;
 	button_a5.Pin = GPIO_PIN_6;
 	button_a5.Mode = GPIO_MODE_INPUT;
@@ -120,6 +127,7 @@ int main(void) {
 
 	HAL_GPIO_Init(GPIOF, &button_a5);
 
+	// conf and init uart
 	uart_handle.Init.BaudRate = 115200;
 	uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
 	uart_handle.Init.StopBits = UART_STOPBITS_1;
@@ -129,34 +137,25 @@ int main(void) {
 
 	BSP_COM_Init(COM1, &uart_handle);
 
-	__HAL_RCC_RNG_CLK_ENABLE();
-
+	// conf and init rng
 	RNG_HandleTypeDef rndCfg;
 	rndCfg.Instance = RNG;
 	HAL_RNG_Init(&rndCfg);
 	uint32_t rnd_num = 0;
 
-	/* Output a message using printf function */
-	printf("\n------------------WELCOME------------------\r\n");
-	printf("**********in STATIC reaction game**********\r\n\n");
-	printf("Let's play a game! Are you ready?\r\n\n");
-
-	printf("Press the button to start! Press after the led is lit!\n");
-
-	uint32_t start = 0;
-	uint32_t finish = 0;
-	int state = 0;
-	int counter = 0;
-	uint32_t result_arr[3] = {3, 3, 4};
-	uint32_t result;
+	// Output a message using printf function
+	printf("\n------------------WELCOME------------------\r\n"
+	       "**********in STATIC reaction game**********\r\n\n"
+	       "Let's play a game! Are you ready?\r\n\n"
+	       "Press the button to start! Press after the led is lit!\n");
 
 	while (1) {
 
 		if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6) == 0 && !state) {
-			HAL_Delay(500);
+			HAL_Delay(500);  // starts with a delay to dodge inproper button pushes
 			game_delay(/*(HAL_RNG_GetRandomNumber(&rndCfg) % 10 + 1) * 1000 - 500*/ 500, button_a5, GPIOF);
 			GPIOA->ODR |= 1;
-			state = 1;
+			state = 1;       // sets state to enable stopping timer
 			start = HAL_GetTick();
 		}
 
@@ -187,15 +186,27 @@ int main(void) {
 		sum += result_arr[i];
 	}
 
-
+	// converts variables to enable printing float numbers
 	double avg = (double) sum / 3;
 	int rest = (int) avg / 1;
 	int float_part_of_avg = (int) ((avg - rest) * 1000);
 
 	printf("Avg: %d.%d\n", rest, float_part_of_avg);
-
-
 }
+
+void game_delay(uint32_t delay, GPIO_InitTypeDef button, GPIO_TypeDef *port)
+{
+	uint32_t tickstart = 0;
+	tickstart = HAL_GetTick();
+	while ((HAL_GetTick() - tickstart) < delay) {
+
+		if (HAL_GPIO_ReadPin(port, button.Pin) == 0) {
+			printf("Your have to wait for start.\n");
+			break; // if user starts action prematurely, round is stopped.
+		}
+	}
+}
+
 /**
  * @brief  Retargets the C library printf function to the USART.
  * @param  None
