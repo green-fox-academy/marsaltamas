@@ -107,9 +107,10 @@ void Led_Init()
 
   GPIO_InitTypeDef led1_d10_A8;
   led1_d10_A8.Pin = GPIO_PIN_8;
-  led1_d10_A8.Mode = GPIO_MODE_OUTPUT_PP;
+  led1_d10_A8.Mode = GPIO_MODE_AF_PP;
   led1_d10_A8.Pull = GPIO_PULLDOWN;
   led1_d10_A8.Speed = GPIO_SPEED_HIGH;
+  led1_d10_A8.Alternate = GPIO_AF1_TIM1;
 
   HAL_GPIO_Init(GPIOA, &led1_d10_A8);
 }
@@ -135,9 +136,43 @@ void EXTI15_10_IRQHandler()
 
 void HAL_GPIO_EXTI_Callback(uint16_t Gpio_pin)
 {
-	HAL_InitTick(14);
+	HAL_InitTick(14); // https://electronics.stackexchange.com/questions/212194/stm32f7-gets-stuck-in-external-interrupt-callback-function
 	GPIOA->ODR |= GPIO_PIN_8;
 	HAL_Delay(1000);
 }
 
+void TIM1_PWM_Init()
+{
+  __HAL_RCC_TIM1_CLK_ENABLE();
+
+  TIM_HandleTypeDef    TimHandle;
+  TimHandle.Instance = TIM1;
+
+  TimHandle.Init.Prescaler         = 1000;
+  TimHandle.Init.Period            = 1000;
+  TimHandle.Init.ClockDivision     = 0;
+  TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
+  TimHandle.Init.RepetitionCounter = 0;
+  TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+  HAL_TIM_PWM_Init(&TimHandle);
+
+  TIM_OC_InitTypeDef sConfig;
+
+  sConfig.OCMode       = TIM_OCMODE_PWM1;
+  sConfig.OCPolarity   = TIM_OCPOLARITY_HIGH;
+  sConfig.OCFastMode   = TIM_OCFAST_DISABLE;
+  sConfig.OCNPolarity  = TIM_OCNPOLARITY_HIGH;
+  sConfig.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  sConfig.OCIdleState  = TIM_OCIDLESTATE_RESET;
+
+  /* Set the pulse value for channel 1 */
+  sConfig.Pulse = 100;
+  HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1);
+
+
+  HAL_TIM_PWM_Start(&TimHandle, TIM_CHANNEL_1);
+
+
+}
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

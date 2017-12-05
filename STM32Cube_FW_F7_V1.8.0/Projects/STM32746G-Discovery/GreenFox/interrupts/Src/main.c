@@ -120,6 +120,7 @@ int main(void) {
 
 	Led_Init();
 	Button_Init();
+	TIM1_PWM_Init();
 
 	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
@@ -131,23 +132,18 @@ int main(void) {
 
 	while (1) {
 
-//		if (HAL_GPIO_ReadPin(GPIOI, GPIO_PIN_11)) {
-//			//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
-//			GPIOA->ODR |= GPIO_PIN_8;
-//			HAL_Delay(400);
-//		} else
-//			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
 
-		GPIOA->ODR |= GPIO_PIN_8;
-		HAL_Delay(400);
-		GPIOA->ODR &= 0;
-		HAL_Delay(400);
+		for (int i = 0; i < 1000; ++i) {
+			HAL_Delay(1);
+			TIM1->CCR1 = i;
+		}
 
 	}
 }
-
+//}
+//
 /**
- * @brief  Retargets the C library printf function to the USART.
+// * @brief  Retargets the C library printf function to the USART.
  * @param  None
  * @retval None
  */
