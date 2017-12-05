@@ -37,6 +37,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <string.h>
 
 /** @addtogroup STM32F7xx_HAL_Examples
   * @{
@@ -50,73 +51,24 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+UART_HandleTypeDef uart_handle;
+
 /* Private function prototypes -----------------------------------------------*/
+
+#ifdef __GNUC__
+/* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
 /* Private functions ---------------------------------------------------------*/
-
-/*
- * Function creates and initializes a pin at given port*
- * Return a GPIO_Init struct pointer
- * And initializes that to given parameters
- */
-GPIO_InitTypeDef* create_and_init_pin(uint16_t pin_num, uint32_t mode, uint32_t pull_mode, uint32_t speed, GPIO_TypeDef *port)
-{
-	GPIO_InitTypeDef *pin = new GPIO_InitTypeDef;  // create a config structure
-	pin->Pin = pin_num;                            // sets pin
-	pin->Mode = mode;                              // Configure mode
-	pin->Pull = pull_mode;                         // pull mode
-	pin->Speed = speed;                            // conf speed
-
-	HAL_GPIO_Init(port, pin);                      // initialize the pin on GPIOx port with HAL
-
-	return pin;
-}
-
-typedef struct {
-
-	GPIO_InitTypeDef *pin;
-	GPIO_TypeDef *port;
-
-} pin_at_portx_t;
-
-/*
- * Flahes the members of the param array, with param size, and for param ms long each
- */
-void blink_led_array_at_rate(pin_at_portx_t pin_port_t_arr[], int size, int ms)
-{
-  for (int i = 0; i < size;  ++i) {
-	  pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR | pin_port_t_arr[i].pin->Pin;
-	  HAL_Delay(ms);
-	  pin_port_t_arr[i].port->ODR = pin_port_t_arr[i].port->ODR & ~pin_port_t_arr[i].pin->Pin;
-  }
-}
-
-/*
- * flashes different adjacent pins connecting the same param port
- */
-void bit_shift_blinker(GPIO_TypeDef *port, int range, uint16_t start_pin)
-{
-  for (int i = 0; i < range; ++i) {
-	  port->ODR = port->ODR | (start_pin >> i);
-	  HAL_Delay(300);
-	  port->ODR = port->ODR & ~(start_pin >> i);
-  }
-}
-
-/*
- * This function flashes led from given port/pin at given rate
- */
-
-void flash_led_at_pin_in_given_ms(GPIO_TypeDef *port, uint16_t pin_num, int ms)
-{
-	HAL_GPIO_WritePin(port, pin_num, GPIO_PIN_SET);   // setting the pin to 1
-	HAL_Delay(ms);                                    // wait a second
-	HAL_GPIO_WritePin(port, pin_num, GPIO_PIN_RESET); // setting the pin to 0
-}
 
 /**
   * @brief  Main program
@@ -148,111 +100,94 @@ int main(void)
   /* Configure the System clock to have a frequency of 216 MHz */
   SystemClock_Config();
 
-  __HAL_RCC_GPIOA_CLK_ENABLE();       // we need to enable the GPIOA port's clock first
-
-  GPIO_InitTypeDef pin_A_0;           // create a config structure
-  pin_A_0.Pin = GPIO_PIN_0;           // this is about PIN 0
-  pin_A_0.Mode = GPIO_MODE_OUTPUT_PP; // Configure as output with push-up-down enabled
-  pin_A_0.Pull = GPIO_PULLDOWN;       // the push-up-down should work as pulldown
-  pin_A_0.Speed = GPIO_SPEED_HIGH;    // we need a high-speed output
-
-  HAL_GPIO_Init(GPIOA, &pin_A_0);     // initialize the pin on GPIOA port with HAL
-
-  __HAL_RCC_GPIOF_CLK_ENABLE();       // we need to enable the GPIOA port's clock first
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-
-  GPIO_InitTypeDef pin_D_0;           // connected to an external button
-  pin_D_0.Pin = GPIO_PIN_7;           // this is about PIN 7
-  pin_D_0.Mode = GPIO_MODE_INPUT;     // Configure as input
-  pin_D_0.Pull = GPIO_PULLUP;         // the push-up-down should work as pullup
-  pin_D_0.Speed = GPIO_SPEED_HIGH;    // we need a high-speed input
-
-
-  HAL_GPIO_Init(GPIOC, &pin_D_0);
-
-  // init from pin_A_1 to pint_A_3
-  GPIO_InitTypeDef *pin_A_1 = create_and_init_pin(GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
-  GPIO_InitTypeDef *pin_A_2 = create_and_init_pin(GPIO_PIN_9, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
-  GPIO_InitTypeDef *pin_A_3 = create_and_init_pin(GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
-  // init pin_A_4 to be alle to operate led through a push button
-  GPIO_InitTypeDef *pin_A_4 = create_and_init_pin(GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLDOWN, GPIO_SPEED_HIGH, GPIOF);
-
-  /* Add your application code here     */
+  /* Add your application code here
+     */
   BSP_LED_Init(LED_GREEN);
-  BSP_LED_On(LED_GREEN);
-  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 
-  // creating pin_at_portx_t structs
-  pin_at_portx_t a0_t;
-  a0_t.pin = &pin_A_0;
-  a0_t.port = GPIOA;
-  pin_at_portx_t a1_t;
-  a1_t.pin = pin_A_1;
-  a1_t.port = GPIOF;
-  pin_at_portx_t a2_t;
-  a2_t.pin = pin_A_2;
-  a2_t.port = GPIOF;
-  pin_at_portx_t a3_t;
-  a3_t.pin = pin_A_3;
-  a3_t.port = GPIOF;
+  uart_handle.Init.BaudRate   = 115200;
+  uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
+  uart_handle.Init.StopBits   = UART_STOPBITS_1;
+  uart_handle.Init.Parity     = UART_PARITY_NONE;
+  uart_handle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
+  uart_handle.Init.Mode       = UART_MODE_TX_RX;
 
-  pin_at_portx_t pin_at_portx_arr[4] = {a0_t, a1_t, a2_t, a3_t};
+  BSP_COM_Init(COM1, &uart_handle);
 
-  int state = 0;
+  Led_Init();
 
-  while (1)
-  {
-	if (HAL_GPIO_ReadPin(GPIOC, pin_D_0.Pin) == 0) {
-		 blink_led_array_at_rate(pin_at_portx_arr, 4, 50);
-	}
+  __HAL_RCC_TIM1_CLK_ENABLE();
 
-    if (BSP_PB_GetState(BUTTON_KEY))
-	    state++;
+  TIM_HandleTypeDef    TimHandle;           //the timer's config structure
 
-    if (state == 0) {
-	    flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_10, 300);
-    } else if (state == 1) {
-	    blink_led_array_at_rate(pin_at_portx_arr, 4, 300);
-    } else if (state == 2) {
-	    blink_led_array_at_rate(pin_at_portx_arr, 4, 200);
-    } else if (state == 3) {
-	    blink_led_array_at_rate(pin_at_portx_arr, 4, 100);
-    } else if (state == 4) {
-	   state = 0;
-	   HAL_Delay(200);
-    }
+  TimHandle.Instance               = TIM1;
+  TimHandle.Init.Period            = 4000 - 1;
+  TimHandle.Init.Prescaler         = 54500 - 1;
+  TimHandle.Init.ClockDivision     = TIM_CR1_CKD_1;
+  TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
 
-//	  if (BSP_PB_GetState(BUTTON_KEY))
-//		  blink_led_array_at_rate(pin_at_portx_arr, 4, 400);
+  HAL_TIM_Base_Init(&TimHandle);            //Configure the timer
 
-    GPIOF->ODR = GPIOF->ODR | GPIO_PIN_7;
+  HAL_TIM_Base_Start(&TimHandle);
 
-//	  	bit_shift_blinker(GPIOF, 3, GPIO_PIN_10);
+  TIM_OC_InitTypeDef sConfig;
 
-//	  	if (BSP_PB_GetState(BUTTON_KEY)) {
-//	  		flash_led_at_pin_in_given_ms(GPIOA, GPIO_PIN_0, 1000);
-//	  		flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_8, 1000);
+  sConfig.OCMode       = TIM_OCMODE_PWM1;
+
+//  HAL_TIM_PWM_ConfigChannel();
 //
-//	  	}
+//  HAL_TIM_PWM_Init(&sConfig);
+//  HAL_TIM_PWM_Start(&sConfig);
 //
-//	  	flash_led_at_pin_in_given_ms(GPIOA, GPIO_PIN_0, 600);
-//	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_10, 500);
-//	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_9, 200);
-//	  	flash_led_at_pin_in_given_ms(GPIOF, GPIO_PIN_8, 500);
-//
-//	  	GPIOF->ODR = GPIOF->ODR | 0X0400U;
-//	  	HAL_Delay(400);
-//	  	GPIOF->ODR = GPIOF->ODR & ~0X0400U;
-//
-//	  	GPIOF->ODR = GPIOF->ODR | 0b1000000000U;
-//	  	HAL_Delay(500);
-//	  	GPIOF->ODR = GPIOF->ODR & ~0b1000000000U;
-//
-//	  	GPIOF->ODR = GPIOF->ODR | (1 << 8);
-//	  	HAL_Delay(300);
-//	  	GPIOF->ODR = GPIOF->ODR & ~(1 << 8);
 
-  }
+  /* Output without printf, using HAL function*/
+  //char msg[] = "UART HAL Example\r\n";
+  //HAL_UART_Transmit(&uart_handle, msg, strlen(msg), 100);
+
+  /* Output a message using printf function */
+  printf("\n-----------------WELCOME-----------------\r\n");
+  printf("**********in STATIC timer & pwm WS**********\r\n\n");
+
+
+	  while (1)
+	  {
+
+//		  printf("%lu\r\n", TIM1->CNT);
+//
+//		HAL_Delay(1000);
+
+
+		  GPIOA->ODR |= GPIO_PIN_8;
+//		  HAL_Delay(300);
+//		  GPIOA->ODR &= 0;
+//		  HAL_Delay(300);
+		  //printf("value of tim1 cnt reg: %ld\n", TIM1->CNT);
+//		  HAL_Delay(1500);
+
+//		  present = TIM1->CNT;
+//
+//		  if (present < (65535 / 2 )  ) {
+//			  GPIOA->ODR |= GPIO_PIN_0;
+//			  //state = 0;
+//		  } else if (present >= (65535 / 2 )) {
+//		  	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+//		  	  //state = 1;
+//	  	  }
+
+	  }
+}
+
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  * @param  None
+  * @retval None
+  */
+PUTCHAR_PROTOTYPE
+{
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
+  HAL_UART_Transmit(&uart_handle, (uint8_t *)&ch, 1, 0xFFFF);
+
+  return ch;
 }
 
 /**

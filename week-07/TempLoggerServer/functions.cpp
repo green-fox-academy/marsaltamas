@@ -223,7 +223,7 @@ void run(vector<string> command_vector, TemperatureDatabase *tdb)
 {
     bool keep_running = true;
     bool is_port_opened = false;
-    SerialPortWrapper *serial = new SerialPortWrapper("COM6", 115200);
+    SerialPortWrapper *serial = new SerialPortWrapper("COM3", 115200);
     vector<string> log_vector;
 
     while (keep_running) {
