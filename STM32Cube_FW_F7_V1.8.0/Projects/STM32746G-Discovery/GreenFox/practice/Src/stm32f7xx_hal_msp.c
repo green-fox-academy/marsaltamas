@@ -63,6 +63,7 @@
 
 extern TIM_HandleTypeDef tim1_handler;
 extern TIM_HandleTypeDef tim2_handler;
+extern TIM_HandleTypeDef tim5_handler;
 extern UART_HandleTypeDef uart_handle;
 
 
@@ -93,6 +94,8 @@ void HAL_MspDeInit(void)
    */
 }
 
+
+
 void leda0_init()
 {
 	GPIO_InitTypeDef led_a0_a0;
@@ -118,11 +121,27 @@ void ledd9_init()
 	HAL_GPIO_Init(GPIOA, &led_d9_a15);
 }
 
+void ledd3_init()
+{
+	GPIO_InitTypeDef led_d3_b4;
+
+	led_d3_b4.Pin = GPIO_PIN_4;
+	led_d3_b4.Speed = GPIO_SPEED_FAST;
+	led_d3_b4.Mode = GPIO_MODE_OUTPUT_PP;
+	led_d3_b4.Pull = GPIO_PULLDOWN;
+	//led_d3_b4.Alternate = GPIO_AF1_TIM2;
+
+	HAL_GPIO_Init(GPIOB, &led_d3_b4);
+}
+
 void enable_clocks()
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOI_CLK_ENABLE();
 	__HAL_RCC_TIM1_CLK_ENABLE();
 	__HAL_RCC_TIM2_CLK_ENABLE();
+	__HAL_RCC_TIM5_CLK_ENABLE();
 }
 
 // TIM1 used to flash led in 500 ms feq
@@ -155,11 +174,26 @@ void tim2_handler_init()
 	TIM_OC_InitTypeDef oc_conf_tim2;
 
 	oc_conf_tim2.OCMode = TIM_OCMODE_PWM1;
-	oc_conf_tim2.Pulse = 2;
+	oc_conf_tim2.Pulse = 2500;
 
 	HAL_TIM_PWM_ConfigChannel(&tim2_handler, &oc_conf_tim2, TIM_CHANNEL_1);
 
 	HAL_TIM_PWM_Start(&tim2_handler, TIM_CHANNEL_1);
+}
+
+void tim5_handler_init()
+{
+	// enable clock tim5 in enable_clock()
+
+	tim5_handler.Instance = TIM5;
+	tim5_handler.Init.Period = 2000 - 1;
+	tim5_handler.Init.Prescaler = 54000 - 1;
+	tim5_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim5_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_Base_Init(&tim5_handler);
+	HAL_TIM_Base_Start_IT(&tim5_handler);
+
 }
 
 void uart_handle_init()
@@ -172,6 +206,18 @@ void uart_handle_init()
 	uart_handle.Init.Mode = UART_MODE_TX_RX;
 
 	BSP_COM_Init(COM1, &uart_handle);
+}
+
+void interrupt_enable_tim5()
+{
+	HAL_NVIC_SetPriority(TIM5_IRQn, 15, 0);
+	HAL_NVIC_EnableIRQ(TIM5_IRQn);
+}
+
+void interrupt_enable_pb_i11()
+{
+	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
+	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

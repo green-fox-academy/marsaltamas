@@ -40,9 +40,13 @@
 #include <string.h>
 
 /* Private variables ---------------------------------------------------------*/
+
 UART_HandleTypeDef uart_handle;
 TIM_HandleTypeDef tim1_handler;
 TIM_HandleTypeDef tim2_handler;
+TIM_HandleTypeDef tim5_handler;
+
+volatile int led_on = 1;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -63,6 +67,14 @@ static void CPU_CACHE_Enable(void);
 
 void uart_handle_init();
 
+void EXTI15_10_IRQHandler();
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
+
+void TIM5_IRQHandler();
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+
 int main(void) {
 
 	int dir = 1;
@@ -81,15 +93,21 @@ int main(void) {
 	 */
 	HAL_Init();
 
+	BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_EXTI);
+
 	/* Configure the System clock to have a frequency of 216 MHz */
 	SystemClock_Config();
 
 	enable_clocks();
 	leda0_init();
 	ledd9_init();
+	ledd3_init();
 	uart_handle_init();
 	tim1_hanlder_init();
 	tim2_handler_init();
+	tim5_handler_init();
+	interrupt_enable_pb_i11();
+	interrupt_enable_tim5();
 
 	BSP_LED_Init(LED_GREEN);
 
@@ -98,6 +116,12 @@ int main(void) {
 
 	while (1) {
 
+		/* turn led on/off with pb interrupt
+		if (led_on)
+			GPIOB->ODR |= GPIO_PIN_4;
+		else
+			GPIOB->ODR &= 0;
+		*/
 
 		/* dims ledd9_a15
 		if (TIM2->CCR1 == 5000)
@@ -121,8 +145,38 @@ int main(void) {
 			GPIOA->ODR &= 15;
 		*/
 
-
 	}
+}
+
+
+void EXTI15_10_IRQHandler()
+{
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	printf("i was here\n");
+	if (led_on) {
+		led_on = 0;
+	} else
+		led_on = 1;
+}
+
+void TIM5_IRQHandler()
+{
+	HAL_TIM_IRQHandler(&tim5_handler);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	printf("period ellapsed called\n");
+	led_on = led_on ? (led_on = 0) : (led_on = 1);
+
+	if (!led_on)
+		HAL_TIM_PWM_Stop(&tim2_handler, TIM_CHANNEL_1);
+	if (led_on)
+		HAL_TIM_PWM_Start(&tim2_handler, TIM_CHANNEL_1);
 }
 
 //}
