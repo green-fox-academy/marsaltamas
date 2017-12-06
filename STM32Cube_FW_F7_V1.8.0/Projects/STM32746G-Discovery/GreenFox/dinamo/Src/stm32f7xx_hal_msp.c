@@ -149,7 +149,7 @@ void tim2_init()
 	TIM_OC_InitTypeDef oc_tim2;
 
 	oc_tim2.OCMode = TIM_OCMODE_PWM1;
-	oc_tim2.Pulse = 900;
+	oc_tim2.Pulse = 1;
 
 	HAL_TIM_PWM_ConfigChannel(&tim2_handle, &oc_tim2, TIM_CHANNEL_1);
 }
