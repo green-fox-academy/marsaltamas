@@ -47,13 +47,9 @@
  * @{
  */
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
-
-volatile uint32_t timIntPeriod;
+TIM_HandleTypeDef Tim2Handle;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -77,12 +73,12 @@ static void CPU_CACHE_Enable(void);
  * @param  None
  * @retval None
  */
+
+void TIM2_IRQHandler();
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+
 int main(void) {
-	/* This project template calls firstly two functions in order to configure MPU feature
-	 and to enable the CPU Cache, respectively MPU_Config() and CPU_CACHE_Enable().
-	 These functions are provided as template implementation that User may integrate
-	 in his application, to enhance the performance in case of use of AXI interface
-	 with several masters. */
 
 	/* Configure the MPU attributes as Write Through */
 	MPU_Config();
@@ -101,12 +97,9 @@ int main(void) {
 	/* Configure the System clock to have a frequency of 216 MHz */
 	SystemClock_Config();
 
+
 	//BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_EXTI);
 
-
-
-	/* Add your application code here
-	 */
 	BSP_LED_Init(LED_GREEN);
 
 	uart_handle.Init.BaudRate = 115200;
@@ -118,27 +111,55 @@ int main(void) {
 
 	BSP_COM_Init(COM1, &uart_handle);
 
-	Led_Init();
-	Button_Init();
-	TIM1_PWM_Init();
+//	Led_Init();     // used to test pwm
 
-	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
-	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+//	Button_Init();  // used to test pwm
+//	TIM1_PWM_Init();// used to test pwm
+	TIM2_IT_Init(&Tim2Handle);
 
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+
+	GPIO_InitTypeDef leda0;
+	leda0.Pin = GPIO_PIN_0;
+	leda0.Mode = GPIO_MODE_OUTPUT_PP;
+	leda0.Pull = GPIO_PULLDOWN;
+	leda0.Speed = GPIO_SPEED_HIGH;
+
+	HAL_GPIO_Init(GPIOA, &leda0);
+
+//	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
+//	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 	printf("\n-----------------WELCOME-----------------\r\n");
 	printf("**********in STATIC interrupts WS**********\r\n\n");
 
-
 	while (1) {
 
+		HAL_Delay(1000);
+		printf("tim 2 cnt: %lu\n", TIM2->CNT);
 
-		for (int i = 0; i < 1000; ++i) {
-			HAL_Delay(1);
-			TIM1->CCR1 = i;
-		}
+//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+//		for (int i = 0; i < 1000; ++i) {
+//			HAL_Delay(1);
+//			TIM1->CCR1 =  i;
+//		}
 
 	}
+}
+
+void TIM2_IRQHandler()
+{
+	printf("interrupt called\n");
+	HAL_TIM_IRQHandler(&Tim2Handle);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  HAL_InitTick(14);
+  printf("callback called\n");
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+  HAL_Delay(400);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 }
 //}
 //
