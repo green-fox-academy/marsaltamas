@@ -51,6 +51,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 UART_HandleTypeDef uart_handle;
+TIM_HandleTypeDef tim2_handle;
+
 volatile int momentum = 0;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -105,7 +107,9 @@ int main(void) {
 	Uart_Handle_Init();
 	clock_enabler();
 	leda0_a0_init();
+	leda15_d9_init();
 	buttona5_f6_init();
+	tim2_init();
 
 
 	printf("\n-----------------WELCOME-----------------\r\n");

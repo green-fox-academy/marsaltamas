@@ -58,12 +58,9 @@
   * @{
   */
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
+
+extern TIM_HandleTypeDef tim2_handle;
 
 /** @defgroup HAL_MSP_Private_Functions
   * @{
@@ -93,6 +90,7 @@ void clock_enabler()
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOF_CLK_ENABLE();
+	__HAL_RCC_TIM2_CLK_ENABLE();
 }
 
 void leda0_a0_init()
@@ -105,6 +103,19 @@ void leda0_a0_init()
 	leda0_a0.Pull = GPIO_PULLDOWN;
 
 	HAL_GPIO_Init(GPIOA, &leda0_a0);
+}
+
+void leda15_d9_init()
+{
+	GPIO_InitTypeDef leda15_d9;
+
+	leda15_d9.Pin = GPIO_PIN_15;
+	leda15_d9.Mode = GPIO_MODE_AF_PP;
+	leda15_d9.Speed = GPIO_SPEED_HIGH;
+	leda15_d9.Pull = GPIO_PULLDOWN;
+	leda15_d9.Alternate = GPIO_AF1_TIM2;
+
+	HAL_GPIO_Init(GPIOA, &leda15_d9);
 }
 
 void buttona5_f6_init()
@@ -120,6 +131,27 @@ void buttona5_f6_init()
 
 	HAL_NVIC_SetPriority(EXTI9_5_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+}
+
+void tim2_init()
+{
+	// enable in clock_enabler()
+
+	tim2_handle.Instance = TIM2;
+	tim2_handle.Init.Period = 1000;
+	tim2_handle.Init.Prescaler = 0;
+	tim2_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim2_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_PWM_Init(&tim2_handle);
+	HAL_TIM_PWM_Start(&tim2_handle, TIM_CHANNEL_1);
+
+	TIM_OC_InitTypeDef oc_tim2;
+
+	oc_tim2.OCMode = TIM_OCMODE_PWM1;
+	oc_tim2.Pulse = 900;
+
+	HAL_TIM_PWM_ConfigChannel(&tim2_handle, &oc_tim2, TIM_CHANNEL_1);
 }
 
 
