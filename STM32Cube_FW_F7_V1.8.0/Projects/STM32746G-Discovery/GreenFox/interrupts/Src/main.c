@@ -68,11 +68,7 @@ static void CPU_CACHE_Enable(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-/**
- * @brief  Main program
- * @param  None
- * @retval None
- */
+void Uart_Handle_Init();
 
 void TIM2_IRQHandler();
 
@@ -97,35 +93,19 @@ int main(void) {
 	/* Configure the System clock to have a frequency of 216 MHz */
 	SystemClock_Config();
 
-
 	//BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_EXTI);
 
 	BSP_LED_Init(LED_GREEN);
-
-	uart_handle.Init.BaudRate = 115200;
-	uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
-	uart_handle.Init.StopBits = UART_STOPBITS_1;
-	uart_handle.Init.Parity = UART_PARITY_NONE;
-	uart_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	uart_handle.Init.Mode = UART_MODE_TX_RX;
-
-	BSP_COM_Init(COM1, &uart_handle);
+	Uart_Handle_Init();
 
 //	Led_Init();     // used to test pwm
 
 //	Button_Init();  // used to test pwm
 //	TIM1_PWM_Init();// used to test pwm
+	Led_InitA0_Init_a0();
 	TIM2_IT_Init(&Tim2Handle);
 
-	__HAL_RCC_GPIOA_CLK_ENABLE();
 
-	GPIO_InitTypeDef leda0;
-	leda0.Pin = GPIO_PIN_0;
-	leda0.Mode = GPIO_MODE_OUTPUT_PP;
-	leda0.Pull = GPIO_PULLDOWN;
-	leda0.Speed = GPIO_SPEED_HIGH;
-
-	HAL_GPIO_Init(GPIOA, &leda0);
 
 //	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
 //	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
@@ -147,10 +127,22 @@ int main(void) {
 	}
 }
 
+void Uart_Handle_Init()
+{
+  uart_handle.Init.BaudRate = 115200;
+  uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
+  uart_handle.Init.StopBits = UART_STOPBITS_1;
+  uart_handle.Init.Parity = UART_PARITY_NONE;
+  uart_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  uart_handle.Init.Mode = UART_MODE_TX_RX;
+
+  BSP_COM_Init(COM1, &uart_handle);
+}
+
 void TIM2_IRQHandler()
 {
-	printf("interrupt called\n");
-	HAL_TIM_IRQHandler(&Tim2Handle);
+  printf("interrupt called\n");
+  HAL_TIM_IRQHandler(&Tim2Handle);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)

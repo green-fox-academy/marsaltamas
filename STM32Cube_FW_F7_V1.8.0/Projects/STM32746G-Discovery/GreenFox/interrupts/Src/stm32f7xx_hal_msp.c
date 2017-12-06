@@ -103,7 +103,7 @@ void Led_Init()
   HAL_GPIO_Init(GPIOA, &led1_d10_A8);
 }
 
-void Led_InitA0()
+void Led_InitA0_d10()
 {
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
@@ -115,6 +115,19 @@ void Led_InitA0()
   //led1_d10_A8.Alternate = GPIO_AF1_TIM2;
 
   HAL_GPIO_Init(GPIOA, &led1_d10_A8);
+}
+
+void Led_InitA0_Init_a0()
+{
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  GPIO_InitTypeDef leda0;
+  leda0.Pin = GPIO_PIN_0;
+  leda0.Mode = GPIO_MODE_OUTPUT_PP;
+  leda0.Pull = GPIO_PULLDOWN;
+  leda0.Speed = GPIO_SPEED_HIGH;
+
+  HAL_GPIO_Init(GPIOA, &leda0);
 }
 
 
