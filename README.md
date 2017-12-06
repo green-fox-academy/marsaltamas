@@ -1,11 +1,17 @@
 <p align="center"><b>My completed tasks</b></p>
 <p align="center"><img src="http://bestanimations.com/Sci-Fi/Robots/animated-robot-5.gif"></p>
 
+## week-9
+
+:octocat:|.......day-1.......|.......day-2.......|.......day-3.......|.......day-4.......|.......day-5.......       
+---|----------|----------|--------|------|-------
+:open_file_folder:|[Timers, PWM](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/timer_pwm)|[Interrupts](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/interrupts)|[Practice](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Control Loop]()|[Control Loop]()|
+
 ## week-8
 
 :octocat:|.......day-1.......|.......day-2.......|.......day-3.......|.......day-4.......|.......day-5.......       
 ---|----------|----------|--------|------|-------
-:open_file_folder:|[led blink, pd](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[GPIO](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Practice](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Reaction game](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/reaction_game)|[Reaction game 2](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/reaction_game_2)|
+:open_file_folder:|[led blink, pb](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[GPIO](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Practice](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Reaction game](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/reaction_game)|[Reaction game 2](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/reaction_game_2)|
 
 ## week-7
 
@@ -49,11 +55,7 @@
 ---|----------|----------|--------|---|---
 :open_file_folder:|training |[git, bash](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-2/first-task)|[c-workshop](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-3/c-workshop) | [c-workshop-second-part](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-4/c-workshop-2) | [practice](https://github.com/greenfox-academy/marsaltamas/tree/master/week-01/day-5) 
 
-<!---<p align="center"><b>week-9</b></p>
-
-:octocat:|.......day-1.......|.......day-2.......|.......day-3.......|.......day-4.......|.......day-5.......       
----|----------|----------|--------|------|-------
-:open_file_folder:|[day-1]()|[day-2]()|[day-3]()|[day-4]()|[day-5]()|
+<!---
 
 <p align="center"><b>week-10</b></p>
 
