@@ -81,7 +81,8 @@ void EXTI9_5_IRQHandler()
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	momentum += 100;
+	if (momentum < 951)
+		momentum += 40;
 }
 
 
@@ -118,7 +119,7 @@ int main(void) {
 	while (1) {
 
 		while (momentum > 0) {
-			momentum -= 5;
+			momentum -= 10;
 			HAL_Delay(200);
 			printf("momentum: %d\n", momentum);
 			if (momentum > 0)
