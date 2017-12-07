@@ -51,8 +51,12 @@
 /* Private define ------------------------------------------------------------*/
 
 
+#define DOWN 1
+#define UP 2
+
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
+volatile user_set_state = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -69,6 +73,13 @@ static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
+void update_user_state(int up_down)
+{
+	if (up_down == 1 && user_set_state > 0)
+		user_set_state--;
+	if (up_down == 2 && user_set_state < 20)
+		user_set_state++;
+}
 
 void EXTI0_IRQHandler()
 {
@@ -77,10 +88,18 @@ void EXTI0_IRQHandler()
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if (GPIO_Pin == GPIO_PIN_0)
-		printf("hello from button up\n");
-	if (GPIO_Pin == GPIO_PIN_10)
-		printf("hello from down up\n");
+
+	if (GPIO_Pin == GPIO_PIN_10) {
+		update_user_state(DOWN);
+		printf("user set state: %d\n", user_set_state);
+	}
+
+	if (GPIO_Pin == GPIO_PIN_0) {
+		update_user_state(UP);
+		printf("user set state: %d\n", user_set_state);
+	}
+
+
 }
 
 void EXTI15_10_IRQHandler()

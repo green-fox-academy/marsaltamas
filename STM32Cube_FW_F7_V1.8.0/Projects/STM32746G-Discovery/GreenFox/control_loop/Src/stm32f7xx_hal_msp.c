@@ -90,8 +90,8 @@ void button_up_init()
 	GPIO_InitTypeDef button_up_a0_pa0;
 
 	button_up_a0_pa0.Pin = GPIO_PIN_0;
-	button_up_a0_pa0.Speed = GPIO_SPEED_FAST;
-	button_up_a0_pa0.Mode = GPIO_MODE_IT_RISING;
+	button_up_a0_pa0.Speed = GPIO_SPEED_LOW;
+	button_up_a0_pa0.Mode = GPIO_MODE_IT_FALLING;
 	button_up_a0_pa0.Pull = GPIO_PULLUP;
 
 	HAL_GPIO_Init(GPIOA, &button_up_a0_pa0);
@@ -105,8 +105,8 @@ void button_down_init()
 	GPIO_InitTypeDef button_up_a1_pf10;
 
 	button_up_a1_pf10.Pin = GPIO_PIN_10;
-	button_up_a1_pf10.Speed = GPIO_SPEED_FAST;
-	button_up_a1_pf10.Mode = GPIO_MODE_IT_RISING;
+	button_up_a1_pf10.Speed = GPIO_SPEED_LOW;
+	button_up_a1_pf10.Mode = GPIO_MODE_IT_FALLING;
 	button_up_a1_pf10.Pull = GPIO_PULLUP;
 
 	HAL_GPIO_Init(GPIOF, &button_up_a1_pf10);
