@@ -135,8 +135,8 @@ void tim2_init()
 {
 	// TIM1 clock enabled in clock_enabler()
 	tim2_handle.Instance = TIM2;
-	tim2_handle.Init.Period = 1000 - 1;
-	tim2_handle.Init.Prescaler = 0;
+	tim2_handle.Init.Period = 1000;
+	tim2_handle.Init.Prescaler = 50000;
 	tim2_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	tim2_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
 
@@ -146,7 +146,7 @@ void tim2_init()
 	TIM_OC_InitTypeDef tim2_oc_config;
 
 	tim2_oc_config.OCMode = TIM_OCMODE_PWM1;
-	tim2_oc_config.Pulse = 999;
+	tim2_oc_config.Pulse = 0;
 
 	HAL_TIM_PWM_ConfigChannel(&tim2_handle, &tim2_oc_config, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&tim2_handle, TIM_CHANNEL_1);

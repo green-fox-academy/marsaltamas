@@ -76,10 +76,16 @@ static void CPU_CACHE_Enable(void);
 
 void update_user_state(int up_down)
 {
-	if (up_down == 1 && user_set_state > 0)
+	if (up_down == 1 && user_set_state > 0) {
 		user_set_state--;
-	if (up_down == 2 && user_set_state < 20)
+		TIM2->CCR1-= 125;
+		printf("time2 ccr: %lu\n", TIM2->CCR1);
+	}
+	if (up_down == 2 && user_set_state < 8) {
 		user_set_state++;
+		TIM2->CCR1+= 125;
+		printf("time2 ccr: %lu\n", TIM2->CCR1);
+	}
 }
 
 void EXTI0_IRQHandler()
