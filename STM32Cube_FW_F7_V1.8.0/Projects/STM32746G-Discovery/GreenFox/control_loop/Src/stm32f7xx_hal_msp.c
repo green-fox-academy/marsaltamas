@@ -54,6 +54,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 extern TIM_HandleTypeDef tim2_handle;
+extern TIM_HandleTypeDef tim3_handle;
+extern TIM_IC_InitTypeDef tim3_ic_config;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -84,8 +86,11 @@ void HAL_MspDeInit(void)
 void clock_enabler()
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOF_CLK_ENABLE();
+
 	__HAL_RCC_TIM2_CLK_ENABLE();
+	__HAL_RCC_TIM3_CLK_ENABLE();
 }
 
 void button_up_init()
@@ -100,7 +105,7 @@ void button_up_init()
 	HAL_GPIO_Init(GPIOA, &button_up_a0_pa0);
 
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-	HAL_NVIC_SetPriority(EXTI0_IRQn, 15, 0);
+	HAL_NVIC_SetPriority(EXTI0_IRQn, 14, 0);
 }
 
 void button_down_init()
@@ -115,7 +120,7 @@ void button_down_init()
 	HAL_GPIO_Init(GPIOF, &button_up_a1_pf10);
 
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
+	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 14, 0);
 }
 
 void pwm_pin_d9_pa15_init()
@@ -152,5 +157,44 @@ void tim2_init()
 	HAL_TIM_PWM_Start(&tim2_handle, TIM_CHANNEL_1);
 }
 
+void speed_ic_pin_d3_pb4_init()
+{
+	GPIO_InitTypeDef speed_ic_pin_d3_pb4;
+
+	speed_ic_pin_d3_pb4.Pin = GPIO_PIN_4;
+	speed_ic_pin_d3_pb4.Speed = GPIO_SPEED_FAST;
+	speed_ic_pin_d3_pb4.Mode = GPIO_MODE_AF_OD;
+	speed_ic_pin_d3_pb4.Pull = GPIO_PULLUP;
+	speed_ic_pin_d3_pb4.Alternate = GPIO_AF2_TIM3;
+
+	HAL_GPIO_Init(GPIOB, &speed_ic_pin_d3_pb4);
+
+//	HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+//	HAL_NVIC_SetPriority(EXTI4_IRQn, 15, 0);
+}
+
+void tim3_init()
+{
+	// TIM1 clock enabled in clock_enabler()
+	tim3_handle.Instance = TIM3;
+	tim3_handle.Init.Period = 0xFFFF;
+	tim3_handle.Init.Prescaler = 0;
+	tim3_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim3_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_IC_Init(&tim3_handle);
+
+	//TIM_IC_InitTypeDef tim3_ic_config;
+
+	tim3_ic_config.ICPolarity  = TIM_ICPOLARITY_RISING;
+	tim3_ic_config.ICSelection = TIM_ICSELECTION_DIRECTTI;
+	tim3_ic_config.ICPrescaler = TIM_ICPSC_DIV2;
+
+	HAL_NVIC_EnableIRQ(TIM3_IRQn);
+	HAL_NVIC_SetPriority(TIM3_IRQn, 15, 0);
+
+	HAL_TIM_IC_ConfigChannel(&tim3_handle, &tim3_ic_config, TIM_CHANNEL_1);
+	HAL_TIM_IC_Start_IT(&tim3_handle, TIM_CHANNEL_1);
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

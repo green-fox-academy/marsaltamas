@@ -57,7 +57,24 @@
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
 TIM_HandleTypeDef tim2_handle;
-volatile user_set_state = 0;
+TIM_HandleTypeDef tim3_handle;
+TIM_IC_InitTypeDef tim3_ic_config;
+volatile int user_set_state = 0;
+volatile int temp_speed = 0;
+volatile int period_elapsed = 0;
+
+
+
+/* Captured Values */
+uint32_t               uwIC2Value1 = 0;
+uint32_t               uwIC2Value2 = 0;
+uint32_t               uwDiffCapture = 0;
+
+/* Capture index */
+uint16_t               uhCaptureIndex = 0;
+
+/* Frequency Value */
+uint32_t               uwFrequency = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -88,9 +105,74 @@ void update_user_state(int up_down)
 	}
 }
 
+void TIM3_IRQHandler()
+{
+	HAL_TIM_IRQHandler(&tim3_handle);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	period_elapsed++;
+}
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+  {
+    if(uhCaptureIndex == 0)
+    {
+      /* Get the 1st Input Capture value */
+      uwIC2Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+      period_elapsed = 0;
+      uhCaptureIndex = 1;
+    }
+    else if(uhCaptureIndex == 1)
+    {
+      /* Get the 2nd Input Capture value */
+      uwIC2Value2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1) + period_elapsed * 0xFFFF;
+
+      /* Capture computation */
+      if (uwIC2Value2 > uwIC2Value1)
+      {
+        uwDiffCapture = (uwIC2Value2 + (period_elapsed * 0xFFFF) - uwIC2Value1);
+        //printf("case 1 < 2\n");
+      }
+      else if (uwIC2Value2 < uwIC2Value1)
+      {
+        /* 0xFFFF is max TIM3_CCRx value */
+    	period_elapsed = period_elapsed - 1;
+        uwDiffCapture = ((0xFFFF - uwIC2Value1) + uwIC2Value2 + period_elapsed * 0xFFFF) + 1;
+        //printf("case 1 > 2\n");
+      }
+      else
+      {
+        /* If capture values are equal, we have reached the limit of frequency
+           measures */
+        Error_Handler();
+      }
+      /* Frequency computation: for this example TIMx (TIM3) is clocked by
+         2xAPB1Clk */
+      uwFrequency = /*(2*HAL_RCC_GetPCLK1Freq())*/ 216000000 / uwDiffCapture;
+      uhCaptureIndex = 0;
+      period_elapsed = 0;
+    }
+  }
+}
+
+
 void EXTI0_IRQHandler()
 {
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+}
+
+void EXTI15_10_IRQHandler()
+{
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
+}
+
+void EXTI4_IRQ_IRQHandler()
+{
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -106,14 +188,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		printf("user set state: %d\n", user_set_state);
 	}
 
+	if (GPIO_Pin == GPIO_PIN_4) {
+		temp_speed++;
+		if (temp_speed % 20 == 0)
+			printf("temp speed up: %d\n", temp_speed);
+	}
+
 
 }
-
-void EXTI15_10_IRQHandler()
-{
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-}
-
 
 void uart_init()
 {
@@ -161,12 +243,17 @@ int main(void)
   uart_init();
   tim2_init();
   pwm_pin_d9_pa15_init();
+  speed_ic_pin_d3_pb4_init();
+  tim3_init();
 
   printf("\n-----------------WELCOME-----------------\r\n");
-  printf("******in STATIC temp logger project******\r\n\n");
+  printf("******in STATIC Fan Control Loop project******\r\n\n");
 
 	  while (1)
 	  {
+
+		  printf("cap value: %lu\n", uwFrequency);
+		  HAL_Delay(500);
 
 	  }
 }
