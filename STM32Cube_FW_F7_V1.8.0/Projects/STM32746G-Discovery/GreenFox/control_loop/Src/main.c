@@ -56,6 +56,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
+TIM_HandleTypeDef tim2_handle;
 volatile user_set_state = 0;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -152,6 +153,8 @@ int main(void)
   button_up_init();
   button_down_init();
   uart_init();
+  tim2_init();
+  pwm_pin_d9_pa15_init();
 
   printf("\n-----------------WELCOME-----------------\r\n");
   printf("******in STATIC temp logger project******\r\n\n");

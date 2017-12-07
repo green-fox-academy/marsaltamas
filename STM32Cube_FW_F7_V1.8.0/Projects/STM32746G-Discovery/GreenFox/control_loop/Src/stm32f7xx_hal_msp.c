@@ -52,6 +52,9 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+
+extern TIM_HandleTypeDef tim2_handle;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -82,7 +85,7 @@ void clock_enabler()
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOF_CLK_ENABLE();
-
+	__HAL_RCC_TIM2_CLK_ENABLE();
 }
 
 void button_up_init()
@@ -90,7 +93,7 @@ void button_up_init()
 	GPIO_InitTypeDef button_up_a0_pa0;
 
 	button_up_a0_pa0.Pin = GPIO_PIN_0;
-	button_up_a0_pa0.Speed = GPIO_SPEED_LOW;
+	button_up_a0_pa0.Speed = GPIO_SPEED_HIGH;
 	button_up_a0_pa0.Mode = GPIO_MODE_IT_FALLING;
 	button_up_a0_pa0.Pull = GPIO_PULLUP;
 
@@ -105,7 +108,7 @@ void button_down_init()
 	GPIO_InitTypeDef button_up_a1_pf10;
 
 	button_up_a1_pf10.Pin = GPIO_PIN_10;
-	button_up_a1_pf10.Speed = GPIO_SPEED_LOW;
+	button_up_a1_pf10.Speed = GPIO_SPEED_HIGH;
 	button_up_a1_pf10.Mode = GPIO_MODE_IT_FALLING;
 	button_up_a1_pf10.Pull = GPIO_PULLUP;
 
@@ -113,6 +116,40 @@ void button_down_init()
 
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
+}
+
+void pwm_pin_d9_pa15_init()
+{
+	GPIO_InitTypeDef pwm_pin_d9_pa15;
+
+	pwm_pin_d9_pa15.Pin = GPIO_PIN_15;
+	pwm_pin_d9_pa15.Speed = GPIO_SPEED_FAST;
+	pwm_pin_d9_pa15.Mode = GPIO_MODE_AF_PP;
+	pwm_pin_d9_pa15.Pull = GPIO_NOPULL;
+	pwm_pin_d9_pa15.Alternate = GPIO_AF1_TIM2;
+
+	HAL_GPIO_Init(GPIOA, &pwm_pin_d9_pa15);
+}
+
+void tim2_init()
+{
+	// TIM1 clock enabled in clock_enabler()
+	tim2_handle.Instance = TIM2;
+	tim2_handle.Init.Period = 1000 - 1;
+	tim2_handle.Init.Prescaler = 0;
+	tim2_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim2_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_PWM_Init(&tim2_handle);
+
+
+	TIM_OC_InitTypeDef tim2_oc_config;
+
+	tim2_oc_config.OCMode = TIM_OCMODE_PWM1;
+	tim2_oc_config.Pulse = 999;
+
+	HAL_TIM_PWM_ConfigChannel(&tim2_handle, &tim2_oc_config, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&tim2_handle, TIM_CHANNEL_1);
 }
 
 
