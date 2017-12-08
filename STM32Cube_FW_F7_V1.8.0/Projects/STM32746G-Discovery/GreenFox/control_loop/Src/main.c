@@ -108,9 +108,13 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
   {
-	  if (TIM2->CNT >= 500 || TIM2->CNT <= 100)
+	  if (TIM2->CNT >= 500 || TIM2->CNT <= 100) // re-sets index if pwm is off-duty
 		  uhCaptureIndex = 0;
 
+	  /*
+	   * updates frequency only if pwm is on
+	   * also excludes incorrect data pulses from fan's signal
+	   */
 	  if (TIM2->CNT < 500 && TIM2->CNT > 100) {
 		if(uhCaptureIndex == 0)
 		{
