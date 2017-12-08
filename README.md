@@ -5,7 +5,7 @@
 
 :octocat:|.......day-1.......|.......day-2.......|.......day-3.......|.......day-4.......|.......day-5.......       
 ---|----------|----------|--------|------|-------
-:open_file_folder:|[Timers, PWM](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/timer_pwm)|[Interrupts](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/interrupts)|[Practice](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Control Loop]()|[Control Loop]()|
+:open_file_folder:|[Timers, PWM](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/timer_pwm)|[Interrupts](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/interrupts)|[Practice](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox)|[Control Loop](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/control_loop)|[Control Loop](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/control_loop)|
 
 ## week-8
 
