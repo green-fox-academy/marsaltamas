@@ -1,4 +1,4 @@
- /**
+/**
   ******************************************************************************
   * @file    Templates/Src/main.c 
   * @author  MCD Application Team
@@ -39,17 +39,8 @@
 #include "main.h"
 #include <string.h>
 
-/** @addtogroup STM32F7xx_HAL_Examples
-  * @{
-  */
-
-/** @addtogroup Templates
-  * @{
-  */ 
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-
 
 #define DOWN 1
 #define UP 2
@@ -63,18 +54,16 @@ volatile int user_set_state = 0;
 volatile int temp_speed = 0;
 volatile int period_elapsed = 0;
 
-
-
 /* Captured Values */
-uint32_t               uwIC2Value1 = 0;
-uint32_t               uwIC2Value2 = 0;
-uint32_t               uwDiffCapture = 0;
+volatile uint32_t               uwIC2Value1 = 0;
+volatile uint32_t               uwIC2Value2 = 0;
+volatile uint32_t               uwDiffCapture = 0;
 
 /* Capture index */
-uint16_t               uhCaptureIndex = 0;
+volatile uint16_t               uhCaptureIndex = 0;
 
 /* Frequency Value */
-uint32_t               uwFrequency = 0;
+volatile uint32_t               uwFrequency = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -110,52 +99,57 @@ void TIM3_IRQHandler()
 	HAL_TIM_IRQHandler(&tim3_handle);
 }
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	period_elapsed++;
-}
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+//{
+//	period_elapsed++;
+//}
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
   {
-    if(uhCaptureIndex == 0)
-    {
-      /* Get the 1st Input Capture value */
-      uwIC2Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
-      period_elapsed = 0;
-      uhCaptureIndex = 1;
-    }
-    else if(uhCaptureIndex == 1)
-    {
-      /* Get the 2nd Input Capture value */
-      uwIC2Value2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1) + period_elapsed * 0xFFFF;
+	  if (TIM2->CNT >= 500 || TIM2->CNT <= 100)
+		  uhCaptureIndex = 0;
 
-      /* Capture computation */
-      if (uwIC2Value2 > uwIC2Value1)
-      {
-        uwDiffCapture = (uwIC2Value2 + (period_elapsed * 0xFFFF) - uwIC2Value1);
-        //printf("case 1 < 2\n");
-      }
-      else if (uwIC2Value2 < uwIC2Value1)
-      {
-        /* 0xFFFF is max TIM3_CCRx value */
-    	period_elapsed = period_elapsed - 1;
-        uwDiffCapture = ((0xFFFF - uwIC2Value1) + uwIC2Value2 + period_elapsed * 0xFFFF) + 1;
-        //printf("case 1 > 2\n");
-      }
-      else
-      {
-        /* If capture values are equal, we have reached the limit of frequency
-           measures */
-        Error_Handler();
-      }
-      /* Frequency computation: for this example TIMx (TIM3) is clocked by
-         2xAPB1Clk */
-      uwFrequency = /*(2*HAL_RCC_GetPCLK1Freq())*/ 216000000 / uwDiffCapture;
-      uhCaptureIndex = 0;
-      period_elapsed = 0;
-    }
+	  if (TIM2->CNT < 500 && TIM2->CNT > 100) {
+		if(uhCaptureIndex == 0)
+		{
+		  /* Get the 1st Input Capture value */
+		  uwIC2Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+		  period_elapsed = 0;
+		  uhCaptureIndex = 1;
+		}
+		else if(uhCaptureIndex == 1)
+		{
+		  /* Get the 2nd Input Capture value */
+		  uwIC2Value2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1) /*+ period_elapsed * 0xFFFF*/;
+
+		  /* Capture computation */
+		  if (uwIC2Value2 > uwIC2Value1)
+		  {
+			uwDiffCapture = (uwIC2Value2 /*+ (period_elapsed * 0xFFFF)*/ - uwIC2Value1);
+			//printf("case 1 < 2\n");
+		  }
+		  else if (uwIC2Value2 < uwIC2Value1)
+		  {
+			/* 0xFFFF is max TIM3_CCRx value */
+			//period_elapsed = period_elapsed - 1;
+			uwDiffCapture = ((0xFFFF - uwIC2Value1) + uwIC2Value2 /*+ period_elapsed * 0xFFFF*/) + 1;
+			//printf("case 1 > 2\n");
+		  }
+		  else
+		  {
+			/* If capture values are equal, we have reached the limit of frequency
+			   measures */
+			Error_Handler();
+		  }
+		  /* Frequency computation: for this example TIMx (TIM3) is clocked by
+			 2xAPB1Clk */
+		  uwFrequency = 10000 / uwDiffCapture;
+		  uhCaptureIndex = 0;
+		  period_elapsed = 0;
+		}
+	  }
   }
 }
 
@@ -252,7 +246,13 @@ int main(void)
 	  while (1)
 	  {
 
-		  printf("cap value: %lu\n", uwFrequency);
+		  printf("uwFrequency: %lu\n", uwFrequency);
+//		  printf("uwDiffCapture: %lu\n", uwDiffCapture);
+//		  printf("uwIC2Value1: %lu\n", uwIC2Value1);
+//		  printf("uwIC2Value2: %lu\n", uwIC2Value2);
+		  printf("========================\n");
+
+		  //printf("tim2 ccr: %lu\n", TIM2->CCR1);
 		  HAL_Delay(500);
 
 	  }

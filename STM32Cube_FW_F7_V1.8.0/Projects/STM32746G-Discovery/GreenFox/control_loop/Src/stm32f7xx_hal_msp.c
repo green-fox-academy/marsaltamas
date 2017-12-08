@@ -13,8 +13,6 @@
                      ##### How to use this driver #####
  ===============================================================================
     [..]
-
-
   @endverbatim
   ******************************************************************************
   * @attention
@@ -141,7 +139,7 @@ void tim2_init()
 	// TIM1 clock enabled in clock_enabler()
 	tim2_handle.Instance = TIM2;
 	tim2_handle.Init.Period = 1000;
-	tim2_handle.Init.Prescaler = 50000;
+	tim2_handle.Init.Prescaler = 10000;
 	tim2_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	tim2_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
 
@@ -178,7 +176,7 @@ void tim3_init()
 	// TIM1 clock enabled in clock_enabler()
 	tim3_handle.Instance = TIM3;
 	tim3_handle.Init.Period = 0xFFFF;
-	tim3_handle.Init.Prescaler = 0;
+	tim3_handle.Init.Prescaler = 10800;
 	tim3_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	tim3_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
 
