@@ -48,6 +48,7 @@
 //#endif /* __GNUC__ */
 
 UART_HandleTypeDef uart_handle;
+uint8_t aRxBuffer[1];
 
 
 /* Private functions -----------------------------------------------*/
@@ -114,6 +115,19 @@ void UART_Init(void)
 	uart_handle.Init.Mode        = UART_MODE_TX_RX;
 
 	HAL_UART_Init(&uart_handle);
+
+	HAL_NVIC_EnableIRQ(USART1_IRQn);
+	HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
+}
+
+void USART1_IRQHandler()
+{
+	HAL_UART_IRQHandler(&uart_handle);
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	HAL_UART_Transmit(&uart_handle, aRxBuffer, 1, 1);
 }
 
 void led_on(void)
@@ -136,6 +150,49 @@ void led_command_error(void)
 	}
 }
 
+int read(uint8_t *result, size_t len)
+{
+    HAL_StatusTypeDef status;
+    int retcode = 0;
+
+    if (len != 0) {
+        status = HAL_UART_Receive( &uart_handle, (uint8_t *) result, len, HAL_MAX_DELAY);
+
+        if (status == HAL_OK) {
+            retcode = len;
+        } else {
+            retcode = -1;
+        }
+    }
+    return retcode;
+}
+
+int read_to_endl(uint8_t *result)
+{
+    HAL_StatusTypeDef status;
+    uint8_t temp_R_buffer[1];
+    int retcode = 0;
+
+    while (temp_R_buffer[0] != '\n') {
+    	status = HAL_UART_Receive(&uart_handle, temp_R_buffer, 1, HAL_MAX_DELAY);
+    	strcpy(result, temp_R_buffer);
+    }
+
+	if (status == HAL_OK) {
+		retcode = 1;
+	} else {
+		retcode = -1;
+	}
+
+    return retcode;
+}
+
+int write(uint8_t *outgoing, int len) {
+
+	HAL_UART_Transmit(&uart_handle, (uint8_t *) outgoing, len, 100);
+
+	return len;
+}
 
 /**
   * @brief  Main program
@@ -174,26 +231,33 @@ int main(void)
   GPIOLed_Init();
 
 
-  uint8_t tx_buffer[100];
-  uint8_t aRxBuffer[100];
+  uint8_t tx_buffer[1];
+
   int valid_command;
+
+  setvbuf(stdin, NULL, _IONBF, 0);
 
   while (1)
   {
 
-	  memset(aRxBuffer, '\0', sizeof(aRxBuffer));
-	  HAL_UART_Receive(&uart_handle, aRxBuffer, 100, 2000);
+	  //HAL_UART_Receive_IT(&uart_handle, aRxBuffer, 1);
 
-	  if (!strcmp(aRxBuffer, "ON")) {
-		  led_on();
-	  }
-	  if (!strcmp(aRxBuffer, "OFF"))
-		  led_off();
+	  HAL_UART_Receive_IT(&uart_handle, aRxBuffer, 1);
+	  //HAL_UART_Transmit(&uart_handle, aRxBuffer, 10, 100);
 
-	  if (strcmp(aRxBuffer, "ON") && strcmp(aRxBuffer, "OFF"))
-	 		  led_command_error();
-
-	  HAL_UART_Transmit(&uart_handle, aRxBuffer, 9, 2000);
+//	  memset(aRxBuffer, '\0', sizeof(aRxBuffer));
+//	  HAL_UART_Receive(&uart_handle, aRxBuffer, 100, 2000);
+//
+//	  if (!strcmp(aRxBuffer, "ON")) {
+//		  led_on();
+//	  }
+//	  if (!strcmp(aRxBuffer, "OFF"))
+//		  led_off();
+//
+//	  if (strcmp(aRxBuffer, "ON") && strcmp(aRxBuffer, "OFF"))
+//	 		  led_command_error();
+//
+//	  HAL_UART_Transmit(&uart_handle, aRxBuffer, 9, 2000);
   }
 }
 
