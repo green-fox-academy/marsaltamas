@@ -37,6 +37,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <string.h>
 
 //#ifdef __GNUC__
 ///* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
@@ -58,7 +59,7 @@ static void CPU_CACHE_Enable(void);
 void clock_enabler(void)
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_USART1_CLK_ENABLE();
 }
 
@@ -78,16 +79,28 @@ void GPIOTx_Init(void)
 
 void GPIORx_Init(void)
 {
-	GPIO_InitTypeDef pinRx_pa7;
+	GPIO_InitTypeDef pinRx_pb7;
 
-	pinRx_pa7.Pin = GPIO_PIN_7;
-	pinRx_pa7.Mode = GPIO_MODE_AF_PP;
-	pinRx_pa7.Alternate = GPIO_AF7_USART1;
-	pinRx_pa7.Pull = GPIO_PULLUP;
-	pinRx_pa7.Speed = GPIO_SPEED_HIGH;
+	pinRx_pb7.Pin = GPIO_PIN_7;
+	pinRx_pb7.Mode = GPIO_MODE_AF_PP;
+	pinRx_pb7.Alternate = GPIO_AF7_USART1;
+	pinRx_pb7.Pull = GPIO_PULLUP;
+	pinRx_pb7.Speed = GPIO_SPEED_HIGH;
 
-	HAL_GPIO_Init(GPIOC, &pinRx_pa7);
+	HAL_GPIO_Init(GPIOB, &pinRx_pb7);
 
+}
+
+void GPIOLed_Init(void)
+{
+	GPIO_InitTypeDef pinLed_pa0;
+
+	pinLed_pa0.Pin = GPIO_PIN_0;
+	pinLed_pa0.Mode = GPIO_MODE_OUTPUT_PP;
+	pinLed_pa0.Speed = GPIO_SPEED_HIGH;
+	pinLed_pa0.Pull = GPIO_PULLDOWN;
+
+	HAL_GPIO_Init(GPIOA, &pinLed_pa0);
 }
 
 void UART_Init(void)
@@ -101,6 +114,26 @@ void UART_Init(void)
 	uart_handle.Init.Mode        = UART_MODE_TX_RX;
 
 	HAL_UART_Init(&uart_handle);
+}
+
+void led_on(void)
+{
+	GPIOA->ODR |= GPIO_PIN_0;
+}
+
+void led_off(void)
+{
+	GPIOA->ODR &= ~GPIO_PIN_0;
+}
+
+void led_command_error(void)
+{
+	for (int i = 0; i < 3; ++i) {
+		GPIOA->ODR |= GPIO_PIN_0;
+		HAL_Delay(300);
+		GPIOA->ODR &= ~GPIO_PIN_0;
+		HAL_Delay(300);
+	}
 }
 
 
@@ -138,15 +171,29 @@ int main(void)
   GPIORx_Init();
   GPIOTx_Init();
   UART_Init();
+  GPIOLed_Init();
 
 
-  uint8_t tx_buffer[] = "message\r\n";
+  uint8_t tx_buffer[100];
+  uint8_t aRxBuffer[100];
+  int valid_command;
 
   while (1)
   {
-	  HAL_Delay(400);
-	  HAL_UART_Transmit(&uart_handle, tx_buffer, 9, 5000);
 
+	  memset(aRxBuffer, '\0', sizeof(aRxBuffer));
+	  HAL_UART_Receive(&uart_handle, aRxBuffer, 100, 2000);
+
+	  if (!strcmp(aRxBuffer, "ON")) {
+		  led_on();
+	  }
+	  if (!strcmp(aRxBuffer, "OFF"))
+		  led_off();
+
+	  if (strcmp(aRxBuffer, "ON") && strcmp(aRxBuffer, "OFF"))
+	 		  led_command_error();
+
+	  HAL_UART_Transmit(&uart_handle, aRxBuffer, 9, 2000);
   }
 }
 
