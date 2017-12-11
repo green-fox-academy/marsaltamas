@@ -48,7 +48,9 @@
 //#endif /* __GNUC__ */
 
 UART_HandleTypeDef uart_handle;
-uint8_t aRxBuffer[1];
+uint8_t aRxBuffer[32];
+uint8_t command_buffer[100];
+int counter = 0;
 
 
 /* Private functions -----------------------------------------------*/
@@ -127,7 +129,11 @@ void USART1_IRQHandler()
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	HAL_UART_Transmit(&uart_handle, aRxBuffer, 1, 1);
+//	if (aRxBuffer[0] != '\n') {
+//
+//		counter++;
+//	}
+	HAL_UART_Transmit(&uart_handle, aRxBuffer[0], 1, 1);
 }
 
 void led_on(void)
@@ -150,41 +156,29 @@ void led_command_error(void)
 	}
 }
 
-int read(uint8_t *result, size_t len)
+void read(uint8_t *result)
 {
-    HAL_StatusTypeDef status;
-    int retcode = 0;
+    int length = 0;
 
-    if (len != 0) {
-        status = HAL_UART_Receive( &uart_handle, (uint8_t *) result, len, HAL_MAX_DELAY);
+    do {
+        HAL_UART_Receive(&uart_handle, &result[length], 1, HAL_MAX_DELAY);
+        length++;
+    } while (result[length - 1] != '\n');
 
-        if (status == HAL_OK) {
-            retcode = len;
-        } else {
-            retcode = -1;
-        }
-    }
-    return retcode;
+    result[length - 1] = '\0';
 }
 
-int read_to_endl(uint8_t *result)
+void readline(char *line)
 {
-    HAL_StatusTypeDef status;
-    uint8_t temp_R_buffer[1];
-    int retcode = 0;
+	unsigned int length = 0;
+	line[0] = '\0';
 
-    while (temp_R_buffer[0] != '\n') {
-    	status = HAL_UART_Receive(&uart_handle, temp_R_buffer, 1, HAL_MAX_DELAY);
-    	strcpy(result, temp_R_buffer);
-    }
+	do {
+		HAL_UART_Receive(&uart_handle, (uint8_t *) &line[length], 1, HAL_MAX_DELAY);
+		++length;
+	} while (line[length-1] != '\n');
 
-	if (status == HAL_OK) {
-		retcode = 1;
-	} else {
-		retcode = -1;
-	}
-
-    return retcode;
+	line[length - 1] = '\0';
 }
 
 int write(uint8_t *outgoing, int len) {
@@ -229,45 +223,27 @@ int main(void)
   GPIOTx_Init();
   UART_Init();
   GPIOLed_Init();
+  char result[100];
 
-
-  uint8_t tx_buffer[1];
-
-  int valid_command;
-
-  setvbuf(stdin, NULL, _IONBF, 0);
 
   while (1)
   {
+	  //led_on();
 
-	  //HAL_UART_Receive_IT(&uart_handle, aRxBuffer, 1);
+	  		readline(result);
 
-	  HAL_UART_Receive_IT(&uart_handle, aRxBuffer, 1);
-	  //HAL_UART_Transmit(&uart_handle, aRxBuffer, 10, 100);
+	  		if (strcmp(result, "on") == 0) {
+	  			led_on();
+	  		} else if (strcmp(result, "off") == 0) {
+	  			led_off();
+	  		} else {
+	  			led_command_error();
+	  		}
 
-//	  memset(aRxBuffer, '\0', sizeof(aRxBuffer));
-//	  HAL_UART_Receive(&uart_handle, aRxBuffer, 100, 2000);
-//
-//	  if (!strcmp(aRxBuffer, "ON")) {
-//		  led_on();
-//	  }
-//	  if (!strcmp(aRxBuffer, "OFF"))
-//		  led_off();
-//
-//	  if (strcmp(aRxBuffer, "ON") && strcmp(aRxBuffer, "OFF"))
-//	 		  led_command_error();
-//
-//	  HAL_UART_Transmit(&uart_handle, aRxBuffer, 9, 2000);
+	  		result[0] = '\0';
   }
 }
 
-//PUTCHAR_PROTOTYPE {
-//	/* PLACE YOUR IMPLEMENTATION OF FPUTC HERE */
-//	/* E.G. WRITE A CHARACTER TO THE EVAL_COM1 AND LOOP UNTIL THE END OF TRANSMISSION */
-//	HAL_UART_TRANSMIT(&UART_HANDLE, (UINT8_T *) &CH, 1, 0XFFFF);
-//
-//	RETURN CH;
-//}
 
 /**
   * @brief  System Clock Configuration
