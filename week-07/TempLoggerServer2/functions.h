@@ -30,8 +30,6 @@ void run(vector<string> command_vector, TemperatureDatabase *tdb);
 void save_to_file(string file_path, TemperatureDatabase *tdb);
 void read_from_file(string file_path, TemperatureDatabase *tdb);
 packed_data_line_t* packed_data_builder(valid_log_entry_t vdle);
-void set_time_stamp(valid_log_entry_t *vle_pointer);
-void avg_t_by_days();
 
 vector<string> init_command_vector();
 

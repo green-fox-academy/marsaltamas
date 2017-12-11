@@ -105,14 +105,6 @@ bool is_day_valid(int year, int month, int day)
     return is_valid;
 }
 
-void set_time_stamp(valid_log_entry_t *vle_pointer)
-{
-    vle_pointer->seconds_stamp = vle_pointer->second + vle_pointer->minute * 60
-                                    + vle_pointer->hour * 3600 + vle_pointer->day * 24 * 3600;
-
-    vle_pointer->months_stamp = vle_pointer->year * 12 + vle_pointer->month;
-}
-
 /*
  * checks if the input string is a valid format
  * valid format is: "y.m.d h:m:s x"
@@ -173,7 +165,6 @@ void validate_and_push_to_tdb(string entry, TemperatureDatabase *tdb)
                                             vle_pointer->minute = minute;
                                             vle_pointer->second = second;
                                             vle_pointer->temperature = temperature;
-                                            set_time_stamp(vle_pointer);
                                             tdb->validated_data_log_vector.push_back(vle_pointer);
 
                                             /*
@@ -271,7 +262,7 @@ void run(vector<string> command_vector, TemperatureDatabase *tdb)
                 read_from_file("LoadDbFile.txt", tdb);
                 break;
             case AVG_TH_BY_DAYS:
-                avg_t_by_days();
+                cout << "avg th by days was called." << endl;
                 break;
             case MAX_TH_BY_DAYS:
                 cout << "max th by days was called." << endl;
@@ -348,19 +339,4 @@ packed_data_line_t* packed_data_builder(valid_log_entry_t vle)
     pdl->time_stamp = mktime(&t);
 
     return pdl;
-}
-
-void avg_t_by_days()
-{
-    string command;
-
-    cout << "avg th by days was called." << endl;
-    cout << "Please select option:\n"
-             "1 for one day avg.\n"
-             "2 for one day avg.\n"
-             "3 for one day avg.\n";
-
-    cin >> command;
-
-    cout << command << endl;
 }

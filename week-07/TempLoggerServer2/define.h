@@ -43,8 +43,6 @@ typedef struct {
     int minute;
     int second;
     int temperature;
-    int months_stamp;
-    int seconds_stamp;
 } valid_log_entry_t;
 
 typedef struct {

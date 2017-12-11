@@ -23,8 +23,6 @@ void TemperatureDatabase::print_data_log()
         cout << validated_data_log_vector.at(i)->minute << ":";
         cout << validated_data_log_vector.at(i)->second << " ";
         cout << validated_data_log_vector.at(i)->temperature << endl;
-        cout << validated_data_log_vector.at(i)->months_stamp << endl;
-        cout << validated_data_log_vector.at(i)->seconds_stamp << endl;
     }
 }
 
