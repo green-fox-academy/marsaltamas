@@ -82,7 +82,7 @@ int main(void)
 	  GPIO_I2C_Init();
 	  I2C_Init();
 
-	  uint8_t read_address =  0b1001101 >> 8;
+	  uint8_t read_address =  0b1001000 << 1;
 	  uint8_t read_register = 0x00;
 	  //uint8_t write_address =  0b1001101 << 1;
 
@@ -92,14 +92,14 @@ int main(void)
 //	data[1] = register_value>>7;    // MSB byte of 16bit data
 //	data[2] = register_value;       // LSB byte of 16bit data
 
-	  uint8_t aRxBuffer[1] = "s\n";
+	  int aRxBuffer = 0;
 
 	  while (1)
 	  {
-		  printf("%s\n", aRxBuffer);
+		  printf("%d\n", aRxBuffer);
 		  HAL_Delay(500);
 		  HAL_I2C_Master_Transmit(&I2cHandle, (uint16_t) read_address, &read_register, 1, 1000);
-		  HAL_I2C_Master_Receive(&I2cHandle, (uint16_t)read_address, (uint8_t *)aRxBuffer, 1, 1000);
+		  HAL_I2C_Master_Receive(&I2cHandle, (uint16_t)read_address, &aRxBuffer, 1, 1000);
 	  }
 }
 
