@@ -5,7 +5,7 @@
 
 :octocat:|.......day-1.......|.......day-2.......|.......day-3.......|.......day-4.......|.......day-5.......       
 ---|----------|----------|--------|------|-------
-:open_file_folder:|[UART]()|[day-2]()|[day-3]()|[day-4]()|Exam|
+:open_file_folder:|[UART](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/uart_self_impl)|[I2C](https://github.com/greenfox-academy/marsaltamas/tree/master/STM32Cube_FW_F7_V1.8.0/Projects/STM32746G-Discovery/GreenFox/i2c_temp_logger)|[day-3]()|[day-4]()|Exam|
 
 ## week-9
 
