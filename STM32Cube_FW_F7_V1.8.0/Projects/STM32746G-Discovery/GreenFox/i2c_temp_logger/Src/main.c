@@ -41,6 +41,7 @@
 
 UART_HandleTypeDef uart_handle;
 I2C_HandleTypeDef I2cHandle;
+uint8_t temp = 0;
 
 /* Private functions -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -54,6 +55,7 @@ void GPIORx_Init(void);
 void UART_Init(void);
 void GPIO_I2C_Init(void);
 void I2C_Init(void);
+void read_and_cout(void);
 
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
@@ -82,24 +84,17 @@ int main(void)
 	  GPIO_I2C_Init();
 	  I2C_Init();
 
-	  uint8_t read_address =  0b1001000 << 1;
-	  uint8_t read_register = 0x00;
-	  //uint8_t write_address =  0b1001101 << 1;
 
-	uint8_t data[3];
-
-//	data[0] = read_register;     // 0x0C in your example
-//	data[1] = register_value>>7;    // MSB byte of 16bit data
-//	data[2] = register_value;       // LSB byte of 16bit data
-
-	  int aRxBuffer = 0;
 
 	  while (1)
 	  {
-		  printf("%d\n", aRxBuffer);
+		  //read_and_cout();
+		  temp = 0;
+		  uint8_t read_address =  0b1001000 << 1;
+		  uint8_t read_register = 0x00;
+		  printf("temp from main: %d\n", temp);
+		  HAL_I2C_Master_Transmit_IT(&I2cHandle, read_address, &read_register, 1);
 		  HAL_Delay(500);
-		  HAL_I2C_Master_Transmit(&I2cHandle, (uint16_t) read_address, &read_register, 1, 1000);
-		  HAL_I2C_Master_Receive(&I2cHandle, (uint16_t)read_address, &aRxBuffer, 1, 1000);
 	  }
 }
 
@@ -109,6 +104,20 @@ PUTCHAR_PROTOTYPE {
 	HAL_UART_Transmit(&uart_handle, (uint8_t *) &ch, 1, 0xFFFF);
 
 	return ch;
+}
+
+void read_and_cout(void)
+{
+	uint8_t read_address =  0b1001000 << 1;
+	uint8_t read_register = 0x00;
+
+	uint8_t aRxBuffer = 0;
+
+	HAL_I2C_Master_Transmit(&I2cHandle, (uint16_t) read_address, &read_register, 1, 1000);
+	HAL_I2C_Master_Receive(&I2cHandle, (uint16_t)read_address, &aRxBuffer, 1, 1000);
+	printf("%d\n", aRxBuffer);
+	HAL_Delay(500);
+
 }
 
 void clock_enabler(void)
@@ -136,6 +145,8 @@ void GPIO_I2C_Init(void)
 	HAL_GPIO_Init(GPIOB, &pin_i2c_pb8_pd9);
 }
 
+
+
 void I2C_Init(void)
 {
 
@@ -149,6 +160,24 @@ void I2C_Init(void)
 	I2cHandle.Init.NoStretchMode   = I2C_NOSTRETCH_DISABLE;
 
 	HAL_I2C_Init(&I2cHandle);
+
+	HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+	HAL_NVIC_SetPriority(I2C1_EV_IRQn, 14, 0);
+}
+
+void I2C1_EV_IRQHandler()
+{
+	HAL_I2C_EV_IRQHandler(&I2cHandle);
+}
+
+void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	HAL_I2C_Master_Receive_IT(hi2c, 0b10010000, &temp, 1);
+}
+
+void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	printf("temp from cb: %d\n", temp);
 }
 
 void GPIOTx_Init(void)
