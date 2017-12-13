@@ -16,7 +16,7 @@
 
 using namespace std;
 
-void fight(Character c1, Character c2);
+void fight(Character& c1, Character& c2);
 
 int main()
 {
@@ -26,7 +26,13 @@ int main()
     Character player("player", PLAYER, 10, 10, player_armor);
     Character monster("monster", MONSTER, 10, 10, monster_armor);
 
+    cout << "before fight c1: " << player.get_hp() << endl;
+    cout << "before fight c2: " << monster.get_hp() << endl;
+
     fight(player, monster);
+
+    cout << "after fight c1: " << player.get_hp() << endl;
+    cout << "after fight c2: " << monster.get_hp() << endl;
 
     cout << ":::::::::::::::::::::::::::::::::::" << endl;
 
@@ -45,7 +51,7 @@ int main()
     return 0;
 }
 
-void fight(Character c1, Character c2)
+void fight(Character& c1, Character& c2)
 {
     int round = 1;
     while (1) {
