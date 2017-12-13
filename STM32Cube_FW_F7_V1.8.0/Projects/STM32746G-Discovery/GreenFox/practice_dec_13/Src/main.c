@@ -55,6 +55,8 @@ static void CPU_CACHE_Enable(void);
 
 /* Private functions ---------------------------------------------------------*/
 
+// init green led on board (pi1)
+void greenLedInint();
 
 int main(void)
 {
@@ -81,18 +83,32 @@ int main(void)
   /* Configure the System clock to have a frequency of 216 MHz */
   SystemClock_Config();
 
+  greenLedInint();
 
-  /* Add your application code here
-     */
-  BSP_LED_Init(LED_GREEN);
-  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+  BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_GPIO);
 
-	  while (1)
-	  {
+	while (1)
+	{
+		if (BSP_PB_GetState(BUTTON_WAKEUP))
+			HAL_GPIO_WritePin(GPIOI, GPIO_PIN_1, GPIO_PIN_SET);
 
-	  }
+		HAL_GPIO_WritePin(GPIOI, GPIO_PIN_1, GPIO_PIN_RESET);
+	}
 }
 
+void greenLedInint()
+{
+	 __HAL_RCC_GPIOI_CLK_ENABLE();
+
+	GPIO_InitTypeDef led_green_pi1;
+
+	led_green_pi1.Pin = GPIO_PIN_1;
+	led_green_pi1.Mode = GPIO_MODE_OUTPUT_PP;
+	led_green_pi1.Pull = GPIO_PULLDOWN;
+	led_green_pi1.Speed = GPIO_SPEED_HIGH;
+
+	HAL_GPIO_Init(GPIOI, &led_green_pi1);
+}
 /**
   * @brief  System Clock Configuration
   *         The system Clock is configured as follow : 
