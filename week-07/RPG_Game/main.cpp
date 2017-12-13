@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "character.h"
+#include "player.h"
 
     //RPG Game lite
 
@@ -15,6 +16,8 @@
 
 using namespace std;
 
+void fight(Character c1, Character c2);
+
 int main()
 {
     Armor player_armor(9);
@@ -23,28 +26,43 @@ int main()
     Character player("player", PLAYER, 10, 10, player_armor);
     Character monster("monster", MONSTER, 10, 10, monster_armor);
 
-    cout << "player hp: " << player.get_hp() << endl;
-    cout << "monster hp: " << monster.get_hp() << endl;
+    fight(player, monster);
 
+    cout << ":::::::::::::::::::::::::::::::::::" << endl;
+
+    Player pl("player class", PLAYER, 10, 10, player_armor);
+    Character monster2("monster2", MONSTER, 10, 10, monster_armor);
+
+    fight(pl, monster2);
+
+    cout << ":::::::::::::::::::::::::::::::::::" << endl;
+
+    Player pl1("player1 class", PLAYER, 10, 10, player_armor);
+    Player pl2("player2 class", PLAYER, 10, 10, player_armor);
+
+    fight(pl1, pl2);
+
+    return 0;
+}
+
+void fight(Character c1, Character c2)
+{
     int round = 1;
-
     while (1) {
 
     cout << "round " << round++ << ": " << endl;
-    player.attack(monster);
-    cout << "player hp: " << player.get_hp() << endl;
-    cout << "monster hp: " << monster.get_hp() << endl;
+    c1.attack(c2);
+    cout << "c1 hp: " << c1.get_hp() << endl;
+    cout << "c2 hp: " << c2.get_hp() << endl;
 
-    if (!(player.get_hp() > 1 && monster.get_hp() > 1))
+    if (!(c1.get_hp() > 0 && c2.get_hp() > 0))
         break;
 
-    monster.attack(player);
-    cout << "player hp: " << player.get_hp() << endl;
-    cout << "monster hp: " << monster.get_hp() << endl;
+    c2.attack(c1);
+    cout << "c1 hp: " << c1.get_hp() << endl;
+    cout << "c2 hp: " << c2.get_hp() << endl;
 
-     if (!(player.get_hp() > 1 && monster.get_hp() > 1))
+    if (!(c1.get_hp() > 0 && c2.get_hp() > 0))
         break;
     }
-
-    return 0;
 }
