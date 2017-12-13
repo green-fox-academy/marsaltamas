@@ -37,14 +37,19 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <string.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+
 UART_HandleTypeDef uart_handle;
-/* RNG handler declaration */
-RNG_HandleTypeDef RngHandle;
+RNG_HandleTypeDef rndCfg;
+TIM_HandleTypeDef tim1_handler;
+TIM_HandleTypeDef tim2_handler;
+
+int rnd_num; // used as the slot to store generated random num
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -53,20 +58,44 @@ static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
+#ifdef __GNUC__
+/* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+
 /* Private functions ---------------------------------------------------------*/
 
 // init green led on board (pi1)
-void greenLedInint();
+void greenLedInintGPIO();
+/*
+ *  init blue bp on board (pi11)
+ *  this button is input, nopull in gpio mode
+ */
+void bluePbInit();
+
+// enable each clock used
+void enable_clocks();
+
+void UART_Init();
+
+void Rng_Init();
+
+// returns a rnd integer number using RNG of the board
+int get_rnd_num();
+
+// can toogle led on given cnt reg value
+void tim1_hanlder_init_no_interrupt();
+
+// calls interrupt in base mode, after period elapsed
+void TIM2_IRQHandler();
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+void tim2_handler_init();
 
 int main(void)
 {
-  /* This project template calls firstly two functions in order to configure MPU feature 
-     and to enable the CPU Cache, respectively MPU_Config() and CPU_CACHE_Enable().
-     These functions are provided as template implementation that User may integrate 
-     in his application, to enhance the performance in case of use of AXI interface 
-     with several masters. */ 
-  
-  /* Configure the MPU attributes as Write Through */
   MPU_Config();
 
   /* Enable the CPU Cache */
@@ -83,23 +112,113 @@ int main(void)
   /* Configure the System clock to have a frequency of 216 MHz */
   SystemClock_Config();
 
-  greenLedInint();
-
-  BSP_PB_Init(BUTTON_WAKEUP, BUTTON_MODE_GPIO);
+  enable_clocks();
+  greenLedInintGPIO();
+  bluePbInit();
+  UART_Init();
+  Rng_Init();
+  tim1_hanlder_init_no_interrupt();
+  tim2_handler_init();
 
 	while (1)
 	{
-		if (BSP_PB_GetState(BUTTON_WAKEUP))
+
+		/* toogles led with 1hz freq using TIM1 in cnt up mode
+		if (TIM1->CNT > 3999)
+			GPIOI->ODR |= GPIO_PIN_1;
+		else
+			GPIOI->ODR &= ~GPIO_PIN_1;
+		*/
+
+		/* if button pushed, led turns on
+		if (HAL_GPIO_ReadPin(GPIOI, GPIO_PIN_11)) {
 			HAL_GPIO_WritePin(GPIOI, GPIO_PIN_1, GPIO_PIN_SET);
+			printf("light is on\n");
+		}
 
 		HAL_GPIO_WritePin(GPIOI, GPIO_PIN_1, GPIO_PIN_RESET);
+		*/
+
+		/* rng pringint and hal get tick
+		for (int i = 0; i < 10; ++i) {
+			printf("random %d: %d\n", i, get_rnd_num());
+			printf("hal systick: %ld\n", HAL_GetTick());
+			HAL_Delay(300);
+		}
+		*/
 	}
 }
 
-void greenLedInint()
+PUTCHAR_PROTOTYPE
 {
-	 __HAL_RCC_GPIOI_CLK_ENABLE();
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
+  HAL_UART_Transmit(&uart_handle, (uint8_t *)&ch, 1, 0xFFFF);
 
+  return ch;
+}
+
+void enable_clocks()
+{
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOI_CLK_ENABLE();
+	__HAL_RCC_USART1_CLK_ENABLE();
+	__HAL_RCC_RNG_CLK_ENABLE();
+	__HAL_RCC_TIM1_CLK_ENABLE();
+	__HAL_RCC_TIM2_CLK_ENABLE();
+}
+
+// these pins are communicating with the pc
+void UART_Init()
+{
+	GPIO_InitTypeDef pinTx_pa9;	// pin for transmission
+
+	pinTx_pa9.Pin = GPIO_PIN_9;
+	pinTx_pa9.Mode = GPIO_MODE_AF_PP;
+	pinTx_pa9.Alternate = GPIO_AF7_USART1;
+	pinTx_pa9.Pull = GPIO_PULLUP;
+	pinTx_pa9.Speed = GPIO_SPEED_HIGH;
+
+	HAL_GPIO_Init(GPIOA, &pinTx_pa9);
+
+	GPIO_InitTypeDef pinRx_pb7;	// pin for receiving info
+
+	pinRx_pb7.Pin = GPIO_PIN_7;
+	pinRx_pb7.Mode = GPIO_MODE_AF_PP;
+	pinRx_pb7.Alternate = GPIO_AF7_USART1;
+	pinRx_pb7.Pull = GPIO_PULLUP;
+	pinRx_pb7.Speed = GPIO_SPEED_HIGH;
+
+	HAL_GPIO_Init(GPIOB, &pinRx_pb7);
+
+	uart_handle.Instance         = USART1;
+	uart_handle.Init.BaudRate    = 115200;
+	uart_handle.Init.WordLength  = UART_WORDLENGTH_8B;
+	uart_handle.Init.StopBits    = UART_STOPBITS_1;
+	uart_handle.Init.Parity      = UART_PARITY_NONE;
+	uart_handle.Init.HwFlowCtl   = UART_HWCONTROL_NONE;
+	uart_handle.Init.Mode        = UART_MODE_TX_RX;
+
+	HAL_UART_Init(&uart_handle);
+}
+
+
+void Rng_Init()
+{
+	rndCfg.Instance = RNG;
+	HAL_RNG_Init(&rndCfg);
+}
+
+int get_rnd_num()
+{
+	HAL_RNG_GenerateRandomNumber(&rndCfg, &rnd_num);
+
+	return rnd_num;
+}
+
+void greenLedInintGPIO()
+{
 	GPIO_InitTypeDef led_green_pi1;
 
 	led_green_pi1.Pin = GPIO_PIN_1;
@@ -109,6 +228,77 @@ void greenLedInint()
 
 	HAL_GPIO_Init(GPIOI, &led_green_pi1);
 }
+
+void bluePbInit()
+{
+	GPIO_InitTypeDef blue_pb_pi11;
+
+	blue_pb_pi11.Pin = GPIO_PIN_11;
+	blue_pb_pi11.Mode = GPIO_MODE_INPUT;
+	blue_pb_pi11.Speed = GPIO_SPEED_HIGH;
+	blue_pb_pi11.Pull = GPIO_NOPULL;
+
+	HAL_GPIO_Init(GPIOI, &blue_pb_pi11);
+}
+
+// TIM1 used to toogle led in 1000 ms feq
+void tim1_hanlder_init_no_interrupt()
+{
+	// enable clock tim1 in enable_clock()
+
+	tim1_handler.Instance = TIM1;
+	tim1_handler.Init.Prescaler = 54000 -1;
+	tim1_handler.Init.Period = 8000 - 1;
+	tim1_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim1_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_Base_Init(&tim1_handler);
+	HAL_TIM_Base_Start(&tim1_handler);
+}
+
+// used in interrupt mode for sending message to uart in every 500 ms
+void tim2_handler_init()
+{
+	// enable clock tim2 in enable_clock()
+
+	tim2_handler.Instance = TIM2;
+	tim2_handler.Init.Prescaler = 54000 - 1;
+	tim2_handler.Init.Period = 1000 -1;
+	tim2_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim2_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_Base_Init(&tim2_handler);
+	HAL_TIM_Base_Start_IT(&tim2_handler);
+	//HAL_TIM_PWM_Start_IT(&tim2_handler);
+
+	TIM_OC_InitTypeDef oc_conf_tim2;
+
+	//oc_conf_tim2.OCMode = TIM_OCMODE_PWM1;
+	//oc_conf_tim2.Pulse = 2500;
+
+	//HAL_TIM__ConfigChannel(&tim2_handler, &oc_conf_tim2, TIM_CHANNEL_1);
+
+	//HAL_TIM_PWM_Start(&tim2_handler, TIM_CHANNEL_1);
+
+	HAL_NVIC_SetPriority(TIM2_IRQn, 15, 0);
+	HAL_NVIC_EnableIRQ(TIM2_IRQn);
+}
+
+void TIM2_IRQHandler()
+{
+	HAL_TIM_IRQHandler(&tim2_handler);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	printf("period elapsed called\n");
+
+	if (!HAL_GPIO_ReadPin(GPIOI, GPIO_PIN_1))
+		GPIOI->ODR |= GPIO_PIN_1;
+	else
+		GPIOI->ODR &= ~GPIO_PIN_1;
+}
+
 /**
   * @brief  System Clock Configuration
   *         The system Clock is configured as follow : 
