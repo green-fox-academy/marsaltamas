@@ -50,6 +50,8 @@ TIM_HandleTypeDef tim1_handler;
 TIM_HandleTypeDef tim2_handler;
 TIM_HandleTypeDef tim3_handler;
 TIM_HandleTypeDef tim5_handler;
+volatile int direction = 1;
+volatile char result[100];
 
 int rnd_num; // used as the slot to store generated random num
 
@@ -79,7 +81,6 @@ void greenLedInintGPIO();
  */
 void bluePbInit();
 
-
 /*
  *  init blue bp on board (pi11) in INTERRPUT mode
  *  this button is input, nopull in gpio mode
@@ -92,6 +93,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 void enable_clocks();
 
 void UART_Init();
+void writeline(char *line);
+void readline(char *line);
 
 void Rng_Init();
 
@@ -118,42 +121,48 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim);
 
 int main(void)
 {
-  MPU_Config();
+	MPU_Config();
 
-  /* Enable the CPU Cache */
-  CPU_CACHE_Enable();
+	/* Enable the CPU Cache */
+	CPU_CACHE_Enable();
 
-  /* STM32F7xx HAL library initialization:
-       - Configure the Flash ART accelerator on ITCM interface
-       - Configure the Systick to generate an interrupt each 1 msec
-       - Set NVIC Group Priority to 4
-       - Low Level Initialization
-     */
-  HAL_Init();
+	/* STM32F7xx HAL library initialization:
+	   - Configure the Flash ART accelerator on ITCM interface
+	   - Configure the Systick to generate an interrupt each 1 msec
+	   - Set NVIC Group Priority to 4
+	   - Low Level Initialization
+	 */
+	HAL_Init();
 
-  /* Configure the System clock to have a frequency of 216 MHz */
-  SystemClock_Config();
+	/* Configure the System clock to have a frequency of 216 MHz */
+	SystemClock_Config();
 
-  enable_clocks();
-  greenLedInintGPIO();
-  //bluePbInit(); inits blue pb in gpio mode
-  bluePbInitInterrupt(); // inits blue pb in int mode
-  UART_Init();
-  Rng_Init();
-  tim1_hanlder_init_no_interrupt();
-  tim2_handler_init();
-  pin_a0_a0_for_pwm_tim5();
-  tim5_pwm_Init();
-  pin_d3_b4_for_pwm_it_tim3();
-  tim3_pwm_Init();
-
-  int direction = 1;
+	enable_clocks();
+	greenLedInintGPIO();
+	//bluePbInit(); inits blue pb in gpio mode
+	bluePbInitInterrupt(); // inits blue pb in int mode
+	UART_Init();
+	Rng_Init();
+	tim1_hanlder_init_no_interrupt();
+	tim2_handler_init();
+	pin_a0_a0_for_pwm_tim5();
+	tim5_pwm_Init();
+	pin_d3_b4_for_pwm_it_tim3();
+	tim3_pwm_Init();
 
 	while (1)
 	{
+		/* reading and writeing serial port terminal
+		readline(result);
+		writeline(result);
 
-		/*
-		* this segment dims  ext led a0 a0 with tim5 pwm */
+		if (strcmp(result, "on\n") == 0)
+			printf("i am on\n");
+		else
+			printf("invalid command\n");
+		================================================*/
+
+		/* this segment dims  ext led a0 a0 with tim5 pwm
 		if (TIM5->CCR1 == 1999)
 			direction = 0;
 		if (TIM5->CCR1 == 50)
@@ -161,7 +170,7 @@ int main(void)
 
 		TIM5->CCR1 = direction ? (TIM5->CCR1 + 1) : (TIM5->CCR1 - 1);
 		HAL_Delay(1);
-
+		==========================================================*/
 
 		/* toogles led with 1hz freq using TIM1 in cnt up mode
 		if (TIM1->CNT > 3999)
@@ -191,11 +200,11 @@ int main(void)
 
 PUTCHAR_PROTOTYPE
 {
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&uart_handle, (uint8_t *)&ch, 1, 0xFFFF);
+	/* Place your implementation of fputc here */
+	/* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
+	HAL_UART_Transmit(&uart_handle, (uint8_t *)&ch, 1, 0xFFFF);
 
-  return ch;
+	return ch;
 }
 
 void enable_clocks()
@@ -321,6 +330,27 @@ void UART_Init()
 	HAL_UART_Init(&uart_handle);
 }
 
+void readline(char *line)
+{
+	unsigned int length = 0;
+	line[0] = '\0';
+
+	do {
+		HAL_UART_Receive(&uart_handle, (uint8_t *) &line[length], 1, HAL_MAX_DELAY);
+		++length;
+	} while (line[length-1] != '\n');
+
+	line[length] = '\0';
+}
+
+void writeline(char *line)
+{
+	unsigned int i = 0;
+	while (line[i] != '\0') {
+		HAL_UART_Transmit(&uart_handle, (uint8_t *) &line[i], 1, 100);
+		++i;
+	}
+}
 
 void Rng_Init()
 {
