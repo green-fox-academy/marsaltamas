@@ -48,6 +48,7 @@ UART_HandleTypeDef uart_handle;
 RNG_HandleTypeDef rndCfg;
 TIM_HandleTypeDef tim1_handler;
 TIM_HandleTypeDef tim2_handler;
+TIM_HandleTypeDef tim5_handler;
 
 int rnd_num; // used as the slot to store generated random num
 
@@ -70,13 +71,23 @@ static void CPU_CACHE_Enable(void);
 
 // init green led on board (pi1)
 void greenLedInintGPIO();
+
 /*
  *  init blue bp on board (pi11)
  *  this button is input, nopull in gpio mode
  */
 void bluePbInit();
 
-// enable each clock used
+
+/*
+ *  init blue bp on board (pi11) in INTERRPUT mode
+ *  this button is input, nopull in gpio mode
+ */
+void bluePbInitInterrupt();
+void EXTI15_10_IRQHandler();
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
+
+// enables each clock used
 void enable_clocks();
 
 void UART_Init();
@@ -86,13 +97,17 @@ void Rng_Init();
 // returns a rnd integer number using RNG of the board
 int get_rnd_num();
 
-// can toogle led on given cnt reg value
+// can toggle led on given cnt reg value
 void tim1_hanlder_init_no_interrupt();
 
 // calls interrupt in base mode, after period elapsed
 void TIM2_IRQHandler();
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 void tim2_handler_init();
+
+// inits pin a0 a0 and tim5 for pwm mode
+void pin_a0_a0_for_pwm_tim5();
+void tim5_pwm_Init();
 
 int main(void)
 {
@@ -114,14 +129,27 @@ int main(void)
 
   enable_clocks();
   greenLedInintGPIO();
-  bluePbInit();
+  //bluePbInit(); inits blue pb in gpio mode
+  bluePbInitInterrupt(); // inits blue pb in int mode
   UART_Init();
   Rng_Init();
   tim1_hanlder_init_no_interrupt();
   tim2_handler_init();
+  pin_a0_a0_for_pwm_tim5();
+  tim5_pwm_Init();
+
+  int direction = 1;
 
 	while (1)
 	{
+
+		if (TIM5->CCR1 == 1999)
+			direction = 0;
+		if (TIM5->CCR1 == 50)
+			direction = 1;
+
+		TIM5->CCR1 = direction ? (TIM5->CCR1 + 1) : (TIM5->CCR1 - 1);
+		HAL_Delay(1);
 
 		/* toogles led with 1hz freq using TIM1 in cnt up mode
 		if (TIM1->CNT > 3999)
@@ -167,6 +195,40 @@ void enable_clocks()
 	__HAL_RCC_RNG_CLK_ENABLE();
 	__HAL_RCC_TIM1_CLK_ENABLE();
 	__HAL_RCC_TIM2_CLK_ENABLE();
+	__HAL_RCC_TIM5_CLK_ENABLE();
+}
+
+void pin_a0_a0_for_pwm_tim5()
+{
+	GPIO_InitTypeDef in_a0_a0_for_pwm;
+
+	in_a0_a0_for_pwm.Pin = GPIO_PIN_0;
+	in_a0_a0_for_pwm.Mode = GPIO_MODE_AF_PP;
+	in_a0_a0_for_pwm.Speed = GPIO_SPEED_HIGH;
+	in_a0_a0_for_pwm.Pull = GPIO_PULLDOWN;
+	in_a0_a0_for_pwm.Alternate = GPIO_AF2_TIM5;
+
+	HAL_GPIO_Init(GPIOA, &in_a0_a0_for_pwm);
+}
+
+void tim5_pwm_Init()
+{
+	tim5_handler.Instance = TIM5;
+	tim5_handler.Init.Prescaler = 0; // 54 000 for 1 sec hz
+	tim5_handler.Init.Period = 2000 -1;		 // 2 000 for 1 sec hz
+	tim5_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim5_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_PWM_Init(&tim5_handler);
+
+	TIM_OC_InitTypeDef oc_conf_tim5;
+
+	oc_conf_tim5.OCMode = TIM_OCMODE_PWM1;
+	oc_conf_tim5.Pulse = 1000;
+
+	HAL_TIM_PWM_ConfigChannel(&tim5_handler, &oc_conf_tim5, TIM_CHANNEL_1);
+
+	HAL_TIM_PWM_Start(&tim5_handler, TIM_CHANNEL_1);
 }
 
 // these pins are communicating with the pc
@@ -239,6 +301,31 @@ void bluePbInit()
 	blue_pb_pi11.Pull = GPIO_NOPULL;
 
 	HAL_GPIO_Init(GPIOI, &blue_pb_pi11);
+}
+
+void bluePbInitInterrupt()
+{
+	GPIO_InitTypeDef blue_pb_pi11;
+
+	blue_pb_pi11.Pin = GPIO_PIN_11;
+	blue_pb_pi11.Mode = GPIO_MODE_IT_RISING;
+	blue_pb_pi11.Speed = GPIO_SPEED_HIGH;
+	blue_pb_pi11.Pull = GPIO_NOPULL;
+
+	HAL_GPIO_Init(GPIOI, &blue_pb_pi11);
+
+	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
+}
+
+void EXTI15_10_IRQHandler()
+{
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	printf("button interrupt called\n");
 }
 
 // TIM1 used to toogle led in 1000 ms feq
