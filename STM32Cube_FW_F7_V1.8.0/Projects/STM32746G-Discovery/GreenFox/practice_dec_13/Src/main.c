@@ -48,6 +48,7 @@ UART_HandleTypeDef uart_handle;
 RNG_HandleTypeDef rndCfg;
 TIM_HandleTypeDef tim1_handler;
 TIM_HandleTypeDef tim2_handler;
+TIM_HandleTypeDef tim3_handler;
 TIM_HandleTypeDef tim5_handler;
 
 int rnd_num; // used as the slot to store generated random num
@@ -109,6 +110,12 @@ void tim2_handler_init();
 void pin_a0_a0_for_pwm_tim5();
 void tim5_pwm_Init();
 
+// pin d3 pb4 pwm it with tim3
+void pin_d3_b4_for_pwm_it_tim3();
+void tim3_pwm_Init();
+void TIM3_IRQHandler();
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim);
+
 int main(void)
 {
   MPU_Config();
@@ -137,12 +144,16 @@ int main(void)
   tim2_handler_init();
   pin_a0_a0_for_pwm_tim5();
   tim5_pwm_Init();
+  pin_d3_b4_for_pwm_it_tim3();
+  tim3_pwm_Init();
 
   int direction = 1;
 
 	while (1)
 	{
 
+		/*
+		* this segment dims  ext led a0 a0 with tim5 pwm */
 		if (TIM5->CCR1 == 1999)
 			direction = 0;
 		if (TIM5->CCR1 == 50)
@@ -150,6 +161,7 @@ int main(void)
 
 		TIM5->CCR1 = direction ? (TIM5->CCR1 + 1) : (TIM5->CCR1 - 1);
 		HAL_Delay(1);
+
 
 		/* toogles led with 1hz freq using TIM1 in cnt up mode
 		if (TIM1->CNT > 3999)
@@ -195,7 +207,51 @@ void enable_clocks()
 	__HAL_RCC_RNG_CLK_ENABLE();
 	__HAL_RCC_TIM1_CLK_ENABLE();
 	__HAL_RCC_TIM2_CLK_ENABLE();
+	__HAL_RCC_TIM3_CLK_ENABLE();
 	__HAL_RCC_TIM5_CLK_ENABLE();
+}
+
+void pin_d3_b4_for_pwm_it_tim3()
+{
+	GPIO_InitTypeDef pin_d3_b4_for_pwm_it;
+
+	pin_d3_b4_for_pwm_it.Pin = GPIO_PIN_4;
+	pin_d3_b4_for_pwm_it.Mode = GPIO_MODE_AF_PP;
+	pin_d3_b4_for_pwm_it.Speed = GPIO_SPEED_HIGH;
+	pin_d3_b4_for_pwm_it.Pull = GPIO_PULLDOWN;
+	pin_d3_b4_for_pwm_it.Alternate = GPIO_AF2_TIM3;
+
+	HAL_GPIO_Init(GPIOB, &pin_d3_b4_for_pwm_it);
+}
+void tim3_pwm_Init()
+{
+	tim3_handler.Instance = TIM3;
+	tim3_handler.Init.Prescaler = 54000 - 1;
+	tim3_handler.Init.Period = 2000 -1;
+	tim3_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim3_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_PWM_Init(&tim3_handler);
+	HAL_TIM_PWM_Start_IT(&tim3_handler, TIM_CHANNEL_1);
+
+	TIM_OC_InitTypeDef oc_conf_tim3;
+
+	oc_conf_tim3.OCMode = TIM_OCMODE_PWM1;
+	oc_conf_tim3.Pulse = 1000;
+
+	HAL_TIM_PWM_ConfigChannel(&tim3_handler, &oc_conf_tim3, TIM_CHANNEL_1);
+	HAL_NVIC_SetPriority(TIM3_IRQn, 14, 0);
+	HAL_NVIC_EnableIRQ(TIM3_IRQn);
+}
+
+void TIM3_IRQHandler()
+{
+	HAL_TIM_IRQHandler(&tim3_handler);
+}
+
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+{
+	printf("tim3 pulse finished callback\n");
 }
 
 void pin_a0_a0_for_pwm_tim5()
@@ -214,7 +270,7 @@ void pin_a0_a0_for_pwm_tim5()
 void tim5_pwm_Init()
 {
 	tim5_handler.Instance = TIM5;
-	tim5_handler.Init.Prescaler = 0; // 54 000 for 1 sec hz
+	tim5_handler.Init.Prescaler = 0; 		 // 54 000 for 1 sec hz
 	tim5_handler.Init.Period = 2000 -1;		 // 2 000 for 1 sec hz
 	tim5_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	tim5_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -367,7 +423,7 @@ void tim2_handler_init()
 
 	//HAL_TIM_PWM_Start(&tim2_handler, TIM_CHANNEL_1);
 
-	HAL_NVIC_SetPriority(TIM2_IRQn, 15, 0);
+	HAL_NVIC_SetPriority(TIM2_IRQn, 13, 0);
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 }
 
