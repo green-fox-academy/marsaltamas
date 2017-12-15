@@ -72,13 +72,8 @@ static void CPU_CACHE_Enable(void);
 
 void enable_clocks()
 {
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOI_CLK_ENABLE();
 	__HAL_RCC_TIM1_CLK_ENABLE();
-	__HAL_RCC_TIM2_CLK_ENABLE();
-	__HAL_RCC_TIM3_CLK_ENABLE();
-	__HAL_RCC_TIM5_CLK_ENABLE();
 }
 
 void init_uart()
@@ -119,8 +114,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		state = -1;
 
 	state++;
-
-	printf("state: %d\n", state);
 }
 
 int is_state_changed()
@@ -129,6 +122,18 @@ int is_state_changed()
 		return TRUE;
 	else
 		return FALSE;
+}
+
+void green_led_inint()
+{
+	GPIO_InitTypeDef led_green_pi1;
+
+	led_green_pi1.Pin = GPIO_PIN_1;
+	led_green_pi1.Mode = GPIO_MODE_OUTPUT_PP;
+	led_green_pi1.Pull = GPIO_PULLDOWN;
+	led_green_pi1.Speed = GPIO_SPEED_HIGH;
+
+	HAL_GPIO_Init(GPIOI, &led_green_pi1);
 }
 
 int main(void)
@@ -141,22 +146,24 @@ int main(void)
 	enable_clocks();
 	init_uart();
 	blue_pb_init_it();
+	green_led_inint();
 
 
+	HAL_GPIO_WritePin(GPIOI, GPIO_PIN_1, GPIO_PIN_SET);
 
 	while (1)
 	{
 		if (is_state_changed()) {;
 			if (state == OPEN) {
-				printf("open\n");
+				printf("Entered in open sate.\n");
 			} else if (state == SECRUING) {
-				printf("securing\n");
+				printf("Entered in securing sate.\n");
 			} else if (state == SECURED) {
-				printf("secured\n");
+				printf("Entered in secured state.\n");
 			} else if (state == OPENING) {
-				printf("opening\n");
+				printf("Entered in opening state.\n");
 			} else {
-				printf("Thre is some kind of error. Contact the operator.\n");
+				printf("There is some kind of error. Contact the operator.\n");
 			}
 
 			previous_state = state;
