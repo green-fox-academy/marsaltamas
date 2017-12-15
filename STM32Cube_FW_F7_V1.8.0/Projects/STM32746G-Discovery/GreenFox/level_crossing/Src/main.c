@@ -39,21 +39,15 @@
 #include "main.h"
 #include <string.h>
 
-/** @addtogroup STM32F7xx_HAL_Examples
-  * @{
-  */
-
-/** @addtogroup Templates
-  * @{
-  */ 
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
+#define OPEN 0
+#define SECRUING 1
+#define SECURED 2
+#define OPENING 3
+
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
-/* RNG handler declaration */
-RNG_HandleTypeDef RngHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -72,35 +66,73 @@ static void CPU_CACHE_Enable(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-/**
-  * @brief  Main program
-  * @param  None
-  * @retval None
-  */
+void enable_clocks()
+{
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOI_CLK_ENABLE();
+	__HAL_RCC_TIM1_CLK_ENABLE();
+	__HAL_RCC_TIM2_CLK_ENABLE();
+	__HAL_RCC_TIM3_CLK_ENABLE();
+	__HAL_RCC_TIM5_CLK_ENABLE();
+}
+
+void init_uart()
+{
+	uart_handle.Init.BaudRate   = 115200;
+	uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
+	uart_handle.Init.StopBits   = UART_STOPBITS_1;
+	uart_handle.Init.Parity     = UART_PARITY_NONE;
+	uart_handle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
+	uart_handle.Init.Mode       = UART_MODE_TX_RX;
+
+	BSP_COM_Init(COM1, &uart_handle);
+}
+
+void blue_pb_init_it()
+{
+	GPIO_InitTypeDef blue_pb_pi11;
+
+	blue_pb_pi11.Pin = GPIO_PIN_11;
+	blue_pb_pi11.Mode = GPIO_MODE_IT_RISING;
+	blue_pb_pi11.Speed = GPIO_SPEED_HIGH;
+	blue_pb_pi11.Pull = GPIO_NOPULL;
+
+	HAL_GPIO_Init(GPIOI, &blue_pb_pi11);
+
+	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
+}
+
+void EXTI15_10_IRQHandler()
+{
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	printf("button interrupt called\n");
+}
+
 int main(void)
 {
+	MPU_Config();
+	CPU_CACHE_Enable();
+	HAL_Init();
+	/* Configure the System clock to have a frequency of 216 MHz */
+	SystemClock_Config();
+	enable_clocks();
+	init_uart();
+	blue_pb_init_it();
 
-  MPU_Config();
-  CPU_CACHE_Enable();
-  HAL_Init();
-  /* Configure the System clock to have a frequency of 216 MHz */
-  SystemClock_Config();
 
-  uart_handle.Init.BaudRate   = 115200;
-  uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
-  uart_handle.Init.StopBits   = UART_STOPBITS_1;
-  uart_handle.Init.Parity     = UART_PARITY_NONE;
-  uart_handle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
-  uart_handle.Init.Mode       = UART_MODE_TX_RX;
 
-  BSP_COM_Init(COM1, &uart_handle);
-
-  while (1)
-  {
-	  printf("hellon\n");
+	while (1)
+	{
+	  printf("hello\n");
 	  HAL_Delay(500);
 
-  }
+	}
 }
 
 /**
