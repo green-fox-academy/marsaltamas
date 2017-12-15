@@ -42,7 +42,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define OPEN 0
-#define SECRUING 1
+#define SECURING 1
 #define SECURED 2
 #define OPENING 3
 #define TRUE 1
@@ -50,8 +50,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
+TIM_HandleTypeDef tim1_handler;
 volatile int state = 0;
 volatile int previous_state = -1;
+volatile int state_change_enabled = TRUE;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -136,6 +138,66 @@ void green_led_inint()
 	HAL_GPIO_Init(GPIOI, &led_green_pi1);
 }
 
+void tim1_hanlder_init_no_interrupt()
+{
+	// enable clock tim1 in enable_clock()
+
+	tim1_handler.Instance = TIM1;
+	tim1_handler.Init.Prescaler = 54000 -1;
+	tim1_handler.Init.Period = 4000 - 1; // 4000 ms is one second
+	tim1_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim1_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_Base_Init(&tim1_handler);
+	HAL_TIM_Base_Start(&tim1_handler);
+}
+
+/*
+ * toogles led with 1hz freq using TIM1 in cnt up mode
+ */
+void flahing_open_state_mode()
+{
+	while (state == OPEN) {
+		if (TIM1->CNT <= 1000)
+			GPIOI->ODR &= ~GPIO_PIN_1;
+		if (TIM1->CNT > 1000 && TIM1->CNT <= 2000)
+			GPIOI->ODR |= GPIO_PIN_1;
+		if (TIM1->CNT > 2000 && TIM1->CNT <= 3000)
+			GPIOI->ODR &= ~GPIO_PIN_1;
+		if (TIM1->CNT > 3000)
+			GPIOI->ODR |= GPIO_PIN_1;
+	}
+
+}
+
+void flahing_securing_state_mode()
+{
+	while (state == SECURING) {
+		if (TIM1->CNT > 2000)
+			GPIOI->ODR |= GPIO_PIN_1;
+		else
+			GPIOI->ODR &= ~GPIO_PIN_1;
+	}
+}
+
+void flahing_secured_state_mode()
+{
+	while (state == SECURED) {
+		GPIOI->ODR &= ~GPIO_PIN_1;
+	}
+}
+
+void flahing_opening_state_mode()
+{
+	while (state == OPENING) {
+		if (TIM1->CNT > 2000)
+					GPIOI->ODR |= GPIO_PIN_1;
+		else
+			GPIOI->ODR &= ~GPIO_PIN_1;
+	}
+
+}
+
 int main(void)
 {
 	MPU_Config();
@@ -147,21 +209,27 @@ int main(void)
 	init_uart();
 	blue_pb_init_it();
 	green_led_inint();
-
-
-	HAL_GPIO_WritePin(GPIOI, GPIO_PIN_1, GPIO_PIN_SET);
+	tim1_hanlder_init_no_interrupt();
 
 	while (1)
 	{
 		if (is_state_changed()) {;
 			if (state == OPEN) {
 				printf("Entered in open sate.\n");
-			} else if (state == SECRUING) {
+				flahing_open_state_mode();
+				continue;
+			} else if (state == SECURING) {
 				printf("Entered in securing sate.\n");
+				flahing_securing_state_mode();
+				continue;
 			} else if (state == SECURED) {
 				printf("Entered in secured state.\n");
+				flahing_secured_state_mode();
+				continue;
 			} else if (state == OPENING) {
 				printf("Entered in opening state.\n");
+				flahing_opening_state_mode();
+				continue;
 			} else {
 				printf("There is some kind of error. Contact the operator.\n");
 			}
