@@ -115,8 +115,8 @@ void EXTI15_10_IRQHandler()
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if (state == OPENING)
-		state = -1;
+//	if (state == OPENING)
+//		state = -1;
 
 	if (state_change_enabled == TRUE)
 		state++;
@@ -205,13 +205,23 @@ void flahing_secured_state_mode()
 
 void flahing_opening_state_mode()
 {
+	HAL_TIM_Base_Start_IT(&tim2_handler);
+	state_change_enabled = FALSE;
+
 	while (state == OPENING) {
 		if (TIM1->CNT > 2000)
 					GPIOI->ODR |= GPIO_PIN_1;
 		else
 			GPIOI->ODR &= ~GPIO_PIN_1;
+
+		if (period_elapsed >= 6)
+			break;
 	}
 
+	HAL_TIM_Base_Stop_IT(&tim2_handler);
+	period_elapsed = 0;
+	state_change_enabled = TRUE;
+	state = OPEN;
 }
 
 void tim2_handler_init_it()
