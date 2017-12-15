@@ -55,6 +55,7 @@ TIM_HandleTypeDef tim2_handler;
 volatile int state = 0;
 volatile int previous_state = -1;
 volatile int state_change_enabled = TRUE;
+volatile int period_elapsed = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -156,7 +157,7 @@ void tim1_hanlder_init_no_interrupt()
 }
 
 /*
- * toogles led with 1hz freq using TIM1 in cnt up mode
+ * toggles led with 1hz freq using TIM1 in cnt up mode
  */
 void flahing_open_state_mode()
 {
@@ -175,12 +176,24 @@ void flahing_open_state_mode()
 
 void flahing_securing_state_mode()
 {
+	HAL_TIM_Base_Start_IT(&tim2_handler);
+	state_change_enabled = FALSE;
+
 	while (state == SECURING) {
 		if (TIM1->CNT > 2000)
 			GPIOI->ODR |= GPIO_PIN_1;
 		else
 			GPIOI->ODR &= ~GPIO_PIN_1;
+
+		if (period_elapsed >= 5)
+			break;
 	}
+
+	HAL_TIM_Base_Stop_IT(&tim2_handler);
+	period_elapsed = 0;
+	state_change_enabled = TRUE;
+	state++;
+
 }
 
 void flahing_secured_state_mode()
@@ -212,7 +225,6 @@ void tim2_handler_init_it()
 	tim2_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
 
 	HAL_TIM_Base_Init(&tim2_handler);
-	HAL_TIM_Base_Start_IT(&tim2_handler);
 
 	HAL_NVIC_SetPriority(TIM2_IRQn, 13, 0);
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
@@ -226,6 +238,7 @@ void TIM2_IRQHandler()
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	printf("period elapsed called\n");
+	period_elapsed++;
 }
 
 
