@@ -51,6 +51,7 @@
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
 TIM_HandleTypeDef tim1_handler;
+TIM_HandleTypeDef tim2_handler;
 volatile int state = 0;
 volatile int previous_state = -1;
 volatile int state_change_enabled = TRUE;
@@ -76,6 +77,7 @@ void enable_clocks()
 {
 	__HAL_RCC_GPIOI_CLK_ENABLE();
 	__HAL_RCC_TIM1_CLK_ENABLE();
+	__HAL_RCC_TIM2_CLK_ENABLE();
 }
 
 void init_uart()
@@ -115,7 +117,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if (state == OPENING)
 		state = -1;
 
-	state++;
+	if (state_change_enabled == TRUE)
+		state++;
 }
 
 int is_state_changed()
@@ -198,6 +201,34 @@ void flahing_opening_state_mode()
 
 }
 
+void tim2_handler_init_it()
+{
+	// enable clock tim2 in enable_clock()
+
+	tim2_handler.Instance = TIM2;
+	tim2_handler.Init.Prescaler = 54000 - 1;
+	tim2_handler.Init.Period = 2000 -1;		 // 1 period / sec
+	tim2_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim2_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_Base_Init(&tim2_handler);
+	HAL_TIM_Base_Start_IT(&tim2_handler);
+
+	HAL_NVIC_SetPriority(TIM2_IRQn, 13, 0);
+	HAL_NVIC_EnableIRQ(TIM2_IRQn);
+}
+
+void TIM2_IRQHandler()
+{
+	HAL_TIM_IRQHandler(&tim2_handler);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	printf("period elapsed called\n");
+}
+
+
 int main(void)
 {
 	MPU_Config();
@@ -210,6 +241,7 @@ int main(void)
 	blue_pb_init_it();
 	green_led_inint();
 	tim1_hanlder_init_no_interrupt();
+	tim2_handler_init_it();
 
 	while (1)
 	{
