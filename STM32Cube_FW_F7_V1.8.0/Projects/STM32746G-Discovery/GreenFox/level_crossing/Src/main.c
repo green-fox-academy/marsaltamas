@@ -39,12 +39,16 @@
 #include "main.h"
 #include <string.h>
 
-/* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+
+/*
+ * these defines representing the stages of the operation
+ */
 #define OPEN 0
 #define SECURING 1
 #define SECURED 2
 #define OPENING 3
+
 #define TRUE 1
 #define FALSE 0
 
@@ -52,10 +56,10 @@
 UART_HandleTypeDef uart_handle;
 TIM_HandleTypeDef tim1_handler;
 TIM_HandleTypeDef tim2_handler;
-volatile int state = 0;
-volatile int previous_state = -1;
-volatile int state_change_enabled = TRUE;
-volatile int period_elapsed = 0;
+volatile int state = 0; 					// keeps track of state of operation
+volatile int previous_state = -1;			// used to detect state changes
+volatile int state_change_enabled = TRUE;	// when false, button pushes has no effect
+volatile int period_elapsed = 0;			// when tim2 is on, it counts the elapsed periods (1 period = 1 sec)
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -72,7 +76,134 @@ static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 
-/* Private functions ---------------------------------------------------------*/
+/*
+ * starts the necessary clocks used in the program
+ */
+void enable_clocks();
+/*
+ * initializes uart
+ */
+void init_uart();
+/*
+ * inits onboard blue push button in interrupt mode
+ */
+void blue_pb_init_it();
+/*
+ * it hander for pb
+ */
+void EXTI15_10_IRQHandler();
+/*
+ * callback for pb interrupt
+ * when state change is enabled, increases the value of state variable by 1
+ */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
+/*
+ * check if the state is changed compared to the previous_state
+ * returns 1 if there is a change
+ */
+int is_state_changed();
+/*
+ * inits green onboard led
+ */
+void green_led_inint();
+/*
+ * inits TIM1 in base mode. used as a pseudo pwm
+ */
+void tim1_hanlder_init_no_interrupt();
+/*
+ * toggles led with 0.5 hz freq using TIM1 cnt register
+ */
+void flahing_open_state_mode();
+/*
+ * toggles led with 1 hz freq using TIM1 cnt register
+ * start TIM2 in IT mode for measuring how long the pb interrupts should be ignored (5 sec)
+ * finally prompts state to SECURED state
+ */
+void flahing_securing_state_mode();
+/*
+ * turns of led flashing
+ */
+void flahing_secured_state_mode();
+/*
+ * toggles led with 1 hz freq using TIM1 cnt register
+ * start TIM2 in IT mode for measuring how long the pb interrupts should be ignored (6 sec)
+ * finally prompts state to OPEN state
+ */
+void flahing_opening_state_mode();
+/*
+ * inits TIM2 in IT mode
+ */
+void tim2_handler_init_it();
+/*
+ * inits TIM2 IT handler
+ */
+void TIM2_IRQHandler();
+/*
+ * used to measure time when pb should ignored
+ */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+
+int main(void)
+{
+	MPU_Config();
+	CPU_CACHE_Enable();
+	HAL_Init();
+	/* Configure the System clock to have a frequency of 216 MHz */
+	SystemClock_Config();
+	enable_clocks();
+	init_uart();
+	blue_pb_init_it();
+	green_led_inint();
+	tim1_hanlder_init_no_interrupt();
+	tim2_handler_init_it();
+
+	/*
+	 * after entering main operation loop we keep checking if there was a change in the opreation state
+	 * if change detected, we change to the requested operation mode
+	 * previous_state is updated at the end of every cycle
+	 */
+	while (1)
+	{
+		if (is_state_changed()) {;
+			if (state == OPEN) {
+				printf("Entered in open sate.\n");
+				flahing_open_state_mode();
+				continue;
+			} else if (state == SECURING) {
+				printf("Entered in securing sate.\n");
+				flahing_securing_state_mode();
+				continue;
+			} else if (state == SECURED) {
+				printf("Entered in secured state.\n");
+				flahing_secured_state_mode();
+				continue;
+			} else if (state == OPENING) {
+				printf("Entered in opening state.\n");
+				flahing_opening_state_mode();
+				continue;
+			} else {
+				printf("There is some kind of error. Contact the operator.\n");
+			}
+
+			previous_state = state;
+		}
+
+	}
+}
+
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  * @param  None
+  * @retval None
+  */
+PUTCHAR_PROTOTYPE
+{
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
+  HAL_UART_Transmit(&uart_handle, (uint8_t *)&ch, 1, 0xFFFF);
+
+  return ch;
+}
 
 void enable_clocks()
 {
@@ -115,10 +246,7 @@ void EXTI15_10_IRQHandler()
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-//	if (state == OPENING)
-//		state = -1;
-
-	if (state_change_enabled == TRUE)
+	if (state_change_enabled == TRUE)	// when changes not enabled, pb interrups has no effect
 		state++;
 }
 
@@ -142,13 +270,18 @@ void green_led_inint()
 	HAL_GPIO_Init(GPIOI, &led_green_pi1);
 }
 
+/*
+ * period calculation for 1 sec:
+ * 216 000 000 / APB2 (= 2) * 2 / 54 000 / 4000
+ */
 void tim1_hanlder_init_no_interrupt()
 {
-	// enable clock tim1 in enable_clock()
-
+	/*
+	 * enable clock tim1 in enable_clock()
+	 */
 	tim1_handler.Instance = TIM1;
 	tim1_handler.Init.Prescaler = 54000 -1;
-	tim1_handler.Init.Period = 4000 - 1; // 4000 ms is one second
+	tim1_handler.Init.Period = 4000 - 1; // 4000 tick is one second
 	tim1_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	tim1_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
 
@@ -156,9 +289,6 @@ void tim1_hanlder_init_no_interrupt()
 	HAL_TIM_Base_Start(&tim1_handler);
 }
 
-/*
- * toggles led with 1hz freq using TIM1 in cnt up mode
- */
 void flahing_open_state_mode()
 {
 	while (state == OPEN) {
@@ -171,13 +301,12 @@ void flahing_open_state_mode()
 		if (TIM1->CNT > 3000)
 			GPIOI->ODR |= GPIO_PIN_1;
 	}
-
 }
 
 void flahing_securing_state_mode()
 {
-	HAL_TIM_Base_Start_IT(&tim2_handler);
-	state_change_enabled = FALSE;
+	HAL_TIM_Base_Start_IT(&tim2_handler); // start TIM2
+	state_change_enabled = FALSE;		  // disable button pushes
 
 	while (state == SECURING) {
 		if (TIM1->CNT > 2000)
@@ -185,7 +314,7 @@ void flahing_securing_state_mode()
 		else
 			GPIOI->ODR &= ~GPIO_PIN_1;
 
-		if (period_elapsed >= 5)
+		if (period_elapsed >= 5)		 // after 5 sec passed, we skip to next state
 			break;
 	}
 
@@ -202,7 +331,9 @@ void flahing_secured_state_mode()
 		GPIOI->ODR &= ~GPIO_PIN_1;
 	}
 }
-
+/*
+ * same logic as flahing_securing_state_mode()
+ */
 void flahing_opening_state_mode()
 {
 	HAL_TIM_Base_Start_IT(&tim2_handler);
@@ -221,9 +352,13 @@ void flahing_opening_state_mode()
 	HAL_TIM_Base_Stop_IT(&tim2_handler);
 	period_elapsed = 0;
 	state_change_enabled = TRUE;
-	state = OPEN;
+	state = OPEN;	// setting state directly to avoid malfunction
 }
 
+/*
+ * period calculation for 1 sec:
+ * 216 000 000 / APB1 (= 4) * 2 / 54 000 / 2000
+ */
 void tim2_handler_init_it()
 {
 	// enable clock tim2 in enable_clock()
@@ -247,66 +382,7 @@ void TIM2_IRQHandler()
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	printf("period elapsed called\n");
-	period_elapsed++;
-}
-
-
-int main(void)
-{
-	MPU_Config();
-	CPU_CACHE_Enable();
-	HAL_Init();
-	/* Configure the System clock to have a frequency of 216 MHz */
-	SystemClock_Config();
-	enable_clocks();
-	init_uart();
-	blue_pb_init_it();
-	green_led_inint();
-	tim1_hanlder_init_no_interrupt();
-	tim2_handler_init_it();
-
-	while (1)
-	{
-		if (is_state_changed()) {;
-			if (state == OPEN) {
-				printf("Entered in open sate.\n");
-				flahing_open_state_mode();
-				continue;
-			} else if (state == SECURING) {
-				printf("Entered in securing sate.\n");
-				flahing_securing_state_mode();
-				continue;
-			} else if (state == SECURED) {
-				printf("Entered in secured state.\n");
-				flahing_secured_state_mode();
-				continue;
-			} else if (state == OPENING) {
-				printf("Entered in opening state.\n");
-				flahing_opening_state_mode();
-				continue;
-			} else {
-				printf("There is some kind of error. Contact the operator.\n");
-			}
-
-			previous_state = state;
-		}
-
-	}
-}
-
-/**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-PUTCHAR_PROTOTYPE
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&uart_handle, (uint8_t *)&ch, 1, 0xFFFF);
-
-  return ch;
+	period_elapsed++; // measures pass of one second time
 }
 
 /**
