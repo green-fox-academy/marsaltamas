@@ -45,9 +45,13 @@
 #define SECRUING 1
 #define SECURED 2
 #define OPENING 3
+#define TRUE 1
+#define FALSE 0
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
+volatile int state = 0;
+volatile int previous_state = -1;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -111,7 +115,20 @@ void EXTI15_10_IRQHandler()
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	printf("button interrupt called\n");
+	if (state == OPENING)
+		state = -1;
+
+	state++;
+
+	printf("state: %d\n", state);
+}
+
+int is_state_changed()
+{
+	if (state != previous_state)
+		return TRUE;
+	else
+		return FALSE;
 }
 
 int main(void)
@@ -129,8 +146,21 @@ int main(void)
 
 	while (1)
 	{
-	  printf("hello\n");
-	  HAL_Delay(500);
+		if (is_state_changed()) {;
+			if (state == OPEN) {
+				printf("open\n");
+			} else if (state == SECRUING) {
+				printf("securing\n");
+			} else if (state == SECURED) {
+				printf("secured\n");
+			} else if (state == OPENING) {
+				printf("opening\n");
+			} else {
+				printf("Thre is some kind of error. Contact the operator.\n");
+			}
+
+			previous_state = state;
+		}
 
 	}
 }
