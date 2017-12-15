@@ -53,7 +53,7 @@ TIM_HandleTypeDef tim5_handler;
 volatile int direction = 1;
 volatile char result[100];
 
-int rnd_num; // used as the slot to store generated random num
+uint32_t rnd_num; // used as the slot to store generated random num
 
 /* Private function prototypes -----------------------------------------------*/
 
