@@ -10,8 +10,10 @@
 		<Property Name="server.vi.callsEnabled" Type="Bool">true</Property>
 		<Property Name="server.vi.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="specify.custom.address" Type="Bool">false</Property>
+		<Item Name="abcBuilder.vi" Type="VI" URL="../../../tempLoggerLabView/abcBuilder.vi"/>
 		<Item Name="abcLookUp.vi" Type="VI" URL="../../../tempLoggerLabView/abcLookUp.vi"/>
 		<Item Name="main.vi" Type="VI" URL="../main.vi"/>
+		<Item Name="morseSignReader.vi" Type="VI" URL="../../../tempLoggerLabView/morseSignReader.vi"/>
 		<Item Name="Dependencies" Type="Dependencies"/>
 		<Item Name="Build Specifications" Type="Build"/>
 	</Item>
