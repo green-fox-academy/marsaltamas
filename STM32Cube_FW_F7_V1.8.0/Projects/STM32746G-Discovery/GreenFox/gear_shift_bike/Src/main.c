@@ -44,6 +44,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef uart_handle;
+TIM_HandleTypeDef tim1_handler;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -60,7 +61,10 @@ static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
 void uart_init();
-
+void enable_clocks();
+void tim1_hanlder_init_no_interrupt();
+void led_2_6_f6_f10();
+void dim_leds();
 
 int main(void)
 {
@@ -69,12 +73,46 @@ int main(void)
 	HAL_Init();
 	/* Configure the System clock to have a frequency of 216 MHz */
 	SystemClock_Config();
+	enable_clocks();
 	uart_init();
+	tim1_hanlder_init_no_interrupt();
+	led_2_6_f6_f10();
 
-	while (1)
-	{
-		printf("hello\n");
-		HAL_Delay(500);
+	int front_gears[] = {1, 2, 3};
+	int back_gears[] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+	int result[27];
+	int pos = 0;
+
+//	while (1)
+//	{
+//
+//
+//	}
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 9; j++) {
+			result[pos] = ((float) front_gears[i] / back_gears[j]) * 100;
+			pos++;
+		}
+	}
+
+	for (int i = 0; i < 27; i++) {
+		printf("result %d : %d\n", i, result[i]);
+	}
+
+
+	for (int i = 0; i < 27; i++) {
+		for (int j = 0; j < 27 - i - 1; j++) {
+			if (result[j] > result[j + 1]) {
+				int temp = result[j + 1];
+				result[j + 1] = result[j];
+				result[j] = temp;
+			}
+		}
+	}
+
+	for (int i = 0; i < 27; i++) {
+		printf("result %d : %d\n", i, result[i]);
 	}
 }
 
@@ -87,6 +125,34 @@ PUTCHAR_PROTOTYPE
 	return ch;
 }
 
+void dim_leds()
+{
+	if (TIM1->CNT < 2000)
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_SET);
+	else
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_RESET);
+
+	if (TIM1->CNT < 3750)
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
+	else
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
+
+	if (TIM1->CNT < 5500)
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_8, GPIO_PIN_SET);
+	else
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_8, GPIO_PIN_RESET);
+
+	if (TIM1->CNT < 6250)
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_7, GPIO_PIN_SET);
+	else
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_7, GPIO_PIN_RESET);
+
+	if (TIM1->CNT < 9000)
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_6, GPIO_PIN_SET);
+	else
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_6, GPIO_PIN_RESET);
+}
+
 void uart_init()
 {
 	uart_handle.Init.BaudRate   = 115200;
@@ -97,6 +163,38 @@ void uart_init()
 	uart_handle.Init.Mode       = UART_MODE_TX_RX;
 
 	BSP_COM_Init(COM1, &uart_handle);
+}
+
+void enable_clocks()
+{
+	__HAL_RCC_GPIOF_CLK_ENABLE();
+	__HAL_RCC_TIM1_CLK_ENABLE();
+}
+
+void led_2_6_f6_f10()
+{
+	GPIO_InitTypeDef led_2_6_f6_f10;
+
+	led_2_6_f6_f10.Pin = GPIO_PIN_10 | GPIO_PIN_9 | GPIO_PIN_8 | GPIO_PIN_7 | GPIO_PIN_6;
+	led_2_6_f6_f10.Mode = GPIO_MODE_OUTPUT_PP;
+	led_2_6_f6_f10.Speed = GPIO_SPEED_HIGH;
+	led_2_6_f6_f10.Pull = GPIO_PULLDOWN;
+
+	HAL_GPIO_Init(GPIOF, &led_2_6_f6_f10);
+}
+
+void tim1_hanlder_init_no_interrupt()
+{
+	// enable clock tim1 in enable_clock()
+
+	tim1_handler.Instance = TIM1;
+	tim1_handler.Init.Prescaler = 0;
+	tim1_handler.Init.Period = 10000 - 1;
+	tim1_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	tim1_handler.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	HAL_TIM_Base_Init(&tim1_handler);
+	HAL_TIM_Base_Start(&tim1_handler);
 }
 
 /**
@@ -171,13 +269,6 @@ static void Error_Handler(void)
   }
 }
 
-/**
-  * @brief  Configure the MPU attributes as Write Through for SRAM1/2.
-  * @note   The Base Address is 0x20010000 since this memory interface is the AXI.
-  *         The Region Size is 256KB, it is related to SRAM1 and SRAM2  memory size.
-  * @param  None
-  * @retval None
-  */
 static void MPU_Config(void)
 {
   MPU_Region_InitTypeDef MPU_InitStruct;
@@ -239,12 +330,5 @@ void assert_failed(uint8_t* file, uint32_t line)
 }
 #endif
 
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
