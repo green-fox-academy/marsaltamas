@@ -4,7 +4,6 @@
 - [State machine](https://github.com/greenfox-academy/huli-smarthome-device-static-fuchsit/blob/development/example-project/Src/main.c)
 - project structure
 - [http evaluation](https://github.com/greenfox-academy/huli-smarthome-device-static-fuchsit/tree/development/common/HTTP_Handler)
-- [JSON parser](https://github.com/greenfox-academy/huli-smarthome-device-static-fuchsit/tree/development/common/JSMN)
 - [Heartbeat controll frame](https://github.com/greenfox-academy/huli-smarthome-device-static-fuchsit/tree/development/common/Heartbeat)
 - [Air_condi report mechanism](https://github.com/greenfox-academy/huli-smarthome-device-static-fuchsit/blob/development/common/fan_control/Src/aircondi.c)
  
